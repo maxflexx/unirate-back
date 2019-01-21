@@ -1,0 +1,25 @@
+{
+  "MEMORY_DB": {
+    "type": "sqlite",
+    "database": ":memory:",
+    "entities": [
+      "src/**/**.entity{.ts,.js}"
+    ],
+    "synchronize": true,
+    "supportBigNumbers": true,
+    "logging": false
+  },
+  "NAME": {
+    "type": "mysql",
+    "host": "host-url",
+    "port": 3306,
+    "username": "username",
+    "password": "password",
+    "database": "database_name",
+    "entities": [
+      "dist/**/**.entity{.ts,.js}"
+    ],
+    "logging": true,
+    "supportBigNumbers": true
+  }
+}
