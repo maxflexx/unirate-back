@@ -1,0 +1,12 @@
+import { IsBoolean, IsString } from 'class-validator';
+
+export class LoginBodyDto {
+  @IsString()
+  login: string;
+
+  @IsString()
+  password: string;
+
+  @IsBoolean()
+  asAdmin: boolean;
+}

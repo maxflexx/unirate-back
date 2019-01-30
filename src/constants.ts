@@ -15,7 +15,7 @@ export const JWT_SECRET = 'yu3egwfhjwhr9823q';
 export const PASSWORD_HASH_SALT = 'pass_salt_hash';
 
 export const ADMIN_RIGHT = 'admin';
-export const USER_RIGHTS = 'user';
+export const USER_RIGHT = 'user';
 
 export const INVALID_PARAMS = 'invalid_params';
 export const ITEM_NOT_FOUND = 'item_not_found';

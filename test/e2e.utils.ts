@@ -10,6 +10,7 @@ import { User } from '../src/entities/user.entity';
 import { FACULTIES, PROFESSIONS, USERS } from './e2e.constants';
 import { Faculty } from '../src/entities/faculty.entity';
 import { Profession } from '../src/entities/profession.entity';
+import { AuthModule } from '../src/modules/auth/auth.module';
 
 
 export async function initTestApp(server) {
@@ -17,7 +18,7 @@ export async function initTestApp(server) {
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule],
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule],
   }).compile();
 
   server.use(bodyParser.json());
