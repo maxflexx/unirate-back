@@ -9,3 +9,4 @@ export const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
 export const JWT_SECRET = 'yu3egwfhjwhr9823q';
 
+export const PASSWORD_HASH_SALT = 'pass_salt_hash';
