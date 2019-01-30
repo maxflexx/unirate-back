@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { TimeUtil } from '../../utils/time.util';
+import { TimeUtil } from '../utils/time.util';
 
 @Entity('feedback')
 export class Feedback {

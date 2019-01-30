@@ -1,5 +1,5 @@
 import { PASSWORD_HASH_SALT } from '../src/constants';
-import { UserRole } from '../src/modules/entities/user.entity';
+import { UserRole } from '../src/entities/user.entity';
 
 const crypto = require('crypto');
 

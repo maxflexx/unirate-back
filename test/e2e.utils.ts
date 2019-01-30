@@ -6,10 +6,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection, getConnection, Repository } from 'typeorm';
 import {AppModule} from '../src/app.module';
 import * as bodyParser from 'body-parser';
-import { User } from '../src/modules/entities/user.entity';
+import { User } from '../src/entities/user.entity';
 import { FACULTIES, PROFESSIONS, USERS } from './e2e.constants';
-import { Faculty } from '../src/modules/entities/faculty.entity';
-import { Profession } from '../src/modules/entities/profession.entity';
+import { Faculty } from '../src/entities/faculty.entity';
+import { Profession } from '../src/entities/profession.entity';
 
 
 export async function initTestApp(server) {
