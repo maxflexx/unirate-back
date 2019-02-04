@@ -9,13 +9,13 @@
     "supportBigNumbers": true,
     "logging": false
   },
-  "NAME": {
+  "AWS_DB": {
     "type": "mysql",
-    "host": "host-url",
+    "host": "unirates.cebb4sgrtztw.us-east-1.rds.amazonaws.com",
     "port": 3306,
-    "username": "username",
-    "password": "password",
-    "database": "database_name",
+    "username": "root",
+    "password": "rootroot",
+    "database": "unirates",
     "entities": [
       "dist/**/**.entity{.ts,.js}"
     ],
