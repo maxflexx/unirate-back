@@ -8,7 +8,7 @@ CREATE TABLE faculty(
     PRIMARY KEY(id)
 );
 
-#profession
+#professions
 DROP TABLE IF EXISTS profession;
 CREATE TABLE profession(
 	id bigint NOT NULL AUTO_INCREMENT,
