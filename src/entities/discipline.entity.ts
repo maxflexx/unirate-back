@@ -16,4 +16,14 @@ export class Discipline {
 
   @Column({name: 'cathedra_id'})
   cathedraId: number;
+
+  fromRaw(raw: any): Discipline {
+    const entity = new Discipline();
+    entity.id = +raw.id;
+    entity.name = raw.name;
+    entity.mandatory = raw.mandatory;
+    entity.year = raw.year;
+    entity.cathedraId = +raw.cathedra_id;
+    return entity;
+  }
 }

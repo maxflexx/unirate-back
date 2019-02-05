@@ -26,4 +26,16 @@ export class Feedback {
 
   @Column({name: 'discipline_id'})
   disciplineId: number;
+
+  static fromRaw(raw: any): Feedback {
+    const entity = new Feedback();
+    entity.id = +raw.id;
+    entity.studentGrade = raw.student_grade;
+    entity.rating = raw.rating;
+    entity.comment = raw.comment;
+    entity.created = raw.created;
+    entity.userLogin = raw.user_login;
+    entity.disciplineId = +raw.discipline_id;
+    return entity;
+  }
 }

@@ -6,7 +6,7 @@ export enum UserRole {
 }
 
 @Entity('user')
-export class User {
+export class User{
   @PrimaryColumn()
   login: string;
 
@@ -24,4 +24,17 @@ export class User {
 
   @Column({name: 'profession_id'})
   professionId: number;
+
+  static fromRaw(raw: any): User {
+    const entity = new User();
+    entity.login = raw.login;
+    entity.password = raw.password;
+    entity.email = raw.email;
+    entity.role = raw.role;
+    entity.rating = raw.rating;
+    entity.professionId = +raw.profession_id;
+    return entity;
+  }
+
+
 }
