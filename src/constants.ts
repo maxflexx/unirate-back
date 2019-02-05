@@ -19,10 +19,15 @@ export const PASSWORD_HASH_SALT = 'pass_salt_hash';
 export const ADMIN_RIGHT = 'admin';
 export const USER_RIGHT = 'user';
 
+
+export const JWT_TOKEN_LIFETIME = 31 * 24 * 60 * 60;
+
 export const INVALID_PARAMS = 'invalid_params';
 export const ITEM_NOT_FOUND = 'item_not_found';
 export const ACCESS_DENIED = 'access_denied';
+export const UNAUTHORIZED = 'unauthorized';
 
 export const InvalidParams = new HttpCodeException(HttpStatus.BAD_REQUEST, INVALID_PARAMS, 'Invalid parameters, check your request body or query');
 export const ItemNotFound = new HttpCodeException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND, 'Item not found in database');
 export const AccessDenied = new HttpCodeException(HttpStatus.FORBIDDEN, ACCESS_DENIED, 'You have not enough rights to use this method');
+export const Unauthorized = new HttpCodeException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED, 'Invalid jwt token');

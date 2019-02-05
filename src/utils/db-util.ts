@@ -8,7 +8,7 @@ export class DbUtil {
 
   static async getMany(entity, query: string, params: any){
     const result = await this.executeQuery(entity, query, params);
-    if (result.length)
+    if (result && result.length)
       return result.map(item => entity.fromRaw(item));
     else
       return null;
@@ -16,7 +16,7 @@ export class DbUtil {
 
   static async getOne(entity, query: string, params: any) {
     const result = await this.executeQuery(entity, query, params);
-    if (result)
+    if (result && result.length)
       return entity.fromRaw(result[0]);
     else
       return null;

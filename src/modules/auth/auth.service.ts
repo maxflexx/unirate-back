@@ -11,9 +11,9 @@ const jwt = require('jwt-simple');
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+  constructor() {}
 
-  async login(body: LoginBodyDto): Promise<{token: string}> {
+  async login(body: LoginBodyDto): Promise<{token: string, isAdmin: boolean}> {
     const user = await DbUtil.getOne(User, `SELECT * FROM user AS u WHERE u.login=$1`, [body.login]);
     if (!user) {
       throw ItemNotFound;
@@ -21,13 +21,7 @@ export class AuthService {
     if (user.password !== body.password) {
       throw ErrorUtil.getValidationError('Invalid password hash');
     }
-    if (user.role === UserRole.USER && body.asAdmin) {
-      throw AccessDenied;
-    }
-    if (user.role === UserRole.ADMIN && !body.asAdmin) {
-      throw AccessDenied;
-    }
-    return {token: this.getJwtToken(body.login, body.asAdmin)};
+    return {token: this.getJwtToken(user.login, user.role), isAdmin: user.role === 1};
   }
 
   getJwtToken(login: string, asAdmin: boolean): string {

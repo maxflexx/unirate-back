@@ -31,6 +31,7 @@ describe('Auth', () => {
             right: USER_RIGHT,
             created: expect.any(Number),
           });
+          expect(response.body.isAdmin).toBe(false);
           expect(payload.created).toBeGreaterThanOrEqual(start);
         });
     });

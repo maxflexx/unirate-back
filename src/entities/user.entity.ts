@@ -22,7 +22,7 @@ export class User{
   @Column()
   rating: number;
 
-  @Column({name: 'profession_id'})
+  @Column({name: 'profession_id', nullable: true})
   professionId: number;
 
   static fromRaw(raw: any): User {
@@ -32,7 +32,7 @@ export class User{
     entity.email = raw.email;
     entity.role = raw.role;
     entity.rating = raw.rating;
-    entity.professionId = +raw.profession_id;
+    entity.professionId = +raw.profession_id != undefined ? +raw.profession_id : undefined;
     return entity;
   }
 

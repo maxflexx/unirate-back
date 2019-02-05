@@ -6,7 +6,4 @@ export class LoginBodyDto {
 
   @IsString()
   password: string;
-
-  @IsBoolean()
-  asAdmin: boolean;
 }
