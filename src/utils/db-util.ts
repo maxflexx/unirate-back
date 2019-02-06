@@ -1,4 +1,5 @@
 import { getManager } from 'typeorm';
+import { TESTNET } from '../constants';
 
 export class DbUtil {
   private static async executeQuery(entity, query: string, params: any) {
@@ -17,7 +18,7 @@ export class DbUtil {
   static async getOne(entity, query: string, params: any) {
     const result = await this.executeQuery(entity, query, params);
     if (result && result.length)
-      return entity.fromRaw(result[0]);
+      return entity.fromRaw(TESTNET ? result[0] : result);
     else
       return null;
   }

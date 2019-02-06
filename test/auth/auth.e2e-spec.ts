@@ -21,7 +21,7 @@ describe('Auth', () => {
       const start = TimeUtil.getUnixTime();
       return request(server)
         .post('/auth/login')
-        .send({login: USERS.SIMPLE.login, password: USERS.SIMPLE.password, asAdmin: false})
+        .send({login: USERS.SIMPLE.login, password: USERS.SIMPLE.password})
         .expect(HttpStatus.CREATED)
         .then(response => {
           expect(response.body.token).toBeDefined();
@@ -38,7 +38,7 @@ describe('Auth', () => {
     it('fail: no such user', () => {
       return request(server)
         .post('/auth/login')
-        .send({login: 'invalid_user', password: USERS.SIMPLE.password, asAdmin: false})
+        .send({login: 'invalid_user', password: USERS.SIMPLE.password})
         .expect(HttpStatus.NOT_FOUND)
         .then(response => {
           expect(response.body.error).toBe(ITEM_NOT_FOUND);
@@ -47,19 +47,10 @@ describe('Auth', () => {
     it('fail: no password field', () => {
       return request(server)
         .post('/auth/login')
-        .send({login: USERS.SIMPLE.login, asAdmin: false})
+        .send({login: USERS.SIMPLE.login})
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
           expect(response.body.error).toBe(INVALID_PARAMS);
-        });
-    });
-    it('fail: access denied', () => {
-      return request(server)
-        .post('/auth/login')
-        .send({login: USERS.SIMPLE.login, password: USERS.SIMPLE.password, asAdmin: true})
-        .expect(HttpStatus.FORBIDDEN)
-        .then(response => {
-          expect(response.body.error).toBe(ACCESS_DENIED);
         });
     });
   });

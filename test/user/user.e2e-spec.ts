@@ -1,8 +1,8 @@
-import express from '../auth/auth.e2e-spec';
+import express from 'express';
 import { Connection } from 'typeorm';
-import { createTestData, initTestApp, testUserAuth } from '../e2e.utils';
+import { createTestData, initTestApp, } from '../e2e.utils';
 import { USERS, USERS_JWT } from '../e2e.constants';
-import { HttpStatus, RequestMethod } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 import request from 'supertest';
 import { ITEM_NOT_FOUND } from '../../src/constants';
 
@@ -15,8 +15,7 @@ describe('User', () => {
     await createTestData();
   });
 
-  describe('GET /user/:login', () => {
-    //testUserAuth(server, RequestMethod.GET, `/user/${USERS.SIMPLE.login}`);
+  describe('GET /user/:login', () => { // TODO: add auth test
     it('success', () => {
       return request(server)
         .get(`/user/${USERS.SIMPLE.login}`)

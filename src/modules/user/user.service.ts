@@ -6,7 +6,7 @@ export class UserService {
   constructor(){}
 
   async getUser(login: string): Promise<User> {
-    const user = DbUtil.getOne(User, 'SELECT * FROM User u WHERE u.login=$1', [login]);
+    const user = await DbUtil.getOne(User, 'SELECT * FROM User u WHERE u.login=$1', [login]);
     if (!user)
       throw ItemNotFound;
     return user;

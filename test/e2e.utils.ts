@@ -13,14 +13,14 @@ import { Profession } from '../src/entities/profession.entity';
 import { AuthModule } from '../src/modules/auth/auth.module';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import request from 'supertest';
-import { response } from 'express';
+import { UserModule } from '../src/modules/user/user.module';
 
 export async function initTestApp(server) {
   const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule],
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule],
   }).compile();
 
   server.use(bodyParser.json());
