@@ -2,11 +2,14 @@ import request from 'supertest';
 import express from 'express';
 import { createTestData, initTestApp } from '../e2e.utils';
 import {Connection} from 'typeorm';
-import { USERS } from '../e2e.constants';
+import { PROFESSIONS, USERS } from '../e2e.constants';
 import { HttpStatus } from '@nestjs/common';
-import { ACCESS_DENIED, INVALID_PARAMS, ITEM_NOT_FOUND, JWT_SECRET, USER_RIGHT } from '../../src/constants';
+import { ACCESS_DENIED, INVALID_PARAMS, ITEM_ALREADY_EXISTS, ITEM_NOT_FOUND, JWT_SECRET, PASSWORD_HASH_SALT, USER_RIGHT } from '../../src/constants';
 import { TimeUtil } from '../../src/utils/time-util';
+import { User, UserRole } from '../../src/entities/user.entity';
+import { DbUtil } from '../../src/utils/db-util';
 const jwt = require('jwt-simple');
+const crypto = require('crypto');
 describe('Auth', () => {
   const server = express();
   jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
@@ -50,6 +53,68 @@ describe('Auth', () => {
         .send({login: USERS.SIMPLE.login})
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
+          expect(response.body.error).toBe(INVALID_PARAMS);
+        });
+    });
+  });
+  describe('POST auth/signup', () => {
+    it('success', () => {
+      const body = {login: 'new_user', password: crypto.createHmac('sha384', PASSWORD_HASH_SALT).update('new_pass').digest('base64'), email: 'ryepkin.maksym@gmail.com'};
+      return request(server)
+        .post('/auth/signup')
+        .send(body)
+        .expect(HttpStatus.CREATED)
+        .then(async response => {
+          expect(response.body).toEqual({
+            login: body.login,
+            password: body.password,
+            email: body.email,
+            role: UserRole.USER,
+            rating: 0
+          });
+          const user = await DbUtil.getOne(User, `SELECT * FROM user u WHERE u.login="${body.login}"`);
+          expect(user).toBeDefined();
+          expect(user.password).toBe(body.password);
+        });
+    });
+    it('success: profession id', () => {
+      const body = {login: 'new_user1', password: crypto.createHmac('sha384', PASSWORD_HASH_SALT).update('new_pass').digest('base64'), email: 'ryepkin.masum@gmail.com', professionId: PROFESSIONS.ECONOMIST.id};
+      return request(server)
+        .post('/auth/signup')
+        .send(body)
+        .expect(HttpStatus.CREATED)
+        .then(async response => {
+          expect(response.body).toEqual({
+            login: body.login,
+            password: body.password,
+            email: body.email,
+            role: UserRole.USER,
+            rating: 0,
+            professionId: body.professionId
+          });
+          const user = await DbUtil.getOne(User, `SELECT * FROM user u WHERE u.login="${body.login}"`);
+          expect(user).toBeDefined();
+          expect(user.password).toBe(body.password);
+          expect(user.professionId).toBe(body.professionId);
+        });
+    });
+    it('fail: already exists', () => {
+      const body = {login: USERS.SIMPLE.login, password: crypto.createHmac('sha384', PASSWORD_HASH_SALT).update('new_pass').digest('base64'), email: 'ryepkin.maskum@gmail.com', professionId: PROFESSIONS.ECONOMIST.id};
+      return request(server)
+        .post('/auth/signup')
+        .send(body)
+        .expect(HttpStatus.CONFLICT)
+        .then(async response => {
+          expect(response.body.error).toBe(ITEM_ALREADY_EXISTS);
+        });
+    });
+    it('fail: no login', () => {
+      const body = { password: crypto.createHmac('sha384', PASSWORD_HASH_SALT).update('new_pass').digest('base64'), email: 'user@gmail.com', professionId: PROFESSIONS.ECONOMIST.id};
+      return request(server)
+        .post('/auth/signup')
+        .send(body)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then(async response => {
           expect(response.body.error).toBe(INVALID_PARAMS);
         });
     });

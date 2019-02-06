@@ -3,10 +3,12 @@ import { User, UserRole } from '../../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
 import { LoginBodyDto } from './dto/login-body.dto';
-import { AccessDenied, ADMIN_RIGHT, ItemNotFound, JWT_SECRET, USER_RIGHT } from '../../constants';
+import { AccessDenied, ADMIN_RIGHT, ItemAlreadyExists, ItemNotFound, JWT_SECRET, USER_RIGHT } from '../../constants';
 import { ErrorUtil } from '../../utils/error-util';
 import { TimeUtil } from '../../utils/time-util';
 import { DbUtil } from '../../utils/db-util';
+import { SignupBodyDto } from './dto/signup-body.dto';
+import { SignupResultDto } from './dto/signup-result.dto';
 const jwt = require('jwt-simple');
 
 @Injectable()
@@ -14,7 +16,7 @@ export class AuthService {
   constructor() {}
 
   async login(body: LoginBodyDto): Promise<{token: string, isAdmin: boolean}> {
-    const user = await DbUtil.getOne(User, `SELECT * FROM user AS u WHERE u.login="${body.login}"`);
+    const user = await this.getUserByLogin(User, body.login);
     if (!user) {
       throw ItemNotFound;
     }
@@ -22,6 +24,21 @@ export class AuthService {
       throw ErrorUtil.getValidationError('Invalid password hash');
     }
     return {token: this.getJwtToken(user.login, user.role), isAdmin: user.role === 1};
+  }
+
+  async getUserByLogin(entity, login: string) {
+    return await DbUtil.getOne(entity, `SELECT * FROM user AS u WHERE u.login="${login}"`);
+  }
+
+  async signup(body: SignupBodyDto): Promise<SignupResultDto> {
+    const user = await this.getUserByLogin(User, body.login);
+    if (user)
+      throw ItemAlreadyExists;
+    if (body.professionId != undefined)
+       await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating, profession_id) VALUES ("${body.login}", "${body.password}", "${body.email}", ${UserRole.USER}, ${0}, ${body.professionId});`);
+    else
+      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${body.login}", "${body.password}", "${body.email}", ${UserRole.USER}, ${0});`);
+    return await this.getUserByLogin(SignupResultDto, body.login);
   }
 
   getJwtToken(login: string, asAdmin: boolean): string {
