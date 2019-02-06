@@ -38,4 +38,11 @@ export class UserService {
     await DbUtil.updateOne(query);
     return DbUtil.getUserByLogin(UserUpdateResultDto, login);
   }
+
+  async deleteUserData(login: string): Promise<void> {
+    const user = await DbUtil.getUserByLogin(User, login);
+    if (!user)
+      throw ItemNotFound;
+    await DbUtil.deleteOne(`DELETE FROM user WHERE login="${login}"`);
+  }
 }

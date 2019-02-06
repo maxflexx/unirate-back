@@ -26,6 +26,11 @@ export class DbUtil {
     return result;
   }
 
+  static async deleteOne(query: string) {
+    const entityManager = getManager();
+    await entityManager.query(query);
+  }
+
   static async updateOne(query: string) {
     const entityManager = getManager();
     await entityManager.query(query);

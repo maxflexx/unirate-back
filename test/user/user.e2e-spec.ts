@@ -97,4 +97,26 @@ describe('User', () => {
         });
     });
   });
+  describe('DELETE user/:login', () => {//TODO: add test, fail trying to delete someone else account
+    it('success', () => {
+      return request(server)
+        .delete(`/user/${USERS.SIMPLE.login}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(async response => {
+          expect(response.text).toBe('OK');
+          const user = await DbUtil.getUserByLogin(User, USERS.SIMPLE.login);
+          expect(user).toBe(null);
+        });
+    });
+    it('fail: not found', () => {
+      return request(server)
+        .delete(`/user/werglmnre`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.NOT_FOUND)
+        .then(async response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+        })
+    });
+  });
 });

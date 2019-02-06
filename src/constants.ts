@@ -19,6 +19,7 @@ export const PASSWORD_HASH_SALT = 'pass_salt_hash';
 export const ADMIN_RIGHT = 'admin';
 export const USER_RIGHT = 'user';
 
+export const STATUS_OK = 'OK';
 
 export const JWT_TOKEN_LIFETIME = 31 * 24 * 60 * 60;
 
