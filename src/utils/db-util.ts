@@ -25,4 +25,13 @@ export class DbUtil {
     const result = await entityManager.query(query);
     return result;
   }
+
+  static async updateOne(query: string) {
+    const entityManager = getManager();
+    await entityManager.query(query);
+  }
+
+  static async getUserByLogin(entity, login: string) {
+    return await DbUtil.getOne(entity, `SELECT * FROM user AS u WHERE u.login="${login}"`);
+  }
 }
