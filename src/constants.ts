@@ -3,12 +3,12 @@
 import { HttpCodeException } from './common/exceptions/http-code.exception';
 import { HttpStatus } from '@nestjs/common';
 
-export const TESTNET = false;
+export const TESTNET = true;
 
 const ormConfig = require('../ormconfig.json');
 export const ORM_CONFIG_MEMORY = TESTNET ? ormConfig.MEMORY_DB : ormConfig.AWS_DB;
 
-export const LISTEN_PORT = TESTNET ? 3000 : process.env.PORT;
+export const LISTEN_PORT = TESTNET ? 3000 : 3000; //process.env.PORT;
 
 export const ORM_CONFIG = ORM_CONFIG_MEMORY;
 

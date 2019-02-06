@@ -14,7 +14,7 @@ export class AuthService {
   constructor() {}
 
   async login(body: LoginBodyDto): Promise<{token: string, isAdmin: boolean}> {
-    const user = await DbUtil.getOne(User, `SELECT * FROM user AS u WHERE u.login=$1`, [body.login]);
+    const user = await DbUtil.getOne(User, `SELECT * FROM user AS u WHERE u.login="${body.login}"`);
     if (!user) {
       throw ItemNotFound;
     }

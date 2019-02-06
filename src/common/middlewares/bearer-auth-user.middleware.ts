@@ -17,7 +17,7 @@ export class BearerAuthUserMiddleware {
       }catch (e) {
         throw Unauthorized;
       }
-      const user = await DbUtil.getOne(User, 'SELECT * FROM User AS u WHERE u.login = $1', [jwtToken.login]);
+      const user = await DbUtil.getOne(User, `SELECT * FROM User AS u WHERE u.login = ${jwtToken.login}`);
       if (!user)
         throw Unauthorized;
       if (user.role !== UserRole.USER)

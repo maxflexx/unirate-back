@@ -14,6 +14,7 @@ import { AuthModule } from '../src/modules/auth/auth.module';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import request from 'supertest';
 import { UserModule } from '../src/modules/user/user.module';
+import { DbUtil } from '../src/utils/db-util';
 
 export async function initTestApp(server) {
   const ORM_CONFIG = ORM_CONFIG_MEMORY;
@@ -60,41 +61,21 @@ export async function initTestApp(server) {
 export async function createTestData() {
   const db: Connection = await getConnection(ORM_CONFIG_MEMORY.name);
 
-  const facultyRep = db.getRepository(Faculty);
+
   for (const key in FACULTIES) {
-    FACULTIES[key].id = +(await createFacultyData(facultyRep, FACULTIES[key])).id;
+    FACULTIES[key].id = +(await DbUtil.insertOne(`INSERT INTO faculty (id, name, short_name) VALUES (${FACULTIES[key].id}, "${FACULTIES[key].name}", "${FACULTIES[key].shortName}");`));
   }
 
-  const professionRep = db.getRepository(Profession);
   for (const key in PROFESSIONS) {
-    PROFESSIONS[key].id = +(await createProfessionData(professionRep, PROFESSIONS[key])).id;
+    PROFESSIONS[key].id = +(await DbUtil.insertOne(`INSERT INTO profession (id, name, faculty_id) VALUES (${PROFESSIONS[key].id}, "${PROFESSIONS[key].name}", ${PROFESSIONS[key].faculty.id})`));
   }
 
-  const userRep = db.getRepository(User);
   for (const key in USERS) {
-    await createUserData(userRep, USERS[key]);
+    if (USERS[key].profession)
+      USERS[key].id = +(await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating, profession_id) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating}, ${USERS[key].profession.id})`));
+    else
+      USERS[key].id = +(await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating})`));
   }
-}
-
-export async function createFacultyData(facultyRep: Repository<Faculty>, raw: any): Promise<Faculty> {
- const faculty = Object.assign(new Faculty(), raw);
- return await facultyRep.save(faculty);
-}
-
-export async function createProfessionData(professionRep: Repository<Profession>, raw: any): Promise<Profession> {
-  const profession = Object.assign(new Profession(), raw);
-  if (raw.faculty) {
-    profession.facultyId = raw.faculty.id;
-  }
-  return await professionRep.save(profession);
-}
-
-export async function createUserData(userRep: Repository<User>, raw: any): Promise<User> {
-  const user = Object.assign(new User(), raw);
-  if (raw.profession) {
-    user.professionId = raw.profession.id;
-  }
-  return await userRep.save(user);
 }
 
 
