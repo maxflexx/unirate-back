@@ -44,5 +44,7 @@ export class UserService {
     if (!user)
       throw ItemNotFound;
     await DbUtil.deleteOne(`DELETE FROM user WHERE login="${login}"`);
+    await DbUtil.updateOne(`UPDATE feedback_grade SET user_login = "deleted_user" WHERE user_login ="${login}"`);
+    await DbUtil.updateOne(`UPDATE feedback SET user_login = "deleted_user" WHERE user_login ="${login}"`);
   }
 }
