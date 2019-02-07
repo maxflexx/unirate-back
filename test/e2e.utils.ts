@@ -7,7 +7,19 @@ import { Connection, getConnection, Repository } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import * as bodyParser from 'body-parser';
 import { User } from '../src/entities/user.entity';
-import { ADMINS_JWT, FACULTIES, INVALID_JWT, PROFESSIONS, USERS, USERS_JWT } from './e2e.constants';
+import {
+  ADMINS_JWT,
+  CATHEDRA,
+  DISCIPLINE,
+  FACULTIES, FEEDBACK_GRADE,
+  FEEDBACK_TEACHER,
+  FEEDBACKS,
+  INVALID_JWT,
+  PROFESSIONS,
+  TEACHER,
+  USERS,
+  USERS_JWT,
+} from './e2e.constants';
 import { Faculty } from '../src/entities/faculty.entity';
 import { Profession } from '../src/entities/profession.entity';
 import { AuthModule } from '../src/modules/auth/auth.module';
@@ -75,6 +87,30 @@ export async function createTestData() {
       await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating, profession_id) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating}, ${USERS[key].profession.id})`);
     else
        await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating})`);
+  }
+
+  for (const key in CATHEDRA) {
+    await DbUtil.insertOne(`INSERT INTO cathedra (id, name, faculty_id) VALUES (${CATHEDRA[key].id}, "${CATHEDRA[key].name}", ${CATHEDRA[key].faculty.id});`);
+  }
+
+  for (const key in DISCIPLINE) {
+    await DbUtil.insertOne(`INSERT INTO discipline (id, name, mandatory, year, cathedra_id) VALUES (${DISCIPLINE[key].id}, "${DISCIPLINE[key].name}", ${DISCIPLINE[key].mandatory}, ${DISCIPLINE[key].year}, ${DISCIPLINE[key].cathedra.id});`);
+  }
+
+  for (const key in TEACHER) {
+    await DbUtil.insertOne(`INSERT INTO teacher (id, name, last_name, middle_name) VALUES (${TEACHER[key].id}, "${TEACHER[key].name}", "${TEACHER[key].lastName}", "${TEACHER[key].middleName}");`);
+  }
+
+  for (const key in FEEDBACKS) {
+    await DbUtil.insertOne(`INSERT INTO feedback (id, student_grade, rating, comment, created, updated, user_login, discipline_id) VALUES (${FEEDBACKS[key].id}, ${FEEDBACKS[key].studentGrade || null}, ${FEEDBACKS[key].rating}, "${FEEDBACKS[key].comment}", ${FEEDBACKS[key].created}, ${FEEDBACKS[key].updated || 0}, "${FEEDBACKS[key].user.login}", ${FEEDBACKS[key].discipline.id});`);
+  }
+
+  for (const key in FEEDBACK_TEACHER) {
+    await DbUtil.insertOne(`INSERT INTO feedback_teacher (feedback_id, teacher_id) VALUES (${FEEDBACK_TEACHER[key].feedback.id}, ${FEEDBACK_TEACHER[key].teacher.id});`);
+  }
+
+  for (const key in FEEDBACK_GRADE) {
+    await DbUtil.insertOne(`INSERT INTO feedback_grade (id, like, feedback_id, user_login) VALUES (${FEEDBACK_GRADE[key].id}, ${FEEDBACK_GRADE[key].like}, ${FEEDBACK_GRADE[key].feedback.id}, "${FEEDBACK_GRADE[key].user.login}");`);
   }
 }
 

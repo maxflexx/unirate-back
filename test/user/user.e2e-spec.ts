@@ -98,7 +98,7 @@ describe('User', () => {
     });
   });
   describe('DELETE user/:login', () => {//TODO: add test, fail trying to delete someone else account
-    it('success', () => {
+    it('success', () => { //TODO: add check, that all user feedbacks deleted
       return request(server)
         .delete(`/user/${USERS.SIMPLE.login}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)

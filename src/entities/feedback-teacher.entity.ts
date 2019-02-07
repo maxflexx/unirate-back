@@ -1,5 +1,7 @@
-import { PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryColumn } from 'typeorm';
 
+
+@Entity('feedback_teacher')
 export class FeedbackTeacher {
   @PrimaryColumn({name: 'feedback_id'})
   feedbackId: number;
