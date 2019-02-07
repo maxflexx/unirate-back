@@ -34,6 +34,7 @@ export class Feedback {
     entity.rating = raw.rating;
     entity.comment = raw.comment;
     entity.created = raw.created;
+    entity.updated = raw.updated || null;
     entity.userLogin = raw.user_login;
     entity.disciplineId = +raw.discipline_id;
     return entity;

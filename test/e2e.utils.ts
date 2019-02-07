@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection, getConnection, Repository } from 'typeorm';
 import { AppModule } from '../src/app.module';
 import * as bodyParser from 'body-parser';
-import { User } from '../src/entities/user.entity';
 import {
   ADMINS_JWT,
   CATHEDRA,
@@ -20,20 +19,19 @@ import {
   USERS,
   USERS_JWT,
 } from './e2e.constants';
-import { Faculty } from '../src/entities/faculty.entity';
-import { Profession } from '../src/entities/profession.entity';
 import { AuthModule } from '../src/modules/auth/auth.module';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import request from 'supertest';
 import { UserModule } from '../src/modules/user/user.module';
 import { DbUtil } from '../src/utils/db-util';
+import { FeedbackModule } from '../src/modules/feedback/feedback.module';
 
 export async function initTestApp(server) {
   const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule],
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule],
   }).compile();
 
   server.use(bodyParser.json());

@@ -7,5 +7,5 @@ import { FeedbackService } from './feedback.service';
   providers: [FeedbackService],
   exports: [FeedbackService],
 })
-export class FeedbackModel {
+export class FeedbackModule {
 }
