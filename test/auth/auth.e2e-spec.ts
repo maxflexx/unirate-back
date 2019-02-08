@@ -2,7 +2,7 @@ import request from 'supertest';
 import express from 'express';
 import { createTestData, initTestApp } from '../e2e.utils';
 import {Connection} from 'typeorm';
-import { PROFESSIONS, USERS } from '../e2e.constants';
+import { DISCIPLINE, FEEDBACKS, PROFESSIONS, USERS, USERS_JWT } from '../e2e.constants';
 import { HttpStatus } from '@nestjs/common';
 import { ACCESS_DENIED, INVALID_PARAMS, ITEM_ALREADY_EXISTS, ITEM_NOT_FOUND, JWT_SECRET, PASSWORD_HASH_SALT, USER_RIGHT } from '../../src/constants';
 import { TimeUtil } from '../../src/utils/time-util';

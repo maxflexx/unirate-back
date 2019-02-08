@@ -2,7 +2,7 @@ import { getManager } from 'typeorm';
 
 export class DbUtil {
 
-  static async getMany(entity, query: string){
+  static async getMany(entity, query: string): Promise<any[]> {
     const entityManager = getManager();
     const result = await entityManager.query(query);
     if (result && result.length)
@@ -38,5 +38,9 @@ export class DbUtil {
 
   static async getUserByLogin(entity, login: string) {
     return await DbUtil.getOne(entity, `SELECT * FROM user AS u WHERE u.login="${login}"`);
+  }
+
+  static async getDisciplineById(entity, id: number) {
+    return await DbUtil.getOne(entity, `SELECT * FROM discipline WHERE id=${id}`);
   }
 }

@@ -2,7 +2,7 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp } from '../e2e.utils';
 import request from 'supertest';
-import { DISCIPLINE, FEEDBACKS } from '../e2e.constants';
+import { DISCIPLINE, FEEDBACKS, USERS_JWT } from '../e2e.constants';
 import { HttpStatus } from '@nestjs/common';
 import { INVALID_PARAMS, ITEM_NOT_FOUND } from '../../src/constants';
 
@@ -18,6 +18,7 @@ describe('Feedback', () => {
     it('success', () => {
       return request(server)
         .get(`feedback/${DISCIPLINE.PROCEDURE.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body).toEqual([{
@@ -46,5 +47,10 @@ describe('Feedback', () => {
           expect(response.body.error).toEqual(ITEM_NOT_FOUND);
         });
     });
+  });
+  describe('POST feedback/:disciplineId', () => {
+    it('success', () => {
+      const body = {studentGrade: 71, comment: 'AWESOME OOP'}
+    })
   });
 });

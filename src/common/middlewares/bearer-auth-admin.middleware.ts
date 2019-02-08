@@ -1,14 +1,12 @@
-import { Injectable, MiddlewareFunction } from '@nestjs/common';
+import { Injectable, MiddlewareFunction, NestMiddleware } from '@nestjs/common';
 import { ADMIN_RIGHT, JWT_SECRET, JWT_TOKEN_LIFETIME, Unauthorized, USER_RIGHT } from '../../constants';
 import { TimeUtil } from '../../utils/time-util';
 import { DbUtil } from '../../utils/db-util';
 import { User, UserRole } from '../../entities/user.entity';
 const jwt = require('jwt-simple');
 @Injectable()
-export class BearerAuthAdminMiddleware {
+export class BearerAuthAdminMiddleware implements NestMiddleware{
   constructor(){}
-
-
   resolve(): MiddlewareFunction {
     return async (req, res, next) => {
       let jwtToken;
@@ -24,7 +22,7 @@ export class BearerAuthAdminMiddleware {
         throw Unauthorized;
       req.user = user;
       req.jwt = req.headers.authorization.split(' ');
-      next();
+      next!();
     };
   }
 

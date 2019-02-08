@@ -1,6 +1,8 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { FeedbackController } from './feedback.controller';
 import { FeedbackService } from './feedback.service';
+import { BearerAuthUserMiddleware } from '../../common/middlewares/bearer-auth-user.middleware';
+import { BearerAuthAdminMiddleware } from '../../common/middlewares/bearer-auth-admin.middleware';
 
 @Module({
   controllers: [FeedbackController],
@@ -8,4 +10,8 @@ import { FeedbackService } from './feedback.service';
   exports: [FeedbackService],
 })
 export class FeedbackModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(BearerAuthAdminMiddleware)
+      .forRoutes(FeedbackController);
+  }
 }
