@@ -15,7 +15,7 @@ export class BearerAuthUserMiddleware implements NestMiddleware {
       return false;
     const decodedJwt = jwt.decode(jwtToken[1], JWT_SECRET);
     if (decodedJwt && decodedJwt.login && decodedJwt.right === USER_RIGHT && decodedJwt.created <= TimeUtil.getUnixTime() + JWT_TOKEN_LIFETIME) {
-      return true;
+      return decodedJwt;
     }
     return false;
   }
@@ -28,7 +28,9 @@ export class BearerAuthUserMiddleware implements NestMiddleware {
       } catch (e) {
         throw Unauthorized;
       }
-      const user = await DbUtil.getOne(User, `SELECT * FROM User AS u WHERE u.login = ${jwtToken.login}`);
+      if (!jwtToken)
+        throw Unauthorized;
+      const user = await DbUtil.getUserByLogin(User, jwtToken.login);
       if (!user)
         throw Unauthorized;
       if (user.role !== UserRole.USER)

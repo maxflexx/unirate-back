@@ -14,7 +14,7 @@ export class FeedbackController {
   async getFeedback(@Param('disciplineId') disciplineId: number): Promise<Feedback[]> {
     if (isNaN(+disciplineId))
       throw InvalidParams;
-    return await this.feedbackService.getFeedback(disciplineId);
+    return await this.feedbackService.getFeedback(+disciplineId);
   }
 
   @Post(':disciplineId')

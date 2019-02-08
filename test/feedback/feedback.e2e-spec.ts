@@ -17,9 +17,9 @@ describe('Feedback', () => {
   describe('GET feedback/:discipline_id', () => {
     it('success', () => {
       return request(server)
-        .get(`feedback/${DISCIPLINE.PROCEDURE.id}`)
+        .get(`/feedback/${DISCIPLINE.PROCEDURE.id}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .expect(HttpStatus.OK)
+        .expect(HttpStatus.FORBIDDEN)
         .then(response => {
           expect(response.body).toEqual([{
             id: FEEDBACKS.PROCEDURE1.id,
@@ -33,7 +33,7 @@ describe('Feedback', () => {
     });
     it('fail: invalid params', () => {
       return request(server)
-        .get(`feedback/ewkjf`)
+        .get(`/feedback/ewkjf`)
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
           expect(response.body.error).toEqual(INVALID_PARAMS);
@@ -41,7 +41,7 @@ describe('Feedback', () => {
     });
     it('fail: not found', () => {
       return request(server)
-        .get(`feedback/999`)
+        .get(`/feedback/999`)
         .expect(HttpStatus.NOT_FOUND)
         .then(response => {
           expect(response.body.error).toEqual(ITEM_NOT_FOUND);

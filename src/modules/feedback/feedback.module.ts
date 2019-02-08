@@ -11,7 +11,7 @@ import { BearerAuthAdminMiddleware } from '../../common/middlewares/bearer-auth-
 })
 export class FeedbackModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(BearerAuthAdminMiddleware)
+    consumer.apply(BearerAuthUserMiddleware)
       .forRoutes(FeedbackController);
   }
 }
