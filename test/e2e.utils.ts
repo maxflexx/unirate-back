@@ -131,14 +131,14 @@ export function testUserAuth(server, requestMethod: RequestMethod, url: string) 
       .set('Authorization', 'Bearer ' + INVALID_JWT.INVALID_LOGIN_JWT)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('no jwt', () => {
     return doRequest(server, requestMethod, url)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('invalid secret jwt word', () => {
@@ -146,7 +146,7 @@ export function testUserAuth(server, requestMethod: RequestMethod, url: string) 
       .set('Authorization', 'Bearer ' + INVALID_JWT.INVALID_JWT_SECRET_WORD)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('invalid invalid jwt', () => {
@@ -154,7 +154,7 @@ export function testUserAuth(server, requestMethod: RequestMethod, url: string) 
       .set('Authorization', 'Bearer ' + INVALID_JWT.INVALID_TOKEN)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('admin cannot enter', () => {
@@ -162,7 +162,7 @@ export function testUserAuth(server, requestMethod: RequestMethod, url: string) 
       .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
 }
@@ -173,14 +173,14 @@ export function testAdminAuth(server, requestMethod: RequestMethod, url: string)
       .set('Authorization', 'Bearer ' + INVALID_JWT.INVALID_LOGIN_JWT)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('no jwt', () => {
     return doRequest(server, requestMethod, url)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('invalid secret jwt word', () => {
@@ -188,7 +188,7 @@ export function testAdminAuth(server, requestMethod: RequestMethod, url: string)
       .set('Authorization', 'Bearer ' + INVALID_JWT.INVALID_JWT_SECRET_WORD)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('invalid invalid jwt', () => {
@@ -196,7 +196,7 @@ export function testAdminAuth(server, requestMethod: RequestMethod, url: string)
       .set('Authorization', 'Bearer ' + INVALID_JWT.INVALID_TOKEN)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
   it('admin cannot enter', () => {
@@ -204,7 +204,7 @@ export function testAdminAuth(server, requestMethod: RequestMethod, url: string)
       .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
       .expect(HttpStatus.UNAUTHORIZED)
       .then(response => {
-        expect(response.error).toBe(UNAUTHORIZED);
+        expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
 

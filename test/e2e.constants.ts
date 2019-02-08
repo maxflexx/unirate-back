@@ -79,8 +79,8 @@ export const FEEDBACK_GRADE = {
   OOP1: {id: 1, like: 1, feedback: FEEDBACKS.OOP1, user: USERS.GRADE_FEEDBACKS},
   OOP1_1: {id: 2, like: 1, feedback: FEEDBACKS.OOP1, user: USERS.GRADE_FEEDBACKS1},
   OOP3: {id: 3, like: 1, feedback: FEEDBACKS.OOP3, user: USERS.GRADE_FEEDBACKS1},
-  OOP3_1: {id: 4, like: 0, feedback: FEEDBACKS.OOP3, user: USERS.SIMPLE},
-  OBDZ: {id: 5, like: 1, feedback: FEEDBACKS.OOP1, user: USERS.GRADE_FEEDBACKS}
+  OOP3_1: {id: 4, like: -1, feedback: FEEDBACKS.OOP3, user: USERS.SIMPLE},
+  OBDZ: {id: 5, like: 1, feedback: FEEDBACKS.OBDZ1, user: USERS.GRADE_FEEDBACKS}
 };
 
 export const USERS_JWT = {
@@ -96,4 +96,4 @@ export const INVALID_JWT = {
   INVALID_LOGIN_JWT: jwt.encode({login: 'some_invalid_login', right: ADMIN_RIGHT, created: TimeUtil.getUnixTime()}, JWT_SECRET),
   INVALID_JWT_SECRET_WORD: jwt.encode({login: USERS.ADMIN_USER.login, right: ADMIN_RIGHT, created: TimeUtil.getUnixTime()}, 'invalid_jwt'),
   INVALID_TOKEN: 'invalid_token'
-}
+};

@@ -5,13 +5,14 @@ import { InvalidParams } from '../../constants';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { User } from '../../entities/user.entity';
 import { UserDecorator } from '../../common/decorators/user.decorator';
+import { FeedbackResultDto } from './dto/feedback-result.dto';
 
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
 
   @Get(':disciplineId')
-  async getFeedback(@Param('disciplineId') disciplineId: number): Promise<Feedback[]> {
+  async getFeedback(@Param('disciplineId') disciplineId: number): Promise<FeedbackResultDto[]> {
     if (isNaN(+disciplineId))
       throw InvalidParams;
     return await this.feedbackService.getFeedback(+disciplineId);

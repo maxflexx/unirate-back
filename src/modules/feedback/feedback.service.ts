@@ -6,16 +6,32 @@ import { ItemNotFound } from '../../constants';
 import { Teacher } from '../../entities/teacher.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { TimeUtil } from '../../utils/time-util';
+import { FeedbackResultDto } from './dto/feedback-result.dto';
 
 @Injectable()
 export class FeedbackService {
   constructor(){}
 
-  async getFeedback(disciplineId: number): Promise<Feedback[]> {
+  async getFeedback(disciplineId: number): Promise<FeedbackResultDto[]> {
     const discipline = await DbUtil.getDisciplineById(Discipline, disciplineId);
     if (!discipline)
       throw ItemNotFound;
-    return await DbUtil.getMany(Feedback, `SELECT *, (SELECT SUM(like) FROM feedback_grade) AS feedbackGrade FROM feedback feedback_teacher WHERE discipline_id=${disciplineId}`);
+    const feedback = await DbUtil.getMany(FeedbackResultDto, `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, f.discipline_id, ft.teacher_id FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id WHERE f.discipline_id=${disciplineId}`);
+    return this.groupFeedback(feedback);
+  }
+
+  private groupFeedback(feedback: FeedbackResultDto[]): FeedbackResultDto[] {
+    const result = [];
+    for (const f of feedback) {
+      const indexOfWritten = result.findIndex(item => item.feedbackId === f.feedbackId);
+      if (indexOfWritten >= 0){
+        result[indexOfWritten].teacherIds.push(f.teacherIds[0]);
+      }
+      else {
+        result.push(f);
+      }
+    }
+    return result;
   }
 
   async createFeedback(disciplineId: number, body: CreateFeedbackDto, userLogin: string) {
