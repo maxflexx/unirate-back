@@ -40,11 +40,4 @@ export class Feedback {
     entity.disciplineId = +raw.discipline_id;
     return entity;
   }
-
-  static createUser(body: CreateFeedbackDto, disciplineId: number): Feedback {
-    const entity = new Feedback();
-    entity.disciplineId = disciplineId;
-    entity.studentGrade = body.studentGrade || null;
-    entity.userLogin
-  }
 }

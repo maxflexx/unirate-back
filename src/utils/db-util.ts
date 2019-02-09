@@ -43,4 +43,8 @@ export class DbUtil {
   static async getDisciplineById(entity, id: number) {
     return await DbUtil.getOne(entity, `SELECT * FROM discipline WHERE id=${id}`);
   }
+
+  static async getFeedbackById(entity, id: number) {
+    return await DbUtil.getOne(entity, `SELECT * FROM feedback WHERE id=${id}`);
+  }
 }

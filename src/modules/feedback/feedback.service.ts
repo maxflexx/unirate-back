@@ -43,12 +43,12 @@ export class FeedbackService {
       throw ItemNotFound;
 
     const feedbackId = await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, updated, user_login, discipline_id) VALUES
-                            (${body.studentGrade || null}, 0, ${body.comment}, ${TimeUtil.getUnixTime()}, null, "${userLogin}", ${disciplineId});`);
-    let queryFeedbackTeacher = `INSERT feedback_teacher (feedback_id, teacher_id) `;
+                            (${body.studentGrade || null}, 0, "${body.comment}", ${TimeUtil.getUnixTime()}, 0, "${userLogin}", ${disciplineId});`);
+    let queryFeedbackTeacher = `INSERT INTO feedback_teacher (feedback_id, teacher_id) VALUES `;
     for (const id of body.teachersIds) {
-      queryFeedbackTeacher += `VALUES (${feedbackId}, ${id}),`;
+      queryFeedbackTeacher += `(${feedbackId}, ${id}),`;
     }
     await DbUtil.insertOne(queryFeedbackTeacher.substr(0, queryFeedbackTeacher.length - 1));
-    return {id: feedbackId, disciplineId, comment: body.comment, like: 0, teacherIds: body.teachersIds, studentGrade: body.studentGrade};
+    return {id: +feedbackId, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachersIds: body.teachersIds, studentGrade: body.studentGrade};
   }
 }

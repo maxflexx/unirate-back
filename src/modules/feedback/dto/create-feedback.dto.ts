@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class CreateFeedbackDto {
   @IsInt()
@@ -9,6 +9,6 @@ export class CreateFeedbackDto {
   comment: string;
 
   @IsInt({each: true})
-  @MinLength(1)
+  @IsNotEmpty()
   teachersIds: number[];
 }

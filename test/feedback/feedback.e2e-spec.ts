@@ -2,9 +2,13 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testUserAuth } from '../e2e.utils';
 import request from 'supertest';
-import { DISCIPLINE, FEEDBACK_TEACHER, FEEDBACKS, USERS_JWT } from '../e2e.constants';
+import { DISCIPLINE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../e2e.constants';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { INVALID_PARAMS, ITEM_NOT_FOUND } from '../../src/constants';
+import { DbUtil } from '../../src/utils/db-util';
+import { Feedback } from '../../src/entities/feedback.entity';
+import { TimeUtil } from '../../src/utils/time-util';
+import { FeedbackTeacher } from '../../src/entities/feedback-teacher.entity';
 
 describe('Feedback', () => {
   const server = express();
@@ -72,8 +76,63 @@ describe('Feedback', () => {
     });
   });
   describe('POST feedback/:disciplineId', () => {
+    testUserAuth(server, RequestMethod.POST, `/feedback/${DISCIPLINE.OBDZ.id}`);
     it('success', () => {
-      const body = {studentGrade: 71, comment: 'AWESOME OOP'}
-    })
+      const body = {studentGrade: 71, comment: 'AWESOME BD', teachersIds: [TEACHER.USHENKO.id, TEACHER.GULAEVA.id]};
+      const start = TimeUtil.getUnixTime();
+      return request(server)
+        .post(`/feedback/${DISCIPLINE.OBDZ.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .send(body)
+        .expect(HttpStatus.CREATED)
+        .then(async response => {
+          expect(response.body).toEqual({
+            id: expect.any(Number),
+            studentGrade: body.studentGrade,
+            comment: body.comment,
+            teachersIds: body.teachersIds,
+            disciplineId: DISCIPLINE.OBDZ.id,
+            rating: 0
+          });
+          const feedback = await DbUtil.getFeedbackById(Feedback, response.body.id);
+          expect(feedback).toBeDefined();
+          expect(feedback).toEqual({
+            id: response.body.id,
+            studentGrade: body.studentGrade,
+            rating: 0,
+            comment: body.comment,
+            created: expect.any(Number),
+            updated: null,
+            userLogin: USERS.SIMPLE.login,
+            disciplineId: DISCIPLINE.OBDZ.id
+          });
+          expect(feedback.created).toBeGreaterThanOrEqual(start);
+          const feedbackTeachers = await DbUtil.getMany(FeedbackTeacher, `SELECT * FROM feedback_teacher WHERE feedback_id=${feedback.id}`);
+          expect(feedbackTeachers).toHaveLength(2);
+          expect(feedbackTeachers.map(item => item.teacherId)).toEqual([TEACHER.GULAEVA.id, TEACHER.USHENKO.id]);
+        });
+    });
+    it('fail: teacher ids', () => {
+      const body = {studentGrade: 71, comment: 'AWESOME BD', teachersIds: [TEACHER.USHENKO.id, 'inval']};
+      return request(server)
+        .post(`/feedback/${DISCIPLINE.OBDZ.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .send(body)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then(async response => {
+          expect(response.body.error).toBe(INVALID_PARAMS);
+        });
+    });
+    it('fail: no such discipline', () => {
+      const body = {studentGrade: 71, comment: 'AWESOME BD', teachersIds: [TEACHER.USHENKO.id]};
+      return request(server)
+        .post(`/feedback/999`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .send(body)
+        .expect(HttpStatus.NOT_FOUND)
+        .then(async response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+        });
+    });
   });
 });
