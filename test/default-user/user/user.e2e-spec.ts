@@ -1,13 +1,13 @@
 import express from 'express';
 import { Connection } from 'typeorm';
-import { createTestData, initTestApp, } from '../e2e.utils';
-import { PROFESSIONS, USERS, USERS_JWT } from '../e2e.constants';
+import { createTestData, initTestApp, } from '../../e2e.utils';
+import { PROFESSIONS, USERS, USERS_JWT } from '../../e2e.constants';
 import { HttpStatus } from '@nestjs/common';
 import request from 'supertest';
-import { ITEM_NOT_FOUND } from '../../src/constants';
-import { CryptoUtil } from '../../src/utils/crypto-util';
-import { DbUtil } from '../../src/utils/db-util';
-import { User } from '../../src/entities/user.entity';
+import { ITEM_NOT_FOUND } from '../../../src/constants';
+import { CryptoUtil } from '../../../src/utils/crypto-util';
+import { DbUtil } from '../../../src/utils/db-util';
+import { User } from '../../../src/entities/user.entity';
 
 describe('User', () => {
   const server = express();

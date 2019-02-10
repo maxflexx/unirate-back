@@ -1,15 +1,15 @@
 import express from 'express';
 import { Connection } from 'typeorm';
-import { createTestData, initTestApp, testUserAuth } from '../e2e.utils';
+import { createTestData, initTestApp, testUserAuth } from '../../e2e.utils';
 import request from 'supertest';
-import { DISCIPLINE, FEEDBACK_GRADE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../e2e.constants';
+import { DISCIPLINE, FEEDBACK_GRADE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../../e2e.constants';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { INVALID_PARAMS, IS_NOT_ITEM_OWNER, ITEM_NOT_FOUND, STATUS_OK } from '../../src/constants';
-import { DbUtil } from '../../src/utils/db-util';
-import { Feedback } from '../../src/entities/feedback.entity';
-import { TimeUtil } from '../../src/utils/time-util';
-import { FeedbackTeacher } from '../../src/entities/feedback-teacher.entity';
-import { FeedbackGrade } from '../../src/entities/feedback-grade.entity';
+import { INVALID_PARAMS, IS_NOT_ITEM_OWNER, ITEM_NOT_FOUND, STATUS_OK } from '../../../src/constants';
+import { DbUtil } from '../../../src/utils/db-util';
+import { Feedback } from '../../../src/entities/feedback.entity';
+import { TimeUtil } from '../../../src/utils/time-util';
+import { FeedbackTeacher } from '../../../src/entities/feedback-teacher.entity';
+import { FeedbackGrade } from '../../../src/entities/feedback-grade.entity';
 
 describe('Feedback', () => {
   const server = express();

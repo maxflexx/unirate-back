@@ -25,13 +25,14 @@ import request from 'supertest';
 import { UserModule } from '../src/modules/user/user.module';
 import { DbUtil } from '../src/utils/db-util';
 import { FeedbackModule } from '../src/modules/feedback/feedback.module';
+import { TeacherModule } from '../src/modules/teacher/teacher.module';
 
 export async function initTestApp(server) {
   const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule],
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule],
   }).compile();
 
   server.use(bodyParser.json());
