@@ -1,27 +1,29 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { FeedbackService } from './feedback.service';
-import { Feedback } from '../../entities/feedback.entity';
-import { InvalidParams } from '../../constants';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { User } from '../../entities/user.entity';
 import { UserDecorator } from '../../common/decorators/user.decorator';
 import { FeedbackResultDto } from './dto/feedback-result.dto';
+import { ParseIntPipe } from '../../common/pipes/parse-int.pipe';
+import { FeedbackGrade } from '../../entities/feedback-grade.entity';
+import { GradeFeedbackDto } from './dto/grade-feedback.dto';
 
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
 
   @Get(':disciplineId')
-  async getFeedback(@Param('disciplineId') disciplineId: number): Promise<FeedbackResultDto[]> {
-    if (isNaN(+disciplineId))
-      throw InvalidParams;
+  async getFeedback(@Param('disciplineId', new ParseIntPipe()) disciplineId: number): Promise<FeedbackResultDto[]> {
     return await this.feedbackService.getFeedback(+disciplineId);
   }
 
   @Post(':disciplineId')
-  async createFeedback(@Body() body: CreateFeedbackDto, @Param('disciplineId') disciplineId: number, @UserDecorator() user: User) {
-    if (isNaN(+disciplineId))
-      throw InvalidParams;
+  async createFeedback(@Body() body: CreateFeedbackDto, @Param('disciplineId', new ParseIntPipe()) disciplineId: number, @UserDecorator() user: User) {
     return await this.feedbackService.createFeedback(disciplineId, body, user.login);
+  }
+
+  @Post('grade/:feedbackId')
+  async gradeFeedback(@Param('feedbackId', new ParseIntPipe()) feedbackId: number, @UserDecorator() user: User, @Body() body: GradeFeedbackDto): Promise<FeedbackGrade> {
+    return await this.feedbackService.gradeFeedback(feedbackId, user.login, body.like);
   }
 }

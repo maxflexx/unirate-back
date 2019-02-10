@@ -2,13 +2,14 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testUserAuth } from '../e2e.utils';
 import request from 'supertest';
-import { DISCIPLINE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../e2e.constants';
+import { DISCIPLINE, FEEDBACK_GRADE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../e2e.constants';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { INVALID_PARAMS, ITEM_NOT_FOUND } from '../../src/constants';
+import { ACCESS_DENIED, INVALID_PARAMS, ITEM_NOT_FOUND, STATUS_OK } from '../../src/constants';
 import { DbUtil } from '../../src/utils/db-util';
 import { Feedback } from '../../src/entities/feedback.entity';
 import { TimeUtil } from '../../src/utils/time-util';
 import { FeedbackTeacher } from '../../src/entities/feedback-teacher.entity';
+import { FeedbackGrade } from '../../src/entities/feedback-grade.entity';
 
 describe('Feedback', () => {
   const server = express();
@@ -129,6 +130,139 @@ describe('Feedback', () => {
         .post(`/feedback/999`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .send(body)
+        .expect(HttpStatus.NOT_FOUND)
+        .then(async response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+        });
+    });
+  });
+  describe('POST feedback/grade/:feedbackId', async () => {
+    testUserAuth(server, RequestMethod.POST, `/feedback/grade/${FEEDBACKS.OOP1.id}`);
+    it('success: new', async () => {
+      const oop = await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OOP1.id);
+      return request(server)
+        .post(`/feedback/grade/${FEEDBACKS.OOP1.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .send({like: 1})
+        .expect(HttpStatus.CREATED)
+        .then(async response => {
+          expect(response.body).toEqual({
+            id: expect.any(Number),
+            like: 1,
+            userLogin: USERS.SIMPLE.login,
+            feedbackId: FEEDBACKS.OOP1.id
+          });
+          const updatedFeedback =  await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OOP1.id);
+          expect(updatedFeedback.rating).toBe(oop.rating + 1);
+          const grade = await DbUtil.getFeedbackGrade(FeedbackGrade, FEEDBACKS.OOP1.id, USERS.SIMPLE.login);
+          expect(grade).toEqual({
+            id: expect.any(Number),
+            like: 1,
+            feedbackId: FEEDBACKS.OOP1.id,
+            userLogin: USERS.SIMPLE.login
+          });
+        });
+    });
+    it('success: update old', async () => {
+      const obdz = await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OBDZ1.id);
+      return request(server)
+        .post(`/feedback/grade/${FEEDBACKS.OBDZ1.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.GRADE_FEEDBACKS)
+        .send({like: -1})
+        .expect(HttpStatus.CREATED)
+        .then(async response => {
+          expect(response.body).toEqual({
+            id: FEEDBACK_GRADE.OBDZ.id,
+            like: -1,
+            userLogin: USERS.GRADE_FEEDBACKS.login,
+            feedbackId: FEEDBACKS.OBDZ1.id
+          });
+          const updatedFeedback =  await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OBDZ1.id);
+          expect(updatedFeedback.rating).toBe(obdz.rating - 1);
+          const grade = await DbUtil.getFeedbackGrade(FeedbackGrade, FEEDBACKS.OBDZ1.id, USERS.GRADE_FEEDBACKS.login);
+          expect(grade).toEqual({
+            id: expect.any(Number),
+            like: -1,
+            feedbackId: FEEDBACKS.OBDZ1.id,
+            userLogin: USERS.GRADE_FEEDBACKS.login
+          });
+        });
+    });
+    it('success: nothing updated', async () => {
+      const oop = await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OOP3.id);
+      return request(server)
+        .post(`/feedback/grade/${FEEDBACKS.OOP3.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.GRADE_FEEDBACKS1)
+        .send({like: 1})
+        .expect(HttpStatus.CREATED)
+        .then(async response => {
+          expect(response.body).toEqual({
+            id: FEEDBACK_GRADE.OOP3.id,
+            like: 1,
+            userLogin: USERS.GRADE_FEEDBACKS1.login,
+            feedbackId: FEEDBACKS.OOP3.id
+          });
+          const updatedFeedback =  await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OOP3.id);
+          expect(updatedFeedback.rating).toBe(oop.rating);
+          const grade = await DbUtil.getFeedbackGrade(FeedbackGrade, FEEDBACKS.OOP3.id, USERS.GRADE_FEEDBACKS1.login);
+          expect(grade).toEqual({
+            id: expect.any(Number),
+            like: 1,
+            feedbackId: FEEDBACKS.OOP3.id,
+            userLogin: USERS.GRADE_FEEDBACKS1.login
+          });
+        });
+    });
+    it('fail: invalid like value', () => {
+      return request(server)
+        .post(`/feedback/grade/${FEEDBACKS.OOP1.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .send({like: 10})
+        .expect(HttpStatus.BAD_REQUEST)
+        .then(async response => {
+          expect(response.body.error).toBe(INVALID_PARAMS);
+        });
+    });
+    it('fail: no such feedback', () => {
+      return request(server)
+        .post(`/feedback/grade/999`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .send({like: 1})
+        .expect(HttpStatus.NOT_FOUND)
+        .then(async response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+        });
+    });
+  });
+  describe('DELETE feedback/:id', () => {
+    it('success', () => {
+      return request(server)
+        .delete(`/feedback/${FEEDBACKS.OOP1.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(async response => {
+          expect(response.text).toBe(STATUS_OK);
+          const feedback = await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OOP1.id);
+          expect(feedback).toBe(null);
+          const grades = await DbUtil.getMany(FeedbackGrade, `SELECT * FROM feedback_grade WHERE feedback_id=${FEEDBACKS.OOP1.id}`);
+          expect(grades.length).toBe(0);
+        });
+    });
+    it('fail: not owner', () => {
+      return request(server)
+        .delete(`/feedback/${FEEDBACKS.OOP1.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.GRADE_FEEDBACKS)
+        .send({like: 1})
+        .expect(HttpStatus.FORBIDDEN)
+        .then(async response => {
+          expect(response.body.error).toBe(ACCESS_DENIED);
+        });
+    });
+    it('fail: no such feedback', () => {
+      return request(server)
+        .delete(`/feedback/999`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .send({like: 1})
         .expect(HttpStatus.NOT_FOUND)
         .then(async response => {
           expect(response.body.error).toBe(ITEM_NOT_FOUND);

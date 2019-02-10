@@ -47,4 +47,8 @@ export class DbUtil {
   static async getFeedbackById(entity, id: number) {
     return await DbUtil.getOne(entity, `SELECT * FROM feedback WHERE id=${id}`);
   }
+
+  static async getFeedbackGrade(entity, feedbackId: number, userLogin: string) {
+    return await DbUtil.getOne(entity, `SELECT * FROM feedback_grade WHERE feedback_id=${feedbackId} AND user_login="${userLogin}"`);
+  }
 }

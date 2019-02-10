@@ -7,6 +7,8 @@ import { Teacher } from '../../entities/teacher.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { TimeUtil } from '../../utils/time-util';
 import { FeedbackResultDto } from './dto/feedback-result.dto';
+import { FeedbackGrade } from '../../entities/feedback-grade.entity';
+import { Db } from 'typeorm';
 
 @Injectable()
 export class FeedbackService {
@@ -50,5 +52,29 @@ export class FeedbackService {
     }
     await DbUtil.insertOne(queryFeedbackTeacher.substr(0, queryFeedbackTeacher.length - 1));
     return {id: +feedbackId, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachersIds: body.teachersIds, studentGrade: body.studentGrade};
+  }
+
+  async updateFeedbackRating(like: number, feedbackGrade: FeedbackGrade): Promise<void> {
+    if (feedbackGrade && feedbackGrade.like === like) {
+      return;
+    }
+    await DbUtil.updateOne(`UPDATE feedback SET rating=rating${like === 1 ? '+' : '-'}1`);
+  }
+
+  async gradeFeedback(feedbackId: number, login: string, like: number): Promise<FeedbackGrade> {
+    const feedback = await DbUtil.getFeedbackById(Feedback, feedbackId);
+    if (!feedback)
+      throw ItemNotFound;
+    const feedbackGrade = await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
+    await this.updateFeedbackRating(like, feedbackGrade);
+    if (feedbackGrade) {
+      if (feedbackGrade.like !== like) {
+        await DbUtil.updateOne(`UPDATE feedback_grade SET like=${like} WHERE user_login="${login}" AND feedback_id=${feedbackId}`);
+        feedbackGrade.like = like;
+      }
+      return feedbackGrade;
+    }
+    await DbUtil.insertOne(`INSERT INTO feedback_grade (like, feedback_id, user_login) VALUES (${like}, ${feedbackId}, "${login}")`);
+    return await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
   }
 }

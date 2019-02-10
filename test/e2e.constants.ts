@@ -86,6 +86,8 @@ export const FEEDBACK_GRADE = {
 export const USERS_JWT = {
   SIMPLE: jwt.encode({login: USERS.SIMPLE.login, right: USER_RIGHT, created: TimeUtil.getUnixTime()}, JWT_SECRET),
   SIMPLE_FGN: jwt.encode({login: USERS.SIMPLE_FGN.login, right: USER_RIGHT, created: TimeUtil.getUnixTime()}, JWT_SECRET),
+  GRADE_FEEDBACKS: jwt.encode({login: USERS.GRADE_FEEDBACKS.login, right: USER_RIGHT, created: TimeUtil.getUnixTime()}, JWT_SECRET),
+  GRADE_FEEDBACKS1: jwt.encode({login: USERS.GRADE_FEEDBACKS1.login, right: USER_RIGHT, created: TimeUtil.getUnixTime()}, JWT_SECRET)
 };
 
 export const ADMINS_JWT = {
