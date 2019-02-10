@@ -4,7 +4,7 @@ import { createTestData, initTestApp, testUserAuth } from '../e2e.utils';
 import request from 'supertest';
 import { DISCIPLINE, FEEDBACK_GRADE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../e2e.constants';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { ACCESS_DENIED, INVALID_PARAMS, ITEM_NOT_FOUND, STATUS_OK } from '../../src/constants';
+import { INVALID_PARAMS, IS_NOT_ITEM_OWNER, ITEM_NOT_FOUND, STATUS_OK } from '../../src/constants';
 import { DbUtil } from '../../src/utils/db-util';
 import { Feedback } from '../../src/entities/feedback.entity';
 import { TimeUtil } from '../../src/utils/time-util';
@@ -245,17 +245,17 @@ describe('Feedback', () => {
           const feedback = await DbUtil.getFeedbackById(Feedback, FEEDBACKS.OOP1.id);
           expect(feedback).toBe(null);
           const grades = await DbUtil.getMany(FeedbackGrade, `SELECT * FROM feedback_grade WHERE feedback_id=${FEEDBACKS.OOP1.id}`);
-          expect(grades.length).toBe(0);
+          expect(grades).toBe(null);
         });
     });
     it('fail: not owner', () => {
       return request(server)
-        .delete(`/feedback/${FEEDBACKS.OOP1.id}`)
+        .delete(`/feedback/${FEEDBACKS.OOP3.id}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.GRADE_FEEDBACKS)
         .send({like: 1})
         .expect(HttpStatus.FORBIDDEN)
         .then(async response => {
-          expect(response.body.error).toBe(ACCESS_DENIED);
+          expect(response.body.error).toBe(IS_NOT_ITEM_OWNER);
         });
     });
     it('fail: no such feedback', () => {

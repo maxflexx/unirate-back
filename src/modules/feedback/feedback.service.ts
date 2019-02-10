@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Feedback } from '../../entities/feedback.entity';
 import { DbUtil } from '../../utils/db-util';
 import { Discipline } from '../../entities/discipline.entity';
-import { ItemNotFound } from '../../constants';
+import { AccessDenied, IsNotItemOwner, ItemNotFound } from '../../constants';
 import { Teacher } from '../../entities/teacher.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { TimeUtil } from '../../utils/time-util';
@@ -76,5 +76,15 @@ export class FeedbackService {
     }
     await DbUtil.insertOne(`INSERT INTO feedback_grade (like, feedback_id, user_login) VALUES (${like}, ${feedbackId}, "${login}")`);
     return await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
+  }
+
+  async deleteFeedback(feedbackId: number, login: string): Promise<void> {
+    const feedback = await DbUtil.getFeedbackById(Feedback, feedbackId);
+    if (!feedback)
+      throw ItemNotFound;
+    if (feedback.userLogin !== login)
+      throw IsNotItemOwner;
+    await DbUtil.deleteOne(`DELETE FROM feedback WHERE id=${feedbackId}`);
+    await DbUtil.deleteOne(`DELETE FROM feedback_grade WHERE feedback_id=${feedbackId}`);
   }
 }
