@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { GetTeacherParamsDto } from './dto/get-teacher-params.dto';
 import { Teacher } from '../../../entities/teacher.entity';
-import { TeacherService } from './teacher.service';
+import { TeacherService } from '../../services/teacher.service';
 
 @Controller('teacher')
 export class TeacherController {

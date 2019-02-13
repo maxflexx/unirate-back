@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { FeedbackService } from './feedback.service';
+import { FeedbackService } from '../../services/feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { User } from '../../../entities/user.entity';
 import { UserDecorator } from '../../../common/decorators/user.decorator';

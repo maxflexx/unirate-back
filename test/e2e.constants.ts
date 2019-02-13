@@ -36,7 +36,7 @@ export const DISCIPLINE = {
   ENGLISH: {id: 5, name: 'English', mandatory: 1, year: 1, faculty: FACULTIES.FGN},
   ENGLISH_LIT: {id: 6, name: 'English lit', mandatory: 0, year: 3, faculty: FACULTIES.FGN},
   ECONOMICS: {id: 7, name: 'Economics', mandatory: 1, year: 2, faculty: FACULTIES.FEN},
-  HISTORY: {id: 8, name: 'History', mandatory: 1, year: 2, faculty: FACULTIES.FEN},
+  HISTORY: {id: 8, name: 'History', mandatory: 1, year: 1, faculty: FACULTIES.FEN},
 };
 
 export const TEACHER = {

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Feedback } from '../../../entities/feedback.entity';
-import { DbUtil } from '../../../utils/db-util';
-import { Discipline } from '../../../entities/discipline.entity';
-import { IsNotItemOwner, ItemNotFound } from '../../../constants';
-import { Teacher } from '../../../entities/teacher.entity';
-import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { TimeUtil } from '../../../utils/time-util';
-import { FeedbackResultDto } from './dto/feedback-result.dto';
-import { FeedbackGrade } from '../../../entities/feedback-grade.entity';
+import { Feedback } from '../../entities/feedback.entity';
+import { DbUtil } from '../../utils/db-util';
+import { Discipline } from '../../entities/discipline.entity';
+import { IsNotItemOwner, ItemNotFound } from '../../constants';
+import { Teacher } from '../../entities/teacher.entity';
+import { CreateFeedbackDto } from '../default-user/feedback/dto/create-feedback.dto';
+import { TimeUtil } from '../../utils/time-util';
+import { FeedbackResultDto } from '../default-user/feedback/dto/feedback-result.dto';
+import { FeedbackGrade } from '../../entities/feedback-grade.entity';
 
 @Injectable()
 export class FeedbackService {

@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { User, UserRole } from '../../entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Repository } from 'typeorm';
-import { LoginBodyDto } from './dto/login-body.dto';
+import { LoginBodyDto } from '../auth/dto/login-body.dto';
 import { AccessDenied, ADMIN_RIGHT, ItemAlreadyExists, ItemNotFound, JWT_SECRET, USER_RIGHT } from '../../constants';
 import { ErrorUtil } from '../../utils/error-util';
 import { TimeUtil } from '../../utils/time-util';
 import { DbUtil } from '../../utils/db-util';
-import { SignupBodyDto } from './dto/signup-body.dto';
-import { SignupResultDto } from './dto/signup-result.dto';
+import { SignupBodyDto } from '../auth/dto/signup-body.dto';
+import { SignupResultDto } from '../auth/dto/signup-result.dto';
 const jwt = require('jwt-simple');
 
 @Injectable()

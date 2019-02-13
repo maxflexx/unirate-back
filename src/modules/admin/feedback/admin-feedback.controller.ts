@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
-import { FeedbackService } from '../../default-user/feedback/feedback.service';
+import { FeedbackService } from '../../services/feedback.service';
 import { ParseIntPipe } from '../../../common/pipes/parse-int.pipe';
 import { FeedbackResultDto } from '../../default-user/feedback/dto/feedback-result.dto';
 import { STATUS_OK } from '../../../constants';

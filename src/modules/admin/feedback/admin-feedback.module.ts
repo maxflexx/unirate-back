@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AdminFeedbackController } from './admin-feedback.controller';
 import { BearerAuthAdminMiddleware } from '../../../common/middlewares/bearer-auth-admin.middleware';
-import { FeedbackService } from '../../default-user/feedback/feedback.service';
+import { FeedbackService } from '../../services/feedback.service';
 
 @Module({
   providers: [FeedbackService],

@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TeacherController } from './teacher.controller';
-import { TeacherService } from './teacher.service';
+import { TeacherService } from '../../services/teacher.service';
 import { BearerAuthUserMiddleware } from '../../../common/middlewares/bearer-auth-user.middleware';
 
 @Module({

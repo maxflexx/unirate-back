@@ -1,6 +1,6 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { FeedbackController } from './feedback.controller';
-import { FeedbackService } from './feedback.service';
+import { FeedbackService } from '../../services/feedback.service';
 import { BearerAuthUserMiddleware } from '../../../common/middlewares/bearer-auth-user.middleware';
 import { BearerAuthAdminMiddleware } from '../../../common/middlewares/bearer-auth-admin.middleware';
 
