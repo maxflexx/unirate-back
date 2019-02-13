@@ -7,6 +7,18 @@ const jwt = require('jwt-simple');
 @Injectable()
 export class BearerAuthAdminMiddleware implements NestMiddleware{
   constructor(){}
+
+  static decodeJwt(token: string): boolean | object {
+    const jwtToken = token.split(' ');
+    if (jwtToken[0] !== 'Bearer' || !jwtToken[1])
+      return false;
+    const decodedJwt = jwt.decode(jwtToken[1], JWT_SECRET);
+    if (decodedJwt && decodedJwt.login && decodedJwt.right === ADMIN_RIGHT && decodedJwt.created <= TimeUtil.getUnixTime() + JWT_TOKEN_LIFETIME) {
+      return decodedJwt;
+    }
+    return false;
+  }
+
   resolve(): MiddlewareFunction {
     return async (req, res, next) => {
       let jwtToken;
@@ -15,25 +27,14 @@ export class BearerAuthAdminMiddleware implements NestMiddleware{
       }catch (e) {
         throw Unauthorized;
       }
-      const user = await DbUtil.getOne(User, `SELECT * FROM User AS u WHERE u.login = "${jwtToken.login}"`);
+      const user = await DbUtil.getUserByLogin(User, jwtToken.login);
       if (!user)
         throw Unauthorized;
       if (user.role !== UserRole.ADMIN)
         throw Unauthorized;
       req.user = user;
       req.jwt = req.headers.authorization.split(' ');
-      next!();
+      next();
     };
-  }
-
-  static decodeJwt(token: string): boolean | object {
-    const jwtToken = token.split(' ');
-    if (jwtToken[0] !== 'Bearer' || !jwtToken[1])
-      return false;
-    const decodedJwt = jwt.decode(jwtToken[1], JWT_SECRET);
-    if (decodedJwt && decodedJwt.login && decodedJwt.right === ADMIN_RIGHT && decodedJwt.created <= TimeUtil.getUnixTime() + JWT_TOKEN_LIFETIME) {
-      return true;
-    }
-    return false;
   }
 }

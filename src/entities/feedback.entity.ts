@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { TimeUtil } from '../utils/time-util';
-import { CreateFeedbackDto } from '../modules/feedback/dto/create-feedback.dto';
+import { CreateFeedbackDto } from '../modules/default-user/feedback/dto/create-feedback.dto';
 
 @Entity('feedback')
 export class Feedback {

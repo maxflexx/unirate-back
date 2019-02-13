@@ -22,17 +22,18 @@ import {
 import { AuthModule } from '../src/modules/auth/auth.module';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import request from 'supertest';
-import { UserModule } from '../src/modules/user/user.module';
+import { UserModule } from '../src/modules/default-user/user/user.module';
 import { DbUtil } from '../src/utils/db-util';
-import { FeedbackModule } from '../src/modules/feedback/feedback.module';
-import { TeacherModule } from '../src/modules/teacher/teacher.module';
+import { FeedbackModule } from '../src/modules/default-user/feedback/feedback.module';
+import { TeacherModule } from '../src/modules/default-user/teacher/teacher.module';
+import { AdminFeedbackModule } from '../src/modules/admin/feedback/admin-feedback.module';
 
 export async function initTestApp(server) {
   const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule],
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule],
   }).compile();
 
   server.use(bodyParser.json());
@@ -200,7 +201,7 @@ export function testAdminAuth(server, requestMethod: RequestMethod, url: string)
         expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
-  it('admin cannot enter', () => {
+  it('user cannot enter', () => {
     return doRequest(server, requestMethod, url)
       .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
       .expect(HttpStatus.UNAUTHORIZED)
@@ -208,5 +209,4 @@ export function testAdminAuth(server, requestMethod: RequestMethod, url: string)
         expect(response.body.error).toBe(UNAUTHORIZED);
       });
   });
-
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GetTeacherParamsDto } from './dto/get-teacher-params.dto';
-import { Teacher } from '../../entities/teacher.entity';
-import { DbUtil } from '../../utils/db-util';
+import { Teacher } from '../../../entities/teacher.entity';
+import { DbUtil } from '../../../utils/db-util';
 
 @Injectable()
 export class TeacherService {

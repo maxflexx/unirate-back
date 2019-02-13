@@ -1,6 +1,6 @@
-import { User } from '../../entities/user.entity';
-import { DbUtil } from '../../utils/db-util';
-import { ItemNotFound } from '../../constants';
+import { User } from '../../../entities/user.entity';
+import { DbUtil } from '../../../utils/db-util';
+import { ItemNotFound } from '../../../constants';
 import { UserResultDto } from './dto/user-result.dto';
 import { UserUpdateResultDto } from './dto/user-update-result.dto';
 import { UserUpdateBodyDto } from './dto/user-update-body.dto';

@@ -235,6 +235,7 @@ describe('Feedback', () => {
     });
   });
   describe('DELETE feedback/:id', () => {
+    testUserAuth(server, RequestMethod.DELETE, `/feedback/${FEEDBACKS.OOP2.id}`);
     it('success', () => {
       return request(server)
         .delete(`/feedback/${FEEDBACKS.OOP1.id}`)
@@ -246,13 +247,14 @@ describe('Feedback', () => {
           expect(feedback).toBe(null);
           const grades = await DbUtil.getMany(FeedbackGrade, `SELECT * FROM feedback_grade WHERE feedback_id=${FEEDBACKS.OOP1.id}`);
           expect(grades).toBe(null);
+          const feedbackTeachers = await DbUtil.getMany(FeedbackTeacher, `SELECT * FROM feedback_teacher WHERE feedback_id=${FEEDBACKS.OOP1.id}`);
+          expect(feedbackTeachers).toBe(null);
         });
     });
     it('fail: not owner', () => {
       return request(server)
         .delete(`/feedback/${FEEDBACKS.OOP3.id}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.GRADE_FEEDBACKS)
-        .send({like: 1})
         .expect(HttpStatus.FORBIDDEN)
         .then(async response => {
           expect(response.body.error).toBe(IS_NOT_ITEM_OWNER);
@@ -262,7 +264,6 @@ describe('Feedback', () => {
       return request(server)
         .delete(`/feedback/999`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .send({like: 1})
         .expect(HttpStatus.NOT_FOUND)
         .then(async response => {
           expect(response.body.error).toBe(ITEM_NOT_FOUND);

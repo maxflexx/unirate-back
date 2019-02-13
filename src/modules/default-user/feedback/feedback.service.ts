@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Feedback } from '../../entities/feedback.entity';
-import { DbUtil } from '../../utils/db-util';
-import { Discipline } from '../../entities/discipline.entity';
-import { AccessDenied, IsNotItemOwner, ItemNotFound } from '../../constants';
-import { Teacher } from '../../entities/teacher.entity';
+import { Feedback } from '../../../entities/feedback.entity';
+import { DbUtil } from '../../../utils/db-util';
+import { Discipline } from '../../../entities/discipline.entity';
+import { IsNotItemOwner, ItemNotFound } from '../../../constants';
+import { Teacher } from '../../../entities/teacher.entity';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
-import { TimeUtil } from '../../utils/time-util';
+import { TimeUtil } from '../../../utils/time-util';
 import { FeedbackResultDto } from './dto/feedback-result.dto';
-import { FeedbackGrade } from '../../entities/feedback-grade.entity';
-import { Db } from 'typeorm';
+import { FeedbackGrade } from '../../../entities/feedback-grade.entity';
 
 @Injectable()
 export class FeedbackService {
@@ -61,6 +60,7 @@ export class FeedbackService {
     await DbUtil.updateOne(`UPDATE feedback SET rating=rating${like === 1 ? '+' : '-'}1`);
   }
 
+//TODO: change feedback.rating
   async gradeFeedback(feedbackId: number, login: string, like: number): Promise<FeedbackGrade> {
     const feedback = await DbUtil.getFeedbackById(Feedback, feedbackId);
     if (!feedback)
@@ -78,13 +78,33 @@ export class FeedbackService {
     return await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
   }
 
-  async deleteFeedback(feedbackId: number, login: string): Promise<void> {
+  async getFeedbackSecure(feedbackId: number): Promise<Feedback> {
     const feedback = await DbUtil.getFeedbackById(Feedback, feedbackId);
     if (!feedback)
       throw ItemNotFound;
-    if (feedback.userLogin !== login)
+    return feedback;
+  }
+
+  checkOwnerRights(feedbackUserLogin: string, userLogin: string) {
+    if (feedbackUserLogin !== userLogin)
       throw IsNotItemOwner;
+  }
+
+
+  async deleteFeedbackUser(feedbackId: number, login: string): Promise<void> {
+    const feedback = await this.getFeedbackSecure(feedbackId);
+    this.checkOwnerRights(feedback.userLogin, login);
+    await this.deleteAllFeedbackData(feedbackId);
+  }
+
+  async deleteFeedbackAdmin(feedbackId: number): Promise<void> {
+    await this.getFeedbackSecure(feedbackId);
+    await this.deleteAllFeedbackData(feedbackId);
+  }
+
+  async deleteAllFeedbackData(feedbackId: number): Promise<void> {
     await DbUtil.deleteOne(`DELETE FROM feedback WHERE id=${feedbackId}`);
     await DbUtil.deleteOne(`DELETE FROM feedback_grade WHERE feedback_id=${feedbackId}`);
+    await DbUtil.deleteOne(`DELETE FROM feedback_teacher WHERE feedback_id=${feedbackId}`);
   }
 }

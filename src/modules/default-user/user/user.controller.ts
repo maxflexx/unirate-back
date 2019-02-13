@@ -1,10 +1,10 @@
 import { UserService } from './user.service';
 import { Body, Controller, Delete, Get, Param, Put } from '@nestjs/common';
-import { User } from '../../entities/user.entity';
-import { ErrorUtil } from '../../utils/error-util';
+import { User } from '../../../entities/user.entity';
+import { ErrorUtil } from '../../../utils/error-util';
 import { UserUpdateBodyDto } from './dto/user-update-body.dto';
 import { UserUpdateResultDto } from './dto/user-update-result.dto';
-import { STATUS_OK } from '../../constants';
+import { STATUS_OK } from '../../../constants';
 
 @Controller('user')
 export class UserController {

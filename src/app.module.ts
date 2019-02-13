@@ -6,12 +6,13 @@ import {ORM_CONFIG} from './constants';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
-import { FeedbackModule } from './modules/feedback/feedback.module';
-import { TeacherModule } from './modules/teacher/teacher.module';
+import { UserModule } from './modules/default-user/user/user.module';
+import { FeedbackModule } from './modules/default-user/feedback/feedback.module';
+import { TeacherModule } from './modules/default-user/teacher/teacher.module';
+import { AdminFeedbackModule } from './modules/admin/feedback/admin-feedback.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ORM_CONFIG), AuthModule, UserModule, FeedbackModule, TeacherModule],
+  imports: [TypeOrmModule.forRoot(ORM_CONFIG), AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule],
   controllers: [AppController],
   providers: [AppService],
 })
