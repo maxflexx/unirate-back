@@ -222,7 +222,7 @@ describe('Admin Disciplines', () => {
   describe('DELETE admin/discipline/:id', () => {
     it('success', () => {
       return request(server)
-        .put(`/admin/discipline/${DISCIPLINE.OOP.id}`)
+        .delete(`/admin/discipline/${DISCIPLINE.OOP.id}`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then( async response => {
@@ -234,7 +234,7 @@ describe('Admin Disciplines', () => {
     });
     it('fail: not found', () => {
       return request(server)
-        .put(`/admin/discipline/99999`)
+        .delete(`/admin/discipline/99999`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then( async response => {

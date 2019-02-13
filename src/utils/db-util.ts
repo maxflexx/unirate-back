@@ -60,4 +60,7 @@ export class DbUtil {
     return await DbUtil.getMany(entity, `SELECT * FROM feedback_grade WHERE feedback_id=${id}`);
   }
 
+  static async getFacultyById(entity, id) {
+    return await DbUtil.getOne(entity, `SELECT * FROM faculty WHERE id=${id}`);
+  }
 }
