@@ -3,7 +3,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS faculty;
 CREATE TABLE faculty(
 	id bigint NOT NULL AUTO_INCREMENT,
-    name varchar(64) NOT NULL,
+    name varchar(64) NOT NULL, --UNIQUE
     short_name varchar(8) NOT NULL,
     PRIMARY KEY(id)
 );
@@ -12,7 +12,7 @@ CREATE TABLE faculty(
 DROP TABLE IF EXISTS profession;
 CREATE TABLE profession(
 	id bigint NOT NULL AUTO_INCREMENT,
-    name varchar(64) NOT NULL,
+    name varchar(64) NOT NULL, --UNIQUE
     faculty_id bigint NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(faculty_id)
@@ -25,7 +25,7 @@ CREATE TABLE profession(
 DROP TABLE IF EXISTS discipline;
 CREATE TABLE discipline(
 	id bigint NOT NULL AUTO_INCREMENT,
-    name varchar(64) NOT NULL,
+    name varchar(64) NOT NULL, --UNIQUE
     mandatory tinyint(1) NOT NULL,
     `year` tinyint(1) NOT NULL,
     faculty_id bigint NOT NULL,
@@ -41,7 +41,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`(
 	login varchar(32) NOT NULL,
     password varchar(128) NOT NULL,
-    email varchar(64) NOT NULL,
+    email varchar(64) NOT NULL, --UNIQUE
     role tinyint(1) NOT NULL DEFAULT 0,
     rating smallint NOT NULL DEFAULT 0,
     profession_id bigint,

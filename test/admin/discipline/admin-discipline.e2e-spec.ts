@@ -1,10 +1,13 @@
-import express from 'express';
+import express, { response } from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testAdminAuth } from '../../e2e.utils';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { ADMINS_JWT, DISCIPLINE, FACULTIES } from '../../e2e.constants';
 import request from 'supertest';
-
+import { DbUtil } from '../../../src/utils/db-util';
+import { Discipline } from '../../../src/entities/discipline.entity';
+import { INVALID_PARAMS, ITEM_NOT_FOUND } from '../../../src/constants';
+import { Feedback } from '../../../src/entities/feedback.entity';
 
 describe('Admin Disciplines', () => {
   const server = express();
@@ -88,6 +91,154 @@ describe('Admin Disciplines', () => {
             year: DISCIPLINE.PROCEDURE.year,
             facultyId: DISCIPLINE.PROCEDURE.faculty.id
           }]);
+        });
+    });
+  });
+  describe('POST admin/discipline', () => {
+    testAdminAuth(server, RequestMethod.POST, '/admin/discipline');
+    it('success', () => {
+      const body = {name: 'NEW_DISCIPLINE', mandatory: 1, year: 3, facultyId: FACULTIES.FEN.id};
+      return request(server)
+        .post('/admin/discipline')
+        .send(body)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.CREATED)
+        .then(async response => {
+          expect(response.body).toEqual({
+            id: expect.any(Number),
+            name: body.name,
+            mandatory: body.mandatory,
+            year: body.year,
+            facultyId: body.facultyId
+          });
+          const discipline = await DbUtil.getDisciplineById(Discipline, response.body.id);
+          expect(discipline).toEqual({
+            id: response.body.id,
+            name: body.name,
+            mandatory: body.mandatory,
+            year: body.year,
+            facultyId: body.facultyId
+          });
+        });
+    });
+    it('fail: faculty not found', () => {
+      const body = {name: 'NEW_DISCIPLINE', mandatory: 1, year: 3, facultyId: 90999};
+      return request(server)
+        .post('/admin/discipline')
+        .send(body)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.NOT_FOUND)
+        .then( response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+        });
+    });
+    it('fail: no name', () => {
+      const body = {mandatory: 1, year: 3, facultyId: FACULTIES.INFORMATICS.id};
+      return request(server)
+        .post('/admin/discipline')
+        .send(body)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then( response => {
+          expect(response.body.error).toBe(INVALID_PARAMS);
+        });
+    });
+  });
+  describe('PUT admin/discipline/:id', () => {
+    testAdminAuth(server, RequestMethod.PUT, '/admin/discipline/1');
+    it('success: update everything', () => {
+      const body = {name: 'UPDATE', mandatory: 0, year: 1, facultyId: FACULTIES.FGN.id};
+      return request(server)
+        .put(`/admin/discipline/${DISCIPLINE.PROCEDURE.id}`)
+        .send(body)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(async response => {
+          expect(response.body).toEqual({
+            id: DISCIPLINE.PROCEDURE.id,
+            name: body.name,
+            mandatory: body.mandatory,
+            year: body.year,
+            facultyId: body.facultyId,
+          });
+          const discipline = await DbUtil.getDisciplineById(Discipline, response.body.id);
+          expect(discipline).toEqual({
+            id: response.body.id,
+            name: body.name,
+            mandatory: body.mandatory,
+            year: body.year,
+            facultyId: body.facultyId
+          });
+        });
+    });
+    it('success: partial update', () => {
+      const body = {mandatory: 0, year: 2};
+      return request(server)
+        .put(`/admin/discipline/${DISCIPLINE.OBDZ.id}`)
+        .send(body)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(async response => {
+          expect(response.body).toEqual({
+            id: DISCIPLINE.OBDZ.id,
+            name: DISCIPLINE.OBDZ.name,
+            mandatory: body.mandatory,
+            year: body.year,
+            facultyId: DISCIPLINE.OBDZ.faculty.id,
+          });
+          const discipline = await DbUtil.getDisciplineById(Discipline, response.body.id);
+          expect(discipline).toEqual({
+            id: DISCIPLINE.OBDZ.id,
+            name: DISCIPLINE.OBDZ.name,
+            mandatory: body.mandatory,
+            year: body.year,
+            facultyId: DISCIPLINE.OBDZ.faculty.id,
+          });
+        });
+    });
+    it('fail: faculty not found', () => {
+      const body = {facultyId: 90999};
+      return request(server)
+        .put(`/admin/discipline/${DISCIPLINE.HISTORY.id}`)
+        .send(body)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.NOT_FOUND)
+        .then( response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+        });
+    });
+    it('fail: discipline not found', () => {
+      const body = {facultyId: FACULTIES.FEN.id};
+      return request(server)
+        .put(`/admin/discipline/9999`)
+        .send(body)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.NOT_FOUND)
+        .then( response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+        });
+    });
+  });
+  describe('DELETE admin/discipline/:id', () => {
+    it('success', () => {
+      return request(server)
+        .put(`/admin/discipline/${DISCIPLINE.OOP.id}`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then( async response => {
+          const discipline = await DbUtil.getDisciplineById(Discipline, DISCIPLINE.OOP.id);
+          expect(discipline).toBe(null);
+          const feedback = await DbUtil.getFeedbackByDisciplineId(Feedback, DISCIPLINE.OOP.id);
+          expect(feedback).toBe(null);
+        });
+    });
+    it('fail: not found', () => {
+      return request(server)
+        .put(`/admin/discipline/99999`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then( async response => {
+          expect(response.body.error).toBe(ITEM_NOT_FOUND);
         });
     });
   });
