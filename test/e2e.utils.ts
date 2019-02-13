@@ -8,7 +8,6 @@ import { AppModule } from '../src/app.module';
 import * as bodyParser from 'body-parser';
 import {
   ADMINS_JWT,
-  CATHEDRA,
   DISCIPLINE,
   FACULTIES, FEEDBACK_GRADE,
   FEEDBACK_TEACHER,
@@ -89,12 +88,8 @@ export async function createTestData() {
        await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating})`);
   }
 
-  for (const key in CATHEDRA) {
-    await DbUtil.insertOne(`INSERT INTO cathedra (id, name, faculty_id) VALUES (${CATHEDRA[key].id}, "${CATHEDRA[key].name}", ${CATHEDRA[key].faculty.id});`);
-  }
-
   for (const key in DISCIPLINE) {
-    await DbUtil.insertOne(`INSERT INTO discipline (id, name, mandatory, year, cathedra_id) VALUES (${DISCIPLINE[key].id}, "${DISCIPLINE[key].name}", ${DISCIPLINE[key].mandatory}, ${DISCIPLINE[key].year}, ${DISCIPLINE[key].cathedra.id});`);
+    await DbUtil.insertOne(`INSERT INTO discipline (id, name, mandatory, year, faculty_id) VALUES (${DISCIPLINE[key].id}, "${DISCIPLINE[key].name}", ${DISCIPLINE[key].mandatory}, ${DISCIPLINE[key].year}, ${DISCIPLINE[key].faculty.id});`);
   }
 
   for (const key in TEACHER) {

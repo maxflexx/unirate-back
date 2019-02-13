@@ -21,19 +21,6 @@ CREATE TABLE profession(
         ON UPDATE CASCADE
 );
 
-#cathedra
-DROP TABLE IF EXISTS cathedra;
-CREATE TABLE cathedra(
-	id bigint NOT NULL AUTO_INCREMENT,
-    name varchar(64) NOT NULL,
-    faculty_id bigint NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(faculty_id)
-		REFERENCES faculty(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
 #discipline
 DROP TABLE IF EXISTS discipline;
 CREATE TABLE discipline(
@@ -41,10 +28,10 @@ CREATE TABLE discipline(
     name varchar(64) NOT NULL,
     mandatory tinyint(1) NOT NULL,
     `year` tinyint(1) NOT NULL,
-    cathedra_id bigint NOT NULL,
+    faculty_id bigint NOT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY(cathedra_id)
-		REFERENCES cathedra(id)
+    FOREIGN KEY(faculty_id)
+		REFERENCES faculty(id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
@@ -106,7 +93,6 @@ CREATE TABLE feedback_teacher (
 		REFERENCES feedback(id),
 	FOREIGN KEY(teacher_id)
 		REFERENCES teacher(id)
-);
 
 #feedback_grade
 DROP TABLE IF EXISTS feedback_grade;

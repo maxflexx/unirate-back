@@ -14,8 +14,8 @@ export class Discipline {
   @Column()
   year: number;
 
-  @Column({name: 'cathedra_id'})
-  cathedraId: number;
+  @Column({name: 'faculty_id'})
+  facultyId: number;
 
   static fromRaw(raw: any): Discipline {
     const entity = new Discipline();
@@ -23,7 +23,7 @@ export class Discipline {
     entity.name = raw.name;
     entity.mandatory = raw.mandatory;
     entity.year = raw.year;
-    entity.cathedraId = +raw.cathedra_id;
+    entity.facultyId = +raw.faculty_id;
     return entity;
   }
 }
