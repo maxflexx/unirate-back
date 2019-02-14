@@ -9,6 +9,7 @@ import { UpdateDisciplineDto } from '../admin/discipline/dto/update-discipline.d
 import { Feedback } from '../../entities/feedback.entity';
 import { FeedbackTeacher } from '../../entities/feedback-teacher.entity';
 import { FeedbackGrade } from '../../entities/feedback-grade.entity';
+import { Profession } from '../../entities/profession.entity';
 
 @Injectable()
 export class DisciplineService {
@@ -60,15 +61,9 @@ export class DisciplineService {
   }
 
   async deleteDisciplineAdmin(disciplineId: number): Promise<void> {
-    const query = `DELETE discipline, feedback, feedback_grade, feedback_teacher FROM discipline
-                   LEFT JOIN feedback ON feedback.discipline_id = discipline.id
-                   LEFT JOIN feedback_grade ON feedback.id = feedback_grade.feedback_id
-                   LEFT JOIN feedback_teacher ON feedback.id = feedback_teacher.feedback_id
-                   WHERE discipline.id=${disciplineId}`;
-    await DbUtil.deleteOne(query);
-    console.log(await DbUtil.getDisciplineById(Discipline, disciplineId));
-    console.log(await DbUtil.getMany(Feedback, `SELECT * FROM feedback WHERE discipline_id=${disciplineId}`));
-    console.log(await DbUtil.getMany(FeedbackTeacher, 'SELECT * FROM feedback_teacher'));
-    console.log(await DbUtil.getMany(FeedbackGrade, 'SELECT * FROM feedback_grade'));
+    const discipline = await DbUtil.getDisciplineById(Discipline, disciplineId);
+    if (!discipline)
+      throw ItemNotFound;
+    await DbUtil.deleteOne(`DELETE FROM discipline WHERE discipline.id=${disciplineId}`);
   }
 }

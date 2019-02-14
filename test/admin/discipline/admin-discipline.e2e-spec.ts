@@ -228,15 +228,13 @@ describe('Admin Disciplines', () => {
         .then( async response => {
           const discipline = await DbUtil.getDisciplineById(Discipline, DISCIPLINE.OOP.id);
           expect(discipline).toBe(null);
-          const feedback = await DbUtil.getFeedbackByDisciplineId(Feedback, DISCIPLINE.OOP.id);
-          expect(feedback).toBe(null);
         });
     });
     it('fail: not found', () => {
       return request(server)
         .delete(`/admin/discipline/99999`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
-        .expect(HttpStatus.OK)
+        .expect(HttpStatus.NOT_FOUND)
         .then( async response => {
           expect(response.body.error).toBe(ITEM_NOT_FOUND);
         });
