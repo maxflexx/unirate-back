@@ -99,7 +99,7 @@ describe('Admin Faculty', () => {
     });
   });
   describe('PUT admin/faculty/:id', () => {
-    testAdminAuth(server, RequestMethod.PUT, '/admin/faculty');
+    testAdminAuth(server, RequestMethod.PUT, '/admin/faculty/1');
     it('success: update all', () => {
       const body = {name: 'ndfsfs', shortName: 'kjweqbrewb'};
       return request(server)
@@ -143,7 +143,7 @@ describe('Admin Faculty', () => {
     it('fail: there is already faculty with such shortName', () => {
       const body = {shortName: FACULTIES.FEN.shortName};
       return request(server)
-        .post(`/admin/faculty/${FACULTIES.FGN.id}`)
+        .put(`/admin/faculty/${FACULTIES.FGN.id}`)
         .send(body)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.CONFLICT)
@@ -153,7 +153,7 @@ describe('Admin Faculty', () => {
     });
     it('fail: not found', () => {
       return request(server)
-        .post('/admin/faculty/12323')
+        .put('/admin/faculty/12323')
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.NOT_FOUND)
         .then(async response => {
@@ -162,7 +162,7 @@ describe('Admin Faculty', () => {
     });
   });
   describe('DELETE admin/faculty/:id', () => {
-    testAdminAuth(server, RequestMethod.DELETE, '/admin/faculty');
+    testAdminAuth(server, RequestMethod.DELETE, '/admin/faculty/1');
     it('success', () => {
       return request(server)
         .delete(`/admin/faculty/${FACULTIES.INFORMATICS.id}`)

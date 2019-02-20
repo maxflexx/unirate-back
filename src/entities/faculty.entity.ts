@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UpdateFacultyDto } from '../modules/admin/faculty/dto/update-faculty.dto';
 
 @Entity('faculty')
 export class Faculty {
@@ -17,5 +18,10 @@ export class Faculty {
     entity.name = raw.name;
     entity.shortName = raw.short_name;
     return entity;
+  }
+
+  updateAdmin(body: UpdateFacultyDto) {
+    this.name = body.name || this.name;
+    this.shortName = body.shortName || this.shortName;
   }
 }
