@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testAdminAuth } from '../../e2e.utils';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
@@ -7,7 +7,6 @@ import request from 'supertest';
 import { DbUtil } from '../../../src/utils/db-util';
 import { Discipline } from '../../../src/entities/discipline.entity';
 import { INVALID_PARAMS, ITEM_NOT_FOUND } from '../../../src/constants';
-import { Feedback } from '../../../src/entities/feedback.entity';
 
 describe('Admin Disciplines', () => {
   const server = express();
