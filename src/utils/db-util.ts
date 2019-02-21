@@ -63,4 +63,8 @@ export class DbUtil {
   static async getFacultyById(entity, id) {
     return await DbUtil.getOne(entity, `SELECT * FROM faculty WHERE id=${id}`);
   }
+
+  static async getProfessionById(entity, id) {
+    return await DbUtil.getOne(entity, `SELECT * FROM profession WHERE id=${id}`);
+  }
 }
