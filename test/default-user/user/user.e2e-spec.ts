@@ -1,10 +1,10 @@
 import express from 'express';
 import { Connection } from 'typeorm';
-import { createTestData, initTestApp, } from '../../e2e.utils';
+import { createTestData, initTestApp, testUserAuth } from '../../e2e.utils';
 import { PROFESSIONS, USERS, USERS_JWT } from '../../e2e.constants';
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, RequestMethod } from '@nestjs/common';
 import request from 'supertest';
-import { ITEM_NOT_FOUND } from '../../../src/constants';
+import { ACCESS_DENIED, ITEM_NOT_FOUND } from '../../../src/constants';
 import { CryptoUtil } from '../../../src/utils/crypto-util';
 import { DbUtil } from '../../../src/utils/db-util';
 import { User } from '../../../src/entities/user.entity';
@@ -18,7 +18,8 @@ describe('User', () => {
     await createTestData();
   });
 
-  describe('GET /user/:login', () => { // TODO: add auth test
+  describe('GET /user/:login', () => {
+    testUserAuth(server, RequestMethod.GET, '/user/login');
     it('success', () => {
       return request(server)
         .get(`/user/${USERS.SIMPLE.login}`)
@@ -44,13 +45,14 @@ describe('User', () => {
         });
     });
   });
-  describe('PUT user/:login', () => { //TODO: add auth test, add one test on fail, trying to change not someone else data
+  describe('PUT user/:login', () => {
+    testUserAuth(server, RequestMethod.PUT, '/user/login');
     it('success: all params', () => {
       const body = {email: 'ryepkin.maks@gmail.com', password: CryptoUtil.getPasswordHash('qwefds'), professionId: PROFESSIONS.GERMAN_PHILOLOGY.id};
       return request(server)
         .put(`/user/${USERS.SIMPLE_FGN.login}`)
         .send(body)
-        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE_FGN)
         .expect(HttpStatus.OK)
         .then(async response => {
           expect(response.body).toEqual({
@@ -89,16 +91,26 @@ describe('User', () => {
     });
     it('fail: no such user', () => {
       return request(server)
-        .put('/user/invalid_login')
+        .put(`/user/${USERS.SIMPLE_FGN.login}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .expect(HttpStatus.NOT_FOUND)
+        .expect(HttpStatus.FORBIDDEN)
         .then(response => {
-          expect(response.body.error).toBe(ITEM_NOT_FOUND);
+          expect(response.body.error).toBe(ACCESS_DENIED);
         });
     });
   });
-  describe('DELETE user/:login', () => {//TODO: add test, fail trying to delete someone else account
-    it('success', () => { //TODO: add check, that all user feedbacks deleted
+  describe('DELETE user/:login', () => {
+    testUserAuth(server, RequestMethod.DELETE, '/user/login');
+    it('fail: not an owner', () => {
+      return request(server)
+        .delete(`/user/${USERS.GRADE_FEEDBACKS1}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.FORBIDDEN)
+        .then(async response => {
+          expect(response.body.error).toBe(ACCESS_DENIED);
+        });
+    });
+    it('success', () => {
       return request(server)
         .delete(`/user/${USERS.SIMPLE.login}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
@@ -108,15 +120,6 @@ describe('User', () => {
           const user = await DbUtil.getUserByLogin(User, USERS.SIMPLE.login);
           expect(user).toBe(null);
         });
-    });
-    it('fail: not found', () => {
-      return request(server)
-        .delete(`/user/werglmnre`)
-        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .expect(HttpStatus.NOT_FOUND)
-        .then(async response => {
-          expect(response.body.error).toBe(ITEM_NOT_FOUND);
-        })
     });
   });
 });
