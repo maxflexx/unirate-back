@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UpdateProfessionDto } from '../modules/admin/profession/dto/update-profession.dto';
 
 @Entity('profession')
 export class Profession {
@@ -17,5 +18,10 @@ export class Profession {
     entity.name = raw.name;
     entity.facultyId = +raw.faculty_id;
     return entity;
+  }
+
+  updateAdmin(body: UpdateProfessionDto) {
+    this.name = body.name || this.name;
+    this.facultyId = body.facultyId != undefined ? body.facultyId : this.facultyId;
   }
 }

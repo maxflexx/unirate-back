@@ -64,7 +64,7 @@ describe('Admin Professions', () => {
   describe('POST admin/profession', () => {
     testAdminAuth(server, RequestMethod.POST, `/admin/profession`);
     it('success', () => {
-      const body = {name: 'name', facultyId: FACULTIES.INFORMATICS.id};
+      const body = {name: 'ewrf', facultyId: FACULTIES.INFORMATICS.id};
       return request(server)
         .post(`/admin/profession`)
         .send(body)
@@ -85,7 +85,7 @@ describe('Admin Professions', () => {
         });
     });
     it('fail: no such faculty', () => {
-      const body = {name: 'name', facultyId: 9999};
+      const body = {name: 'qwer', facultyId: 9999};
       return request(server)
         .post(`/admin/profession`)
         .send(body)
@@ -130,6 +130,7 @@ describe('Admin Professions', () => {
     });
   });
   describe('PUT admin/profession/:id', () => {
+    testAdminAuth(server, RequestMethod.PUT, `/admin/profession/1`);
     it('success: update all', () => {
       const body = {name: 'new_name', facultyId: FACULTIES.FGN.id};
       return request(server)
@@ -203,6 +204,7 @@ describe('Admin Professions', () => {
     });
   });
   describe('DELETE admin/profession', () => {
+    testAdminAuth(server, RequestMethod.DELETE, `/admin/profession/1`);
     it('success', () => {
       return request(server)
         .delete(`/admin/profession/${PROFESSIONS.GERMAN_PHILOLOGY.id}`)
@@ -217,7 +219,7 @@ describe('Admin Professions', () => {
       return request(server)
         .delete(`/admin/profession/9999`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
-        .expect(HttpStatus.OK)
+        .expect(HttpStatus.NOT_FOUND)
         .then(async response => {
           expect(response.body.error).toBe(ITEM_NOT_FOUND);
         });

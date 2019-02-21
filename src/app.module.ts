@@ -12,9 +12,10 @@ import { TeacherModule } from './modules/default-user/teacher/teacher.module';
 import { AdminFeedbackModule } from './modules/admin/feedback/admin-feedback.module';
 import { AdminDisciplineModule } from './modules/admin/discipline/admin-discipline.module';
 import { AdminFacultyModule } from './modules/admin/faculty/admin-faculty.module';
+import { AdminProfessionModule } from './modules/admin/profession/admin-profession.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ORM_CONFIG), AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule],
+  imports: [TypeOrmModule.forRoot(ORM_CONFIG), AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule],
   controllers: [AppController],
   providers: [AppService],
 })
