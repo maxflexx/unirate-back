@@ -20,6 +20,12 @@ export class DbUtil {
       return null;
   }
 
+  static async getCount(query) {
+    const entityManager = getManager();
+    const result = await entityManager.query(query);
+    return +result[0].count;
+  }
+
   static async insertOne(query: string) {
     const entityManager = getManager();
     const result = await entityManager.query(query);

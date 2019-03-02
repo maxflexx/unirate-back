@@ -26,11 +26,11 @@ describe('Admin User', () => {
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.total).toBe(6);
+          expect(response.body.total).toBe(1);
           expect(response.body.users).toEqual([{
             login: USERS.SIMPLE_FGN.login,
             email: USERS.SIMPLE_FGN.email,
-            rating: 18.3, // avg(feedback.rating)
+            rating: 18, // avg(feedback.rating)
             role: USERS.SIMPLE_FGN.role,
             professionId: USERS.SIMPLE_FGN.profession.id,
             totalFeedbackNumber: 3
@@ -40,11 +40,11 @@ describe('Admin User', () => {
     it('success: offset & count', () => {
       return request(server)
         .get(`/admin/user`)
-        .query(`offset=1&count=1`)
+        .query(`offset=1&limit=1`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.total).toBe(6);
+          expect(response.body.total).toBe(5);
           expect(response.body.users).toEqual([{
             login: USERS.GRADE_FEEDBACKS.login,
             email: USERS.GRADE_FEEDBACKS.email,
@@ -58,22 +58,22 @@ describe('Admin User', () => {
     it('success: order by', () => {
       return request(server)
         .get(`/admin/user`)
-        .query(`orderBy=rating&count=2`)
+        .query(`orderBy=rating DESC&limit=2`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.total).toBe(6);
+          expect(response.body.total).toBe(5);
           expect(response.body.users).toEqual([{
             login: USERS.SIMPLE.login,
             email: USERS.SIMPLE.email,
-            rating: 63.6,
+            rating: 42,
             role: USERS.SIMPLE.role,
             professionId: USERS.SIMPLE.profession.id,
-            totalFeedbackNumber: 0
+            totalFeedbackNumber: 3
           }, {
             login: USERS.SIMPLE_FGN.login,
             email: USERS.SIMPLE_FGN.email,
-            rating: 18.3, // avg(feedback.rating)
+            rating: 18, // avg(feedback.rating)
             role: USERS.SIMPLE_FGN.role,
             professionId: USERS.SIMPLE_FGN.profession.id,
             totalFeedbackNumber: 3
@@ -113,11 +113,11 @@ describe('Admin User', () => {
     });
   });
   describe('PUT admin/:login', () => {
-    testAdminAuth(server, RequestMethod.PUT, '/user/login');
+    testAdminAuth(server, RequestMethod.PUT, '/admin/login');
     it('success: all params', () => {
       const body = {email: 'ryepkin.maks@gmail.com', password: CryptoUtil.getPasswordHash('qwefds'), professionId: PROFESSIONS.GERMAN_PHILOLOGY.id};
       return request(server)
-        .put(`/user/${USERS.ADMIN_USER.login}`)
+        .put(`/admin/${USERS.ADMIN_USER.login}`)
         .send(body)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
@@ -145,7 +145,7 @@ describe('Admin User', () => {
     });
   });
   describe('DELETE admin/user/:login', () => {
-    testAdminAuth(server, RequestMethod.DELETE, 'admin/user/login');
+    testAdminAuth(server, RequestMethod.DELETE, `/admin/user/${USERS.SIMPLE_FGN.login}`);
     it('success: other', () => {
       return request(server)
         .delete(`/admin/user/${USERS.SIMPLE.login}`)
@@ -160,7 +160,7 @@ describe('Admin User', () => {
       return request(server)
         .delete(`/admin/user/ekrgnfsd`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
-        .expect(HttpStatus.OK)
+        .expect(HttpStatus.NOT_FOUND)
         .then(async response => {
           expect(response.body.error).toBe(ITEM_NOT_FOUND);
         });

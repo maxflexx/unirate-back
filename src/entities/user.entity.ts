@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { UpdateRoleAdminDto } from '../modules/admin/user/dto/update-role-admin.dto';
 
 
 export enum UserRole {
@@ -30,6 +31,11 @@ export class User{
     entity.role = raw.role;
     entity.professionId = +raw.profession_id != undefined ? +raw.profession_id : undefined;
     return entity;
+  }
+
+
+  updateRole(body: UpdateRoleAdminDto) {
+    this.role = body.role;
   }
 
 

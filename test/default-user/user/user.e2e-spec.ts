@@ -1,6 +1,6 @@
 import express from 'express';
 import { Connection } from 'typeorm';
-import { createTestData, initTestApp, testUserAuth } from '../../e2e.utils';
+import { createTestData, initTestApp, testAdminAuth, testUserAuth } from '../../e2e.utils';
 import { PROFESSIONS, USERS, USERS_JWT } from '../../e2e.constants';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import request from 'supertest';
@@ -19,7 +19,7 @@ describe('User', () => {
   });
 
   describe('GET /user/:login', () => {
-    testUserAuth(server, RequestMethod.GET, '/user/login');
+    testAdminAuth(server, RequestMethod.GET, '/user/login');
     it('success', () => {
       return request(server)
         .get(`/user/${USERS.SIMPLE.login}`)
