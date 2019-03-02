@@ -60,7 +60,6 @@ CREATE TABLE feedback (
     rating int NOT NULL DEFAULT 0,
     `comment` varchar(2048) NOT NULL,
     created int NOT NULL,
-    updated int,
     user_login varchar(32) NOT NULL,
     discipline_id bigint NOT NULL,
     PRIMARY KEY(id),
@@ -115,5 +114,21 @@ CREATE TABLE feedback_grade (
 		REFERENCES `user`(login)
 		ON UPDATE CASCADE -- ON DELETE SET DEFAULT
 );
+
+DROP TABLE IF EXISTS mandatory;
+CREATE TABLE mandatory (
+    discipline_id bigint NOT NULL,
+    profession_id bigint NOT NULL,
+    PRIMARY KEY(discipline_id,profession_id),
+    FOREIGN KEY(discipline_id)
+        REFERENCES discipline(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY(profession_id)
+        REFERENCES profession(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -12,11 +12,11 @@ import {
   FACULTIES, FEEDBACK_GRADE,
   FEEDBACK_TEACHER,
   FEEDBACKS,
-  INVALID_JWT,
+  INVALID_JWT, MANDATORY,
   PROFESSIONS,
   TEACHER,
   USERS,
-  USERS_JWT,
+  USERS_JWT
 } from './e2e.constants';
 import { AuthModule } from '../src/modules/auth/auth.module';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
@@ -35,7 +35,7 @@ export async function initTestApp(server) {
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule],
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule]
   }).compile();
 
   server.use(bodyParser.json());
@@ -71,10 +71,8 @@ export async function initTestApp(server) {
   return connection;
 }
 
-
 export async function createTestData() {
   const db: Connection = await getConnection(ORM_CONFIG_MEMORY.name);
-
 
   for (const key in FACULTIES) {
     FACULTIES[key].id = +(await DbUtil.insertOne(`INSERT INTO faculty (id, name, short_name) VALUES (${FACULTIES[key].id}, "${FACULTIES[key].name}", "${FACULTIES[key].shortName}");`));
@@ -88,7 +86,7 @@ export async function createTestData() {
     if (USERS[key].profession)
       await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating, profession_id) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating}, ${USERS[key].profession.id})`);
     else
-       await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating})`);
+      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating})`);
   }
 
   for (const key in DISCIPLINE) {
@@ -110,8 +108,13 @@ export async function createTestData() {
   for (const key in FEEDBACK_GRADE) {
     await DbUtil.insertOne(`INSERT INTO feedback_grade (id, like, feedback_id, user_login) VALUES (${FEEDBACK_GRADE[key].id}, ${FEEDBACK_GRADE[key].like}, ${FEEDBACK_GRADE[key].feedback.id}, "${FEEDBACK_GRADE[key].user.login}");`);
   }
-}
 
+  for (const key in MANDATORY) {
+    console.log(`INSERT INTO mandatory (discipline_id, profession_id) VALUES (${MANDATORY[key].discipline.id}, ${MANDATORY[key].profession.id});`);
+    await DbUtil.insertOne(`INSERT INTO mandatory (discipline_id, profession_id) VALUES (${MANDATORY[key].discipline.id}, ${MANDATORY[key].profession.id});`);
+  }
+
+}
 
 export function doRequest(server, requestMethod: RequestMethod, url: string) {
   if (requestMethod === RequestMethod.GET)

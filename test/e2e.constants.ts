@@ -75,6 +75,15 @@ export const FEEDBACK_GRADE = {
   OBDZ: {id: 5, like: 1, feedback: FEEDBACKS.OBDZ1, user: USERS.GRADE_FEEDBACKS}
 };
 
+
+export const MANDATORY = {
+  SE_OBDS: {discipline: DISCIPLINE.OBDZ, profession: PROFESSIONS.SOFTWARE_DEVELOPMENT},
+  SE_OOP: {discipline: DISCIPLINE.OOP, profession: PROFESSIONS.SOFTWARE_DEVELOPMENT},
+  ECONOMICS: {discipline: DISCIPLINE.ECONOMICS, profession: PROFESSIONS.ECONOMIST},
+  ENGLISH_ECONOMICS: {discipline: DISCIPLINE.ENGLISH, profession: PROFESSIONS.ECONOMIST},
+  SE_ENGLISH: {discipline: DISCIPLINE.ENGLISH, profession: PROFESSIONS.SOFTWARE_DEVELOPMENT}
+};
+
 export const USERS_JWT = {
   SIMPLE: jwt.encode({login: USERS.SIMPLE.login, right: USER_RIGHT, created: TimeUtil.getUnixTime()}, JWT_SECRET),
   SIMPLE_FGN: jwt.encode({login: USERS.SIMPLE_FGN.login, right: USER_RIGHT, created: TimeUtil.getUnixTime()}, JWT_SECRET),
