@@ -32,9 +32,9 @@ export class AuthService {
     if (user)
       throw ItemAlreadyExists;
     if (body.professionId != undefined)
-       await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating, profession_id) VALUES ("${body.login}", "${body.password}", "${body.email}", ${UserRole.USER}, ${0}, ${body.professionId});`);
+       await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, profession_id) VALUES ("${body.login}", "${body.password}", "${body.email}", ${UserRole.USER}, ${body.professionId});`);
     else
-      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${body.login}", "${body.password}", "${body.email}", ${UserRole.USER}, ${0});`);
+      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role) VALUES ("${body.login}", "${body.password}", "${body.email}", ${UserRole.USER});`);
     return await DbUtil.getUserByLogin(SignupResultDto, body.login);
   }
 

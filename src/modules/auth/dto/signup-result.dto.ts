@@ -4,7 +4,6 @@ export class SignupResultDto {
   password: string;
   email: string;
   role: number;
-  rating: number;
   professionId: number;
 
   static fromRaw(raw: any): SignupResultDto {
@@ -13,7 +12,6 @@ export class SignupResultDto {
     dto.password = raw.password;
     dto.email = raw.email;
     dto.role = raw.role;
-    dto.rating = raw.rating;
     dto.professionId = raw.profession_id || undefined;
     return dto;
   }

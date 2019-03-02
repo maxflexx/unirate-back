@@ -84,9 +84,9 @@ export async function createTestData() {
 
   for (const key in USERS) {
     if (USERS[key].profession)
-      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating, profession_id) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating}, ${USERS[key].profession.id})`);
+      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, profession_id) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].profession.id})`);
     else
-      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role, rating) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role}, ${USERS[key].rating})`);
+      await DbUtil.insertOne(`INSERT INTO user (login, password, email, role) VALUES ("${USERS[key].login}", "${USERS[key].password}", "${USERS[key].email}", ${USERS[key].role})`);
   }
 
   for (const key in DISCIPLINE) {

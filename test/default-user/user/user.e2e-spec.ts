@@ -30,7 +30,6 @@ describe('User', () => {
           expect(response.body).toEqual({
             login: USERS.SIMPLE.login,
             email: USERS.SIMPLE.email,
-            rating: USERS.SIMPLE.rating,
             professionName: USERS.SIMPLE.profession.name
           });
         });
@@ -65,7 +64,6 @@ describe('User', () => {
           expect(user.password).toBe(body.password);
           expect(user.email).toBe(body.email);
           expect(user.professionId).toBe(body.professionId);
-          expect(user.rating).toBe(USERS.SIMPLE_FGN.rating);
         });
     });
     it('success: not params', () => {
@@ -86,10 +84,9 @@ describe('User', () => {
           expect(user.email).toBe(USERS.SIMPLE.email);
           expect(user.password).toBe(body.password);
           expect(user.professionId).toBe(USERS.SIMPLE.profession.id);
-          expect(user.rating).toBe(USERS.SIMPLE.rating);
         });
     });
-    it('fail: no such user', () => {
+    it('fail: not owner', () => {
       return request(server)
         .put(`/user/${USERS.SIMPLE_FGN.login}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)

@@ -42,7 +42,6 @@ CREATE TABLE `user`(
     password varchar(128) NOT NULL,
     email varchar(64) NOT NULL UNIQUE,
     role tinyint(1) NOT NULL DEFAULT 0,
-    rating smallint NOT NULL DEFAULT 0,
     profession_id bigint,
     PRIMARY KEY(login),
     FOREIGN KEY(profession_id)

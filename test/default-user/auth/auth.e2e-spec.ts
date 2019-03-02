@@ -70,7 +70,6 @@ describe('Auth', () => {
             password: body.password,
             email: body.email,
             role: UserRole.USER,
-            rating: 0
           });
           const user = await DbUtil.getOne(User, `SELECT * FROM user u WHERE u.login="${body.login}"`);
           expect(user).toBeDefined();
@@ -89,7 +88,6 @@ describe('Auth', () => {
             password: body.password,
             email: body.email,
             role: UserRole.USER,
-            rating: 0,
             professionId: body.professionId
           });
           const user = await DbUtil.getOne(User, `SELECT * FROM user u WHERE u.login="${body.login}"`);

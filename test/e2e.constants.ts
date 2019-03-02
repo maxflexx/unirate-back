@@ -20,11 +20,11 @@ export const PROFESSIONS = {
 };
 
 export const USERS = {
-  GRADE_FEEDBACKS1: {login: 'grade_feedbacks1', password: CryptoUtil.getPasswordHash('grade_feed11'), email: 'grade11@feedback.com', role: UserRole.USER, rating: 25},
-  GRADE_FEEDBACKS: {login: 'grade_feedbacks', password: CryptoUtil.getPasswordHash('grade_feed'), email: 'grade@feedback.com', role: UserRole.USER, rating: 19},
-  SIMPLE: {login: 'simple_user', password: CryptoUtil.getPasswordHash('simple_password'), email: 'simple@email.com', role: UserRole.USER, rating: 0, profession: PROFESSIONS.SOFTWARE_DEVELOPMENT},
-  SIMPLE_FGN: {login: 'not_human', password: CryptoUtil.getPasswordHash('not_human228'), email: 'hello@world.com', role: UserRole.USER, rating: 100, profession: PROFESSIONS.ECONOMIST},
-  ADMIN_USER: {login: 'admin_user', password: CryptoUtil.getPasswordHash('admin_pass'), email: 'admin@gmail.com', role: UserRole.ADMIN, rating: 99},
+  GRADE_FEEDBACKS1: {login: 'grade_feedbacks1', password: CryptoUtil.getPasswordHash('grade_feed11'), email: 'grade11@feedback.com', role: UserRole.USER},
+  GRADE_FEEDBACKS: {login: 'grade_feedbacks', password: CryptoUtil.getPasswordHash('grade_feed'), email: 'grade@feedback.com', role: UserRole.USER},
+  SIMPLE: {login: 'simple_user', password: CryptoUtil.getPasswordHash('simple_password'), email: 'simple@email.com', role: UserRole.USER, profession: PROFESSIONS.SOFTWARE_DEVELOPMENT},
+  SIMPLE_FGN: {login: 'not_human', password: CryptoUtil.getPasswordHash('not_human228'), email: 'hello@world.com', role: UserRole.USER, profession: PROFESSIONS.ECONOMIST},
+  ADMIN_USER: {login: 'admin_user', password: CryptoUtil.getPasswordHash('admin_pass'), email: 'admin@gmail.com', role: UserRole.ADMIN},
 };
 
 

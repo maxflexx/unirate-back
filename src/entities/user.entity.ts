@@ -19,9 +19,6 @@ export class User{
   @Column()
   role: number;
 
-  @Column()
-  rating: number;
-
   @Column({name: 'profession_id', nullable: true})
   professionId: number;
 
@@ -31,7 +28,6 @@ export class User{
     entity.password = raw.password;
     entity.email = raw.email;
     entity.role = raw.role;
-    entity.rating = raw.rating;
     entity.professionId = +raw.profession_id != undefined ? +raw.profession_id : undefined;
     return entity;
   }
