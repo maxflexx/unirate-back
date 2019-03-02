@@ -16,6 +16,7 @@ describe('Admin Disciplines', () => {
     db = await initTestApp(server);
     await createTestData();
   });
+  //TODO: add on which professions is mandatory
   describe('GET admin/feedback/:disciplineId', () => {
     testAdminAuth(server, RequestMethod.GET, `/admin/discipline`);
     it('success: filter by facultyId', () => {
@@ -29,13 +30,11 @@ describe('Admin Disciplines', () => {
           expect(response.body.disciplines).toEqual([{
             id: DISCIPLINE.ECONOMICS.id,
             name: DISCIPLINE.ECONOMICS.name,
-            mandatory: DISCIPLINE.ECONOMICS.mandatory,
             year: DISCIPLINE.ECONOMICS.year,
             facultyId: FACULTIES.FEN.id
           }, {
             id: DISCIPLINE.HISTORY.id,
             name: DISCIPLINE.HISTORY.name,
-            mandatory: DISCIPLINE.HISTORY.mandatory,
             year: DISCIPLINE.HISTORY.year,
             facultyId: FACULTIES.FEN.id
           }]);
@@ -52,7 +51,6 @@ describe('Admin Disciplines', () => {
           expect(response.body.disciplines).toEqual([ {
             id: DISCIPLINE.HISTORY.id,
             name: DISCIPLINE.HISTORY.name,
-            mandatory: DISCIPLINE.HISTORY.mandatory,
             year: DISCIPLINE.HISTORY.year,
             facultyId: FACULTIES.FEN.id
           }]);
@@ -69,7 +67,6 @@ describe('Admin Disciplines', () => {
           expect(response.body.disciplines).toEqual([ {
             id: DISCIPLINE.PROCEDURE.id,
             name: DISCIPLINE.PROCEDURE.name,
-            mandatory: DISCIPLINE.PROCEDURE.mandatory,
             year: DISCIPLINE.PROCEDURE.year,
             facultyId: DISCIPLINE.PROCEDURE.faculty.id
           }]);
@@ -86,7 +83,6 @@ describe('Admin Disciplines', () => {
           expect(response.body.disciplines).toEqual([ {
             id: DISCIPLINE.PROCEDURE.id,
             name: DISCIPLINE.PROCEDURE.name,
-            mandatory: DISCIPLINE.PROCEDURE.mandatory,
             year: DISCIPLINE.PROCEDURE.year,
             facultyId: DISCIPLINE.PROCEDURE.faculty.id
           }]);
@@ -96,7 +92,7 @@ describe('Admin Disciplines', () => {
   describe('POST admin/discipline', () => {
     testAdminAuth(server, RequestMethod.POST, '/admin/discipline');
     it('success', () => {
-      const body = {name: 'NEW_DISCIPLINE', mandatory: 1, year: 3, facultyId: FACULTIES.FEN.id};
+      const body = {name: 'NEW_DISCIPLINE', year: 3, facultyId: FACULTIES.FEN.id};
       return request(server)
         .post('/admin/discipline')
         .send(body)
@@ -106,7 +102,6 @@ describe('Admin Disciplines', () => {
           expect(response.body).toEqual({
             id: expect.any(Number),
             name: body.name,
-            mandatory: body.mandatory,
             year: body.year,
             facultyId: body.facultyId
           });
@@ -114,14 +109,13 @@ describe('Admin Disciplines', () => {
           expect(discipline).toEqual({
             id: response.body.id,
             name: body.name,
-            mandatory: body.mandatory,
             year: body.year,
             facultyId: body.facultyId
           });
         });
     });
     it('fail: faculty not found', () => {
-      const body = {name: 'NEW_DISCIPLINE', mandatory: 1, year: 3, facultyId: 90999};
+      const body = {name: 'NEW_DISCIPLINE', year: 3, facultyId: 90999};
       return request(server)
         .post('/admin/discipline')
         .send(body)
@@ -132,7 +126,7 @@ describe('Admin Disciplines', () => {
         });
     });
     it('fail: no name', () => {
-      const body = {mandatory: 1, year: 3, facultyId: FACULTIES.INFORMATICS.id};
+      const body = {year: 3, facultyId: FACULTIES.INFORMATICS.id};
       return request(server)
         .post('/admin/discipline')
         .send(body)
@@ -146,7 +140,7 @@ describe('Admin Disciplines', () => {
   describe('PUT admin/discipline/:id', () => {
     testAdminAuth(server, RequestMethod.PUT, '/admin/discipline/1');
     it('success: update everything', () => {
-      const body = {name: 'UPDATE', mandatory: 0, year: 1, facultyId: FACULTIES.FGN.id};
+      const body = {name: 'UPDATE', year: 1, facultyId: FACULTIES.FGN.id};
       return request(server)
         .put(`/admin/discipline/${DISCIPLINE.PROCEDURE.id}`)
         .send(body)
@@ -156,7 +150,6 @@ describe('Admin Disciplines', () => {
           expect(response.body).toEqual({
             id: DISCIPLINE.PROCEDURE.id,
             name: body.name,
-            mandatory: body.mandatory,
             year: body.year,
             facultyId: body.facultyId,
           });
@@ -164,14 +157,13 @@ describe('Admin Disciplines', () => {
           expect(discipline).toEqual({
             id: response.body.id,
             name: body.name,
-            mandatory: body.mandatory,
             year: body.year,
             facultyId: body.facultyId
           });
         });
     });
     it('success: partial update', () => {
-      const body = {mandatory: 0, year: 2};
+      const body = { year: 2};
       return request(server)
         .put(`/admin/discipline/${DISCIPLINE.OBDZ.id}`)
         .send(body)
@@ -181,7 +173,6 @@ describe('Admin Disciplines', () => {
           expect(response.body).toEqual({
             id: DISCIPLINE.OBDZ.id,
             name: DISCIPLINE.OBDZ.name,
-            mandatory: body.mandatory,
             year: body.year,
             facultyId: DISCIPLINE.OBDZ.faculty.id,
           });
@@ -189,7 +180,6 @@ describe('Admin Disciplines', () => {
           expect(discipline).toEqual({
             id: DISCIPLINE.OBDZ.id,
             name: DISCIPLINE.OBDZ.name,
-            mandatory: body.mandatory,
             year: body.year,
             facultyId: DISCIPLINE.OBDZ.faculty.id,
           });

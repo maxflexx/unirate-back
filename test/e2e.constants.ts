@@ -29,14 +29,14 @@ export const USERS = {
 
 
 export const DISCIPLINE = {
-  OOP: {id: 1, name: 'OOP', mandatory: 1, year: 2, faculty: FACULTIES.INFORMATICS},
-  PROCEDURE: {id: 2, name: 'Procedure programming', mandatory: 1, year: 2, faculty: FACULTIES.INFORMATICS}
-  OBDZ: {id: 3, name: 'OBDZ', mandatory: 1, year: 3, faculty: FACULTIES.INFORMATICS},
-  ALGORITHMS: {id: 4, name: 'Algorithms', mandatory: 0, year: 2, faculty: FACULTIES.INFORMATICS},
-  ENGLISH: {id: 5, name: 'English', mandatory: 1, year: 1, faculty: FACULTIES.FGN},
-  ENGLISH_LIT: {id: 6, name: 'English lit', mandatory: 0, year: 3, faculty: FACULTIES.FGN},
-  ECONOMICS: {id: 7, name: 'Economics', mandatory: 1, year: 2, faculty: FACULTIES.FEN},
-  HISTORY: {id: 8, name: 'History', mandatory: 1, year: 1, faculty: FACULTIES.FEN},
+  OOP: {id: 1, name: 'OOP', year: 2, faculty: FACULTIES.INFORMATICS},
+  PROCEDURE: {id: 2, name: 'Procedure programming', year: 2, faculty: FACULTIES.INFORMATICS}
+  OBDZ: {id: 3, name: 'OBDZ', year: 3, faculty: FACULTIES.INFORMATICS},
+  ALGORITHMS: {id: 4, name: 'Algorithms', year: 2, faculty: FACULTIES.INFORMATICS},
+  ENGLISH: {id: 5, name: 'English', year: 1, faculty: FACULTIES.FGN},
+  ENGLISH_LIT: {id: 6, name: 'English lit', year: 3, faculty: FACULTIES.FGN},
+  ECONOMICS: {id: 7, name: 'Economics', year: 2, faculty: FACULTIES.FEN},
+  HISTORY: {id: 8, name: 'History', year: 1, faculty: FACULTIES.FEN},
 };
 
 export const TEACHER = {

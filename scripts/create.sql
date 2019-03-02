@@ -26,7 +26,6 @@ DROP TABLE IF EXISTS discipline;
 CREATE TABLE discipline(
 	id bigint NOT NULL AUTO_INCREMENT,
     name varchar(64) NOT NULL UNIQUE,
-    mandatory tinyint(1) NOT NULL,
     `year` tinyint(1) NOT NULL,
     faculty_id bigint NOT NULL,
     PRIMARY KEY(id),

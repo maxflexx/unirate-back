@@ -41,8 +41,8 @@ export class DisciplineService {
     const faculty = await DbUtil.getFacultyById(Faculty, body.facultyId);
     if (!faculty)
       throw ItemNotFound;
-    const id = +(await DbUtil.insertOne(`INSERT INTO discipline(name, mandatory, year, faculty_id) VALUES
-    ("${body.name}", ${body.mandatory}, ${body.year}, ${body.facultyId})`));
+    const id = +(await DbUtil.insertOne(`INSERT INTO discipline(name, year, faculty_id) VALUES
+    ("${body.name}", ${body.year}, ${body.facultyId})`));
     return await DbUtil.getDisciplineById(Discipline, id);
   }
 
@@ -56,7 +56,7 @@ export class DisciplineService {
     if (!discipline)
       throw ItemNotFound;
     discipline.updateAdmin(body);
-    await DbUtil.insertOne(`UPDATE discipline SET name="${discipline.name}", mandatory=${discipline.mandatory}, year=${discipline.year}, faculty_id=${discipline.facultyId} WHERE id=${disciplineId}`);
+    await DbUtil.insertOne(`UPDATE discipline SET name="${discipline.name}", year=${discipline.year}, faculty_id=${discipline.facultyId} WHERE id=${disciplineId}`);
     return await DbUtil.getDisciplineById(Discipline, disciplineId);
   }
 

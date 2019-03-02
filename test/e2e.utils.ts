@@ -90,7 +90,7 @@ export async function createTestData() {
   }
 
   for (const key in DISCIPLINE) {
-    await DbUtil.insertOne(`INSERT INTO discipline (id, name, mandatory, year, faculty_id) VALUES (${DISCIPLINE[key].id}, "${DISCIPLINE[key].name}", ${DISCIPLINE[key].mandatory}, ${DISCIPLINE[key].year}, ${DISCIPLINE[key].faculty.id});`);
+    await DbUtil.insertOne(`INSERT INTO discipline (id, name, year, faculty_id) VALUES (${DISCIPLINE[key].id}, "${DISCIPLINE[key].name}", ${DISCIPLINE[key].year}, ${DISCIPLINE[key].faculty.id});`);
   }
 
   for (const key in TEACHER) {
@@ -110,7 +110,6 @@ export async function createTestData() {
   }
 
   for (const key in MANDATORY) {
-    console.log(`INSERT INTO mandatory (discipline_id, profession_id) VALUES (${MANDATORY[key].discipline.id}, ${MANDATORY[key].profession.id});`);
     await DbUtil.insertOne(`INSERT INTO mandatory (discipline_id, profession_id) VALUES (${MANDATORY[key].discipline.id}, ${MANDATORY[key].profession.id});`);
   }
 

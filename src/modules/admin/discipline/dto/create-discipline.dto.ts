@@ -6,10 +6,6 @@ export class CreateDisciplineDto {
   name: string;
 
   @IsInt()
-  @IsIn([0, 1])
-  mandatory: number;
-
-  @IsInt()
   @IsIn([0, 1, 2, 3, 4])
   year: number;
 

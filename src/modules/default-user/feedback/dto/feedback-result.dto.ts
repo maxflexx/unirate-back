@@ -7,7 +7,6 @@ export class FeedbackResultDto {
   rating: number;
   comment: string;
   created: number;
-  updated: number;
   disciplineId: number;
   teacherIds: number[];
 
@@ -19,7 +18,6 @@ export class FeedbackResultDto {
     dto.rating = raw.rating;
     dto.comment = raw.comment;
     dto.created = raw.created;
-    dto.updated = raw.updated;
     dto.disciplineId = +raw.discipline_id;
     dto.teacherIds = [+raw.teacher_id];
     return dto;

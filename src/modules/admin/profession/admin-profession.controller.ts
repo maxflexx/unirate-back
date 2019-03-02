@@ -17,7 +17,7 @@ export class AdminProfessionController {
   }
 
   @Post()
-  async createProfessionAdmin(@Body() body: CreateProfessionDto): Profession<Profession> {
+  async createProfessionAdmin(@Body() body: CreateProfessionDto): Promise<Profession> {
     return await this.professionService.createProfessionAdmin(body);
   }
 

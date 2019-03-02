@@ -60,7 +60,7 @@ export class FeedbackService {
     await DbUtil.updateOne(`UPDATE feedback SET rating=rating${like === 1 ? '+' : '-'}1`);
   }
 
-//TODO: change feedback.rating
+
   async gradeFeedback(feedbackId: number, login: string, like: number): Promise<FeedbackGrade> {
     const feedback = await DbUtil.getFeedbackById(Feedback, feedbackId);
     if (!feedback)
@@ -70,6 +70,7 @@ export class FeedbackService {
     if (feedbackGrade) {
       if (feedbackGrade.like !== like) {
         await DbUtil.updateOne(`UPDATE feedback_grade SET like=${like} WHERE user_login="${login}" AND feedback_id=${feedbackId}`);
+        await DbUtil.updateOne(`UPDATE feedback SET rating=rating+${like} WHERE user_login="${login}" AND id=${feedbackId}`);
         feedbackGrade.like = like;
       }
       return feedbackGrade;
