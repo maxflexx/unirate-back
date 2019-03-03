@@ -1,4 +1,4 @@
-import { IsIn, IsInt, IsOptional } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString } from 'class-validator';
 import { PagingDto } from '../../../../common/dto/paging.dto';
 import { Exclude, Expose, Transform } from 'class-transformer';
 
@@ -28,4 +28,9 @@ export class GetAdminDisciplineParamsDto extends PagingDto{
   @IsOptional()
   @Expose()
   mandatoryProfessionId: number;
+
+  @IsString()
+  @IsOptional()
+  @Expose()
+  search: string;
 }

@@ -2,7 +2,7 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testUserAuth } from '../../e2e.utils';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { DISCIPLINE, TEACHER, USERS_JWT } from '../../e2e.constants';
+import { ADMINS_JWT, DISCIPLINE, TEACHER, USERS_JWT } from '../../e2e.constants';
 import request from 'supertest';
 import { INVALID_PARAMS } from '../../../src/constants';
 
@@ -14,36 +14,39 @@ describe('Teachers', () => {
     db = await initTestApp(server);
     await createTestData();
   });
-  describe('GET feedback/:disciplineId', () => {
+  describe('GET /teacher', () => {
     testUserAuth(server, RequestMethod.GET, `/teacher`);
-    it('success', () => {
+    it('success: filter by id', () => {
       return request(server)
         .get(`/teacher`)
+        .query(`teacherId=${TEACHER.USHENKO.id}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.length).toBe(5);
-          expect(response.body).toContainEqual({
-            id: TEACHER.GULAEVA.id,
-            name: TEACHER.GULAEVA.name,
-            lastName: TEACHER.GULAEVA.lastName,
-            middleName: TEACHER.GULAEVA.middleName,
-          });
+          expect(response.body.total).toBe(1);
+          expect(response.body.teachers).toEqual([{
+            id: TEACHER.USHENKO.id,
+            lastName: TEACHER.USHENKO.lastName,
+            name: TEACHER.USHENKO.name,
+            middleName: TEACHER.USHENKO.middleName,
+            feedbackNumber: 1
+          }]);
         });
     });
-    it('success: by id', () => {
+    it('success: filter by search', () => {
       return request(server)
         .get(`/teacher`)
-        .query(`teacherId=${TEACHER.GULAEVA.id}`)
+        .query(`search=Ush`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.length).toBe(1);
-          expect(response.body).toEqual([{
-            id: TEACHER.GULAEVA.id,
-            name: TEACHER.GULAEVA.name,
-            lastName: TEACHER.GULAEVA.lastName,
-            middleName: TEACHER.GULAEVA.middleName,
+          expect(response.body.total).toBe(1);
+          expect(response.body.teachers).toEqual([{
+            id: TEACHER.USHENKO.id,
+            lastName: TEACHER.USHENKO.lastName,
+            name: TEACHER.USHENKO.name,
+            middleName: TEACHER.USHENKO.middleName,
+            feedbackNumber: 1
           }]);
         });
     });

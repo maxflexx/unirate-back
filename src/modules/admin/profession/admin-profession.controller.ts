@@ -13,7 +13,7 @@ export class AdminProfessionController {
 
   @Get()
   async getProfession(@Query() params: GetProfessionDto): Promise<{total: number, professions: Profession[]}> {
-    return await this.professionService.getProfessionsAdmin(params);
+    return await this.professionService.getProfessions(params);
   }
 
   @Post()

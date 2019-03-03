@@ -3,20 +3,13 @@ import { Exclude, Expose, Transform } from 'class-transformer';
 import { PagingDto } from '../../../../common/dto/paging.dto';
 
 @Exclude()
-export class GetProfessionDto extends PagingDto{
+export class GetFacultyDto extends PagingDto {
   @IsInt()
   @IsPositive()
-  @Transform(item => +item || item)
+  @Transform(v => v ? +v : v)
   @IsOptional()
   @Expose()
   facultyId: number;
-
-  @IsInt()
-  @IsPositive()
-  @Transform(item => +item || item)
-  @IsOptional()
-  @Expose()
-  professionId: number;
 
   @IsString()
   @IsOptional()

@@ -4,12 +4,29 @@ import { DbUtil } from '../../utils/db-util';
 import { CreateFacultyDto } from '../admin/faculty/dto/create-faculty.dto';
 import { ItemAlreadyExists, ItemNotFound } from '../../constants';
 import { UpdateFacultyDto } from '../admin/faculty/dto/update-faculty.dto';
+import { GetFacultyDto } from '../default-user/faculty/dto/get-faculty.dto';
 
 @Injectable()
 export class FacultyService {
 
-  async getFacultiesAdmin(): Promise<Faculty[]> {
-    return await DbUtil.getMany(Faculty, 'SELECT * FROM faculty');
+  async getFaculties(params: GetFacultyDto): Promise<{total: number, faculties: Faculty[]}> {
+    let query = `SELECT * FROM faculty`;
+    let countQuery = 'SELECT COUNT(*) AS count FROM faculty';
+    if (params.facultyId != undefined || params.search) {
+      query += ' WHERE ';
+      countQuery += ' WHERE ';
+      const queryParams = [];
+      if (params.facultyId != undefined) {
+        queryParams.push(`id=${params.facultyId}`);
+      }
+      if (params.search) {
+        queryParams.push(`(name LIKE "%${params.search}%" OR short_name LIKE "%${params.search}%")`);
+      }
+      query += queryParams.join(' AND ');
+      countQuery += queryParams.join(' AND ');
+    }
+    query += ` LIMIT ${params.limit} OFFSET ${params.offset}`;
+    return {total: await DbUtil.getCount(countQuery), faculties: await DbUtil.getMany(Faculty, query)};
   }
 
   async createFacultyAdmin(body: CreateFacultyDto): Promise<Faculty> {

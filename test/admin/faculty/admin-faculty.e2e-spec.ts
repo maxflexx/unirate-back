@@ -1,7 +1,7 @@
 import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testAdminAuth } from '../../e2e.utils';
-import { ADMINS_JWT, FACULTIES } from '../../e2e.constants';
+import { ADMINS_JWT, FACULTIES, USERS_JWT } from '../../e2e.constants';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import request from 'supertest';
 import { DbUtil } from '../../../src/utils/db-util';
@@ -37,6 +37,36 @@ describe('Admin Faculty', () => {
             id: FACULTIES.FEN.id,
             name: FACULTIES.FEN.name,
             shortName: FACULTIES.FEN.shortName,
+          }]);
+        });
+    });
+    it('success: by id', () => {
+      return request(server)
+        .get(`/admin/faculty`)
+        .query(`facultyId=${FACULTIES.FGN.id}`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body.total).toBe(1);
+          expect(response.body.faculties).toEqual([{
+            id: FACULTIES.FGN.id,
+            name: FACULTIES.FGN.name,
+            shortName: FACULTIES.FGN.shortName,
+          }]);
+        });
+    });
+    it('success: by search', () => {
+      return request(server)
+        .get(`/admin/faculty`)
+        .query(`search=FG`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body.total).toBe(1);
+          expect(response.body.faculties).toEqual([{
+            id: FACULTIES.FGN.id,
+            name: FACULTIES.FGN.name,
+            shortName: FACULTIES.FGN.shortName,
           }]);
         });
     });

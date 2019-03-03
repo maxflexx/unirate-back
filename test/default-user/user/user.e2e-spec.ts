@@ -19,7 +19,7 @@ describe('User', () => {
   });
 
   describe('GET /user/:login', () => {
-    testAdminAuth(server, RequestMethod.GET, '/user/login');
+    testUserAuth(server, RequestMethod.GET, '/user/login');
     it('success', () => {
       return request(server)
         .get(`/user/${USERS.SIMPLE.login}`)

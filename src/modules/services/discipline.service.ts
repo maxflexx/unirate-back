@@ -6,10 +6,6 @@ import { CreateDisciplineDto } from '../admin/discipline/dto/create-discipline.d
 import { Faculty } from '../../entities/faculty.entity';
 import { ItemNotFound } from '../../constants';
 import { UpdateDisciplineDto } from '../admin/discipline/dto/update-discipline.dto';
-import { Feedback } from '../../entities/feedback.entity';
-import { FeedbackTeacher } from '../../entities/feedback-teacher.entity';
-import { FeedbackGrade } from '../../entities/feedback-grade.entity';
-import { Profession } from '../../entities/profession.entity';
 
 @Injectable()
 export class DisciplineService {
@@ -17,11 +13,14 @@ export class DisciplineService {
 
   async getDisciplinesAdmin(params: GetAdminDisciplineParamsDto): Promise<{disciplines: Discipline[], total: number}> {
     let query = `SELECT * FROM discipline `;
+    let countQuery = `SELECT COUNT(*) AS count FROM discipline `;
     if (params.mandatoryProfessionId != undefined) {
       query += `LEFT JOIN mandatory ON mandatory.discipline_id = discipline.id `;
+      countQuery += `LEFT JOIN mandatory ON mandatory.discipline_id = discipline.id `;
     }
-    if (params.facultyId != undefined || params.id != undefined || params.year != undefined || params.mandatoryProfessionId != undefined) {
+    if (params.facultyId != undefined || params.id != undefined || params.year != undefined || params.mandatoryProfessionId != undefined || params.search) {
       query += 'WHERE ';
+      countQuery += 'WHERE ';
       const queryParams = [];
       if (params.facultyId != undefined) {
         queryParams.push(`faculty_id = ${params.facultyId}`);
@@ -35,12 +34,15 @@ export class DisciplineService {
       if (params.mandatoryProfessionId != undefined) {
         queryParams.push(`mandatory.profession_id=${params.mandatoryProfessionId}`);
       }
+      if (params.search != undefined) {
+        queryParams.push(`name LIKE "%${params.search}%"`);
+      }
       query += queryParams.join(' AND ');
+      countQuery += queryParams.join(' AND ');
     }
-    const queryWithLimits = query + ` LIMIT ${params.limit} OFFSET ${params.offset}`;
-    const disciplines = await DbUtil.getMany(Discipline, queryWithLimits);
-    const countHowMany = await DbUtil.getMany(Discipline, query);
-    return {disciplines, total: countHowMany.length};
+    query += ` LIMIT ${params.limit} OFFSET ${params.offset}`;
+    const disciplines = await DbUtil.getMany(Discipline, query);
+    return {disciplines, total: await DbUtil.getCount(countQuery)};
   }
 
   async createDisciplineAdmin(body: CreateDisciplineDto): Promise<Discipline> {

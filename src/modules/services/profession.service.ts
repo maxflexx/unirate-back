@@ -11,14 +11,26 @@ import { UpdateProfessionDto } from '../admin/profession/dto/update-profession.d
 export class ProfessionService {
   constructor(){}
 
-  async getProfessionsAdmin(params: GetProfessionDto): Promise<{total: number, professions: Profession[]}> {
-    let professions;
-    if (params.facultyId != undefined) {
-      professions = await DbUtil.getMany(Profession, `SELECT * FROM profession WHERE faculty_id=${params.facultyId}`);
-    }else {
-      professions = await DbUtil.getMany(Profession, `SELECT * FROM profession`);
+  async getProfessions(params: GetProfessionDto): Promise<{total: number, professions: Profession[]}> {
+    let query = 'SELECT * FROM profession';
+    let countQuery = 'SELECT COUNT(*) AS count FROM profession';
+    if (params.facultyId != undefined || params.professionId != undefined || params.search) {
+      query += ' WHERE ';
+      countQuery += ' WHERE ';
+      const queryParams = [];
+      if (params.facultyId != undefined) {
+        queryParams.push(`faculty_id=${params.facultyId}`);
+      }
+      if (params.professionId != undefined) {
+        queryParams.push(`id=${params.professionId}`);
+      }
+      if (params.search) {
+        queryParams.push(`name LIKE "%${params.search}%"`);
+      }
+      query += queryParams.join(' AND ');
+      countQuery += queryParams.join(' AND ');
     }
-    return {total: professions.length, professions};
+    return {total: await DbUtil.getCount(countQuery), professions: await DbUtil.getMany(Profession, query)};
   }
 
   async createProfessionAdmin(body: CreateProfessionDto): Promise<Profession> {

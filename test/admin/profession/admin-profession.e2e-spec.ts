@@ -2,7 +2,7 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testAdminAuth } from '../../e2e.utils';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { ADMINS_JWT, FACULTIES, PROFESSIONS } from '../../e2e.constants';
+import { ADMINS_JWT, FACULTIES, PROFESSIONS, USERS_JWT } from '../../e2e.constants';
 import request from 'supertest';
 import { DbUtil } from '../../../src/utils/db-util';
 import { Profession } from '../../../src/entities/profession.entity';
@@ -31,6 +31,36 @@ describe('Admin Professions', () => {
             id: PROFESSIONS.ECONOMIST.id,
             name: PROFESSIONS.ECONOMIST.name,
             facultyId: PROFESSIONS.ECONOMIST.faculty.id
+          }]);
+        });
+    });
+    it('success: filter by professionId', () => {
+      return request(server)
+        .get(`/admin/profession`)
+        .query(`professionId=${PROFESSIONS.ECONOMIST.id}`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body.total).toBe(1);
+          expect(response.body.professions).toEqual([{
+            id: PROFESSIONS.ECONOMIST.id,
+            name: PROFESSIONS.ECONOMIST.name,
+            facultyId: PROFESSIONS.ECONOMIST.faculty.id
+          }]);
+        });
+    });
+    it('success: filter by search', () => {
+      return request(server)
+        .get(`/admin/profession`)
+        .query(`search=erman`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body.total).toBe(1);
+          expect(response.body.professions).toEqual([{
+            id: PROFESSIONS.GERMAN_PHILOLOGY.id,
+            name: PROFESSIONS.GERMAN_PHILOLOGY.name,
+            facultyId: PROFESSIONS.GERMAN_PHILOLOGY.faculty.id
           }]);
         });
     });

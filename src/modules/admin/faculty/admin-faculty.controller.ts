@@ -1,19 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { FacultyService } from '../../services/faculty.service';
 import { Faculty } from '../../../entities/faculty.entity';
 import { CreateFacultyDto } from './dto/create-faculty.dto';
 import { UpdateFacultyDto } from './dto/update-faculty.dto';
 import { ParseIntPipe } from '../../../common/pipes/parse-int.pipe';
 import { STATUS_OK } from '../../../constants';
+import { GetFacultyDto } from '../../default-user/faculty/dto/get-faculty.dto';
 
 @Controller('admin/faculty')
 export class AdminFacultyController {
   constructor(private readonly facultyService: FacultyService){}
 
   @Get()
-  async getFaculties(): Promise<{total: number, faculties: Faculty[]}> {
-    const faculties = await this.facultyService.getFacultiesAdmin();
-    return {total: faculties.length, faculties};
+  async getFaculties(@Query() params: GetFacultyDto): Promise<{total: number, faculties: Faculty[]}> {
+    return await this.facultyService.getFaculties(params);
   }
 
   @Post()

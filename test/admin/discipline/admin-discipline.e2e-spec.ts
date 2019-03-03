@@ -2,7 +2,7 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testAdminAuth } from '../../e2e.utils';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { ADMINS_JWT, DISCIPLINE, FACULTIES, PROFESSIONS } from '../../e2e.constants';
+import { ADMINS_JWT, DISCIPLINE, FACULTIES, PROFESSIONS, USERS_JWT } from '../../e2e.constants';
 import request from 'supertest';
 import { DbUtil } from '../../../src/utils/db-util';
 import { Discipline } from '../../../src/entities/discipline.entity';
@@ -84,6 +84,22 @@ describe('Admin Disciplines', () => {
             name: DISCIPLINE.PROCEDURE.name,
             year: DISCIPLINE.PROCEDURE.year,
             facultyId: DISCIPLINE.PROCEDURE.faculty.id
+          }]);
+        });
+    });
+    it('success: filter by search', () => {
+      return request(server)
+        .get(`/admin/discipline`)
+        .query(`search=OO`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body.total).toBe(1);
+          expect(response.body.disciplines).toEqual([{
+            id: DISCIPLINE.OOP.id,
+            name: DISCIPLINE.OOP.name,
+            year: DISCIPLINE.OOP.year,
+            facultyId: DISCIPLINE.OOP.faculty.id
           }]);
         });
     });
