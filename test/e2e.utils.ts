@@ -31,13 +31,14 @@ import { AdminFacultyModule } from '../src/modules/admin/faculty/admin-faculty.m
 import { AdminProfessionModule } from '../src/modules/admin/profession/admin-profession.module';
 import { AdminUserModule } from '../src/modules/admin/user/admin-user.module';
 import { AdminMandatoryModule } from '../src/modules/admin/mandatory/admin-mandatory.module';
+import { AdminTeacherModule } from '../src/modules/admin/teacher/admin-teacher.module';
 
 export async function initTestApp(server) {
   const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule, AdminUserModule, AdminMandatoryModule]
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule, AdminUserModule, AdminMandatoryModule, AdminTeacherModule]
   }).compile();
 
   server.use(bodyParser.json());

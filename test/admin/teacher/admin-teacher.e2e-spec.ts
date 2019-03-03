@@ -21,7 +21,7 @@ describe('Admin Teachers', () => {
     it('success: filter by id', () => {
       return request(server)
         .get(`/admin/teacher`)
-        .query(`id=${TEACHER.USHENKO.id}`)
+        .query(`teacherId=${TEACHER.USHENKO.id}`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
@@ -54,7 +54,7 @@ describe('Admin Teachers', () => {
     });
   });
   describe('POST admin/teacher', () => {
-    testAdminAuth(server, RequestMethod.POST, `/admin/teacher/1`);
+    testAdminAuth(server, RequestMethod.POST, `/admin/teacher`);
     it('success', () => {
       const body = { name: 'new', lastName: 'teacher', middleName: 'awesome' };
       return request(server)
