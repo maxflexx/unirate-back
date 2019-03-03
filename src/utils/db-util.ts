@@ -62,15 +62,27 @@ export class DbUtil {
     return await DbUtil.getOne(entity, `SELECT * FROM feedback_grade WHERE feedback_id=${feedbackId} AND user_login="${userLogin}"`);
   }
 
-  static async getFeedbackGradeByFeedbackid(entity, id) {
+  static async getFeedbackGradeByFeedbackid(entity, id: number) {
     return await DbUtil.getMany(entity, `SELECT * FROM feedback_grade WHERE feedback_id=${id}`);
   }
 
-  static async getFacultyById(entity, id) {
+  static async getFacultyById(entity, id: number) {
     return await DbUtil.getOne(entity, `SELECT * FROM faculty WHERE id=${id}`);
   }
 
-  static async getProfessionById(entity, id) {
+  static async getProfessionById(entity, id: number) {
     return await DbUtil.getOne(entity, `SELECT * FROM profession WHERE id=${id}`);
+  }
+
+  static async getMandatoryByProfessionId(entity, professionId: number) {
+    return await DbUtil.getMany(entity, `SELECT * FROM mandatory WHERE profession_id=${professionId}`);
+  }
+
+  static async getMandatoryByDisciplineId(entity, disciplineId: number) {
+    return await DbUtil.getMany(entity,`SELECT * FROM mandatory WHERE discipline_id=${disciplineId}`);
+  }
+
+  static async getMandatoryByDisciplineAndProfession(entity, professionId: number, disciplineId: number) {
+    return await DbUtil.getMany(entity,`SELECT * FROM mandatory WHERE discipline_id=${disciplineId} AND profession_id=${professionId}`);
   }
 }
