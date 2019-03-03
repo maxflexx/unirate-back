@@ -83,6 +83,6 @@ export class DbUtil {
   }
 
   static async getMandatoryByDisciplineAndProfession(entity, professionId: number, disciplineId: number) {
-    return await DbUtil.getMany(entity,`SELECT * FROM mandatory WHERE discipline_id=${disciplineId} AND profession_id=${professionId}`);
+    return await DbUtil.getOne(entity,`SELECT * FROM mandatory WHERE discipline_id=${disciplineId} AND profession_id=${professionId}`);
   }
 }

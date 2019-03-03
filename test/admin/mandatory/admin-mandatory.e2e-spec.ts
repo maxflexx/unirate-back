@@ -6,7 +6,7 @@ import { ADMINS_JWT, DISCIPLINE, MANDATORY, PROFESSIONS } from '../../e2e.consta
 import request from 'supertest';
 import { DbUtil } from '../../../src/utils/db-util';
 import { Mandatory } from '../../../src/entities/mandatory.entity';
-import { ITEM_ALREADY_EXISTS, ITEM_NOT_FOUND } from '../../../src/constants';
+import { INVALID_PARAMS, ITEM_ALREADY_EXISTS, ITEM_NOT_FOUND } from '../../../src/constants';
 
 describe('Admin Mandatory', () => {
   const server = express();
@@ -16,15 +16,15 @@ describe('Admin Mandatory', () => {
     db = await initTestApp(server);
     await createTestData();
   });
-  describe('POST admin/discipline/mandatory', () => {
-    testAdminAuth(server, RequestMethod.POST, `/admin/discipline/mandatory`);
+  describe('POST admin/mandatory', () => {
+    testAdminAuth(server, RequestMethod.POST, `/admin/mandatory`);
     it('success', () => {
       const body = {disciplineId: DISCIPLINE.ENGLISH.id, professionId: PROFESSIONS.APPLIED_MATH.id};
       return request(server)
-        .post(`/admin/discipline/mandatory`)
+        .post(`/admin/mandatory`)
         .send(body)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
-        .expect(HttpStatus.OK)
+        .expect(HttpStatus.CREATED)
         .then(async response => {
           expect(response.body).toEqual(body);
           const mandatory = await DbUtil.getMandatoryByDisciplineAndProfession(Mandatory, body.professionId, body.disciplineId);
@@ -34,7 +34,7 @@ describe('Admin Mandatory', () => {
     it('fail: discipline does not exist', () => {
       const body = {disciplineId: 9999, professionId: PROFESSIONS.APPLIED_MATH.id};
       return request(server)
-        .post(`/admin/discipline/mandatory`)
+        .post(`/admin/mandatory`)
         .send(body)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.NOT_FOUND)
@@ -45,7 +45,7 @@ describe('Admin Mandatory', () => {
     it('fail: profession does not exist', () => {
       const body = {disciplineId: DISCIPLINE.ECONOMICS.id, professionId: 9999};
       return request(server)
-        .post(`/admin/discipline/mandatory`)
+        .post(`/admin/mandatory`)
         .send(body)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.NOT_FOUND)
@@ -56,7 +56,7 @@ describe('Admin Mandatory', () => {
     it('fail: already exists', () => {
       const body = {disciplineId: DISCIPLINE.ECONOMICS.id, professionId: PROFESSIONS.ECONOMIST.id};
       return request(server)
-        .post(`/admin/discipline/mandatory`)
+        .post(`/admin/mandatory`)
         .send(body)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.CONFLICT)
@@ -65,10 +65,11 @@ describe('Admin Mandatory', () => {
         });
     });
   });
-  describe('DELETE admin/discipline/mandatory', () => {
+  describe('DELETE admin/mandatory', () => {
+    testAdminAuth(server, RequestMethod.DELETE, `/admin/mandatory`);
     it('success: one', () => {
     return request(server)
-      .delete(`/admin/discipline/mandatory`)
+      .delete(`/admin/mandatory`)
       .query(`disciplineId=${MANDATORY.SE_OBDS.discipline.id}&professionId=${MANDATORY.SE_OBDS.profession.id}`)
       .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
       .expect(HttpStatus.OK)
@@ -79,7 +80,7 @@ describe('Admin Mandatory', () => {
     });
     it('success: by discipline', () => {
       return request(server)
-        .delete(`/admin/discipline/mandatory`)
+        .delete(`/admin/mandatory`)
         .query(`disciplineId=${MANDATORY.ENGLISH_ECONOMICS.discipline.id}`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
@@ -90,13 +91,23 @@ describe('Admin Mandatory', () => {
     });
     it('success: by profession', () => {
       return request(server)
-        .delete(`/admin/discipline/mandatory`)
+        .delete(`/admin/mandatory`)
         .query(`professionId=${MANDATORY.SE_OOP.profession.id}`)
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(async response => {
           const mandatory = await DbUtil.getMandatoryByProfessionId(Mandatory, MANDATORY.SE_OOP.profession.id);
           expect(mandatory).toBe(null);
+        });
+    });
+    it('fail: no valid params', () => {
+      return request(server)
+        .delete(`/admin/mandatory`)
+        .query(`professionId=eihrwg`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then(async response => {
+          expect(response.body.error).toBe(INVALID_PARAMS);
         });
     });
   });
