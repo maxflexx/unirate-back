@@ -17,7 +17,10 @@ export class DisciplineService {
 
   async getDisciplinesAdmin(params: GetAdminDisciplineParamsDto): Promise<{disciplines: Discipline[], total: number}> {
     let query = `SELECT * FROM discipline `;
-    if (params.facultyId != undefined || params.id != undefined || params.year != undefined) {
+    if (params.mandatoryProfessionId != undefined) {
+      query += `LEFT JOIN mandatory ON mandatory.discipline_id = discipline.id `;
+    }
+    if (params.facultyId != undefined || params.id != undefined || params.year != undefined || params.mandatoryProfessionId != undefined) {
       query += 'WHERE ';
       const queryParams = [];
       if (params.facultyId != undefined) {
@@ -28,6 +31,9 @@ export class DisciplineService {
       }
       if (params.year) {
         queryParams.push(`year = ${params.year}`);
+      }
+      if (params.mandatoryProfessionId != undefined) {
+        queryParams.push(`mandatory.profession_id=${params.mandatoryProfessionId}`);
       }
       query += queryParams.join(' AND ');
     }

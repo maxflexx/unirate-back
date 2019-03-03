@@ -22,4 +22,10 @@ export class GetAdminDisciplineParamsDto extends PagingDto{
   @IsOptional()
   @Expose()
   year?: number;
+
+  @IsInt()
+  @Transform(v => v ? +v : v)
+  @IsOptional()
+  @Expose()
+  mandatoryProfessionId: number;
 }

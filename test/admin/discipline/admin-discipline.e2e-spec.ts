@@ -2,7 +2,7 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testAdminAuth } from '../../e2e.utils';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
-import { ADMINS_JWT, DISCIPLINE, FACULTIES } from '../../e2e.constants';
+import { ADMINS_JWT, DISCIPLINE, FACULTIES, PROFESSIONS } from '../../e2e.constants';
 import request from 'supertest';
 import { DbUtil } from '../../../src/utils/db-util';
 import { Discipline } from '../../../src/entities/discipline.entity';
@@ -16,8 +16,7 @@ describe('Admin Disciplines', () => {
     db = await initTestApp(server);
     await createTestData();
   });
-  //TODO: add on which professions is mandatory
-  describe('GET admin/feedback/:disciplineId', () => {
+  describe('GET admin/discipline', () => {
     testAdminAuth(server, RequestMethod.GET, `/admin/discipline`);
     it('success: filter by facultyId', () => {
       return request(server)
@@ -85,6 +84,27 @@ describe('Admin Disciplines', () => {
             name: DISCIPLINE.PROCEDURE.name,
             year: DISCIPLINE.PROCEDURE.year,
             facultyId: DISCIPLINE.PROCEDURE.faculty.id
+          }]);
+        });
+    });
+    it('success: profession mandatory', () => {
+      return request(server)
+        .get(`/admin/discipline`)
+        .query(`mandatoryProfessionId=${PROFESSIONS.ECONOMIST.id}`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body.total).toBe(2);
+          expect(response.body.disciplines).toEqual([ {
+            id: DISCIPLINE.ECONOMICS.id,
+            name: DISCIPLINE.ECONOMICS.name,
+            year: DISCIPLINE.ECONOMICS.year,
+            facultyId: DISCIPLINE.ECONOMICS.faculty.id
+          }, {
+            id: DISCIPLINE.ENGLISH.id,
+            name: DISCIPLINE.ENGLISH.name,
+            year: DISCIPLINE.ENGLISH.year,
+            facultyId: DISCIPLINE.ENGLISH.faculty.id
           }]);
         });
     });

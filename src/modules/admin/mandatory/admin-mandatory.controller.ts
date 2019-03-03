@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Query } from '@nestjs/common';
 import { MandatoryService } from '../../services/mandatory.service';
 import { CreateAdminMandatoryDto } from './dto/create-admin-mandatory.dto';
 import { Mandatory } from '../../../entities/mandatory.entity';
 import { DeleteAdminMandatoryDto } from './dto/delete-admin-mandatory.dto';
 import { InvalidParams, STATUS_OK } from '../../../constants';
-import { ParseIntPipe } from '../../../common/pipes/parse-int.pipe';
 
 @Controller('admin/mandatory')
 export class AdminMandatoryController {
