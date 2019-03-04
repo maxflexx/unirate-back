@@ -272,7 +272,8 @@ describe('Feedback', () => {
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body).toEqual([]);
+          expect(response.body.total).toBe(0);
+          expect(response.body.feedbacks).toEqual([]);
         });
     });
     it('fail: invalid disciplineId', () => {
@@ -295,7 +296,8 @@ describe('Feedback', () => {
           expect(response.body.error).toEqual(INVALID_PARAMS);
         });
     });
-    describe('POST feedback/:disciplineId', () => {
+  });
+  describe('POST feedback/:disciplineId', () => {
     testUserAuth(server, RequestMethod.POST, `/feedback/${DISCIPLINE.OBDZ.id}`);
     it('success', () => {
       const body = {studentGrade: 71, comment: 'AWESOME BD', teachersIds: [TEACHER.USHENKO.id, TEACHER.GULAEVA.id]};

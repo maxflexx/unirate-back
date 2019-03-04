@@ -1,16 +1,17 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Query } from '@nestjs/common';
 import { FeedbackService } from '../../services/feedback.service';
 import { ParseIntPipe } from '../../../common/pipes/parse-int.pipe';
 import { FeedbackResultDto } from '../../default-user/feedback/dto/feedback-result.dto';
 import { STATUS_OK } from '../../../constants';
+import { GetFeedbackParamsDto } from '../../default-user/feedback/dto/get-feedback-params.dto';
 
 @Controller('admin/feedback')
 export class AdminFeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
 
-  @Get(':disciplineId')
-  async getFeedbackAdmin(@Param('disciplineId', new ParseIntPipe()) disciplineId: number): Promise<FeedbackResultDto[]> {
-    return await this.feedbackService.getFeedback(disciplineId);
+  @Get()
+  async getFeedbackAdmin(@Query() params: GetFeedbackParamsDto): Promise<{feedbacks: FeedbackResultDto[], total: number}> {
+    return await this.feedbackService.getFeedback(params);
   }
 
   @Delete(':feedbackId')

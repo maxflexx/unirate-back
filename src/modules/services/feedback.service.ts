@@ -29,7 +29,7 @@ export class FeedbackService {
       query += ` ORDER BY f.${params.orderBy}`;
     }
     const feedback = await DbUtil.getMany(FeedbackResultDto, query);
-    return feedback ? this.groupFeedback(feedback) : [];
+    return feedback ? this.groupFeedback(feedback) : {feedbacks: [], total: 0};
   }
 
   private groupFeedback(feedback: FeedbackResultDto[]): {feedbacks: FeedbackResultDto[], total: number} {
