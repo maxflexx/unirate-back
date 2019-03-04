@@ -9,13 +9,14 @@ import { FeedbackGrade } from '../../../entities/feedback-grade.entity';
 import { GradeFeedbackDto } from './dto/grade-feedback.dto';
 import { STATUS_OK } from '../../../constants';
 import { GetFeedbackParamsDto } from './dto/get-feedback-params.dto';
+import { Discipline } from '../../../entities/discipline.entity';
 
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
 
   @Get()
-  async getFeedback(@Query() params: GetFeedbackParamsDto): Promise<FeedbackResultDto[]> {
+  async getFeedback(@Query() params: GetFeedbackParamsDto): Promise<{feedbacks: FeedbackResultDto[], total: number}> {
     return await this.feedbackService.getFeedback(params);
   }
 

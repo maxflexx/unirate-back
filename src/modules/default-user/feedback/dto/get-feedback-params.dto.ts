@@ -1,7 +1,8 @@
 import { IsIn, IsInt, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { PagingDto } from '../../../../common/dto/paging.dto';
 
-export class GetFeedbackParamsDto {
+export class GetFeedbackParamsDto extends PagingDto {
   @Transform(item => item != undefined ? +item : item)
   @IsInt()
   @IsOptional()

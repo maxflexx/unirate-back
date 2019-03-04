@@ -15,22 +15,14 @@ import { Faculty } from '../../entities/faculty.entity';
 export class FeedbackService {
   constructor(){}
 
-  async getFeedback(params: GetFeedbackParamsDto): Promise<FeedbackResultDto[]> {
-    let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, f.discipline_id, ft.teacher_id` +
-                ` FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id`;
-    let discipline = null;
-    let faculty = null;
+  async getFeedback(params: GetFeedbackParamsDto): Promise<{feedbacks: FeedbackResultDto[], total: number}> {
+    let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, f.discipline_id, ft.teacher_id`;
+    query += ` FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id`;
     if (params.disciplineId != undefined) {
-      discipline = await DbUtil.getDisciplineById(Discipline, params.disciplineId);
-      if (!discipline)
-        throw ItemNotFound;
       query += ` WHERE f.discipline_id=${params.disciplineId}`;
     }
     if (params.facultyId != undefined) {
-      faculty = await DbUtil.getFacultyById(Faculty, params.facultyId);
-      if (!faculty)
-        throw ItemNotFound;
-      query += discipline ? ' AND ' : ' WHERE ';
+      query += (params.disciplineId != undefined) ? ' AND ' : ' WHERE ';
       query += `${params.facultyId} IN (SELECT d.faculty_id FROM discipline d WHERE d.id=f.discipline_id)`;
     }
     if (params.orderBy != undefined) {
@@ -40,18 +32,18 @@ export class FeedbackService {
     return feedback ? this.groupFeedback(feedback) : [];
   }
 
-  private groupFeedback(feedback: FeedbackResultDto[]): FeedbackResultDto[] {
-    const result = [];
+  private groupFeedback(feedback: FeedbackResultDto[]): {feedbacks: FeedbackResultDto[], total: number} {
+    const feedbacks = [];
     for (const f of feedback) {
-      const indexOfWritten = result.findIndex(item => item.feedbackId === f.feedbackId);
+      const indexOfWritten = feedbacks.findIndex(item => item.feedbackId === f.feedbackId);
       if (indexOfWritten >= 0){
-        result[indexOfWritten].teacherIds.push(f.teacherIds[0]);
+        feedbacks[indexOfWritten].teacherIds.push(f.teacherIds[0]);
       }
       else {
-        result.push(f);
+        feedbacks.push(f);
       }
     }
-    return result;
+    return {feedbacks, total: feedbacks.length};
   }
 
   async createFeedback(disciplineId: number, body: CreateFeedbackDto, userLogin: string) {

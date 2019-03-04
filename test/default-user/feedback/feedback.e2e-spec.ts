@@ -28,7 +28,8 @@ describe('Feedback', () => {
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body).toEqual([{
+          expect(response.body.total).toBe(3);
+          expect(response.body.feedbacks).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -65,7 +66,8 @@ describe('Feedback', () => {
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body).toEqual([{
+          expect(response.body.total).toBe(6);
+          expect(response.body.feedbacks).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -129,7 +131,8 @@ describe('Feedback', () => {
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body).toEqual([{
+          expect(response.body.total).toBe(6);
+          expect(response.body.feedbacks).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -193,7 +196,8 @@ describe('Feedback', () => {
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body).toEqual([{
+          expect(response.body.total).toBe(3);
+          expect(response.body.feedbacks).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -230,7 +234,8 @@ describe('Feedback', () => {
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body).toEqual([{
+          expect(response.body.total).toBe(3);
+          expect(response.body.feedbacks).toEqual([{
             feedbackId: FEEDBACKS.OOP3.id,
             rating: FEEDBACKS.OOP3.rating,
             comment: FEEDBACKS.OOP3.comment,
@@ -288,26 +293,6 @@ describe('Feedback', () => {
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
           expect(response.body.error).toEqual(INVALID_PARAMS);
-        });
-    });
-    it('fail: discipline not found', () => {
-      return request(server)
-        .get(`/feedback`)
-        .query(`disciplineId=999`)
-        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .expect(HttpStatus.NOT_FOUND)
-        .then(response => {
-          expect(response.body.error).toEqual(ITEM_NOT_FOUND);
-        });
-    });
-    it('fail: faculty not found', () => {
-      return request(server)
-        .get(`/feedback`)
-        .query(`facultyId=999`)
-        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .expect(HttpStatus.NOT_FOUND)
-        .then(response => {
-          expect(response.body.error).toEqual(ITEM_NOT_FOUND);
         });
     });
     describe('POST feedback/:disciplineId', () => {
