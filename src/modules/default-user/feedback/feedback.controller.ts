@@ -8,16 +8,11 @@ import { ParseIntPipe } from '../../../common/pipes/parse-int.pipe';
 import { FeedbackGrade } from '../../../entities/feedback-grade.entity';
 import { GradeFeedbackDto } from './dto/grade-feedback.dto';
 import { STATUS_OK } from '../../../constants';
-import { GetFeedbackParamsDto } from './dto/get-feedback-params';
+import { GetFeedbackParamsDto } from './dto/get-feedback-params.dto';
 
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
-
-  /*@Get(':disciplineId')
-  async getFeedback(@Param('disciplineId', new ParseIntPipe()) disciplineId: number): Promise<FeedbackResultDto[]> {
-    return await this.feedbackService.getFeedback(+disciplineId);
-  }*/
 
   @Get()
   async getFeedback(@Query() params: GetFeedbackParamsDto): Promise<FeedbackResultDto[]> {

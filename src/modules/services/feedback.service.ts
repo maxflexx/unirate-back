@@ -8,7 +8,7 @@ import { CreateFeedbackDto } from '../default-user/feedback/dto/create-feedback.
 import { TimeUtil } from '../../utils/time-util';
 import { FeedbackResultDto } from '../default-user/feedback/dto/feedback-result.dto';
 import { FeedbackGrade } from '../../entities/feedback-grade.entity';
-import { GetFeedbackParamsDto } from '../default-user/feedback/dto/get-feedback-params';
+import { GetFeedbackParamsDto } from '../default-user/feedback/dto/get-feedback-params.dto';
 import { Faculty } from '../../entities/faculty.entity';
 
 @Injectable()
@@ -32,6 +32,9 @@ export class FeedbackService {
         throw ItemNotFound;
       query += discipline ? ' AND ' : ' WHERE ';
       query += `${params.facultyId} IN (SELECT d.faculty_id FROM discipline d WHERE d.id=f.discipline_id)`;
+    }
+    if (params.orderBy != undefined) {
+      query += ` ORDER BY f.${params.orderBy}`;
     }
     const feedback = await DbUtil.getMany(FeedbackResultDto, query);
     return feedback ? this.groupFeedback(feedback) : [];
