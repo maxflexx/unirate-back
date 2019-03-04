@@ -34,15 +34,6 @@ describe('User', () => {
           });
         });
     });
-    it('fail: no such user', () => {
-      return request(server)
-        .get('/user/invalid_login')
-        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .expect(HttpStatus.NOT_FOUND)
-        .then(response => {
-          expect(response.body.error).toBe(ITEM_NOT_FOUND);
-        });
-    });
   });
   describe('PUT user/:login', () => {
     testUserAuth(server, RequestMethod.PUT, '/user/login');

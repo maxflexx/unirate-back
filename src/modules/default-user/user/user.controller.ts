@@ -13,9 +13,12 @@ export class UserController {
 
 
   @Get(':login')
-  async getUserByLogin(@Param('login') login: string): Promise<User> {
+  async getUserByLogin(@Param('login') login: string, @UserDecorator() user: User): Promise<User> {
     if (!login) {
       throw ErrorUtil.getValidationError('No login field');
+    }
+    if (login != user.login) {
+      throw AccessDenied;
     }
     return await this.userService.getUser(login);
   }

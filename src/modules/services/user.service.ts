@@ -15,7 +15,7 @@ export class UserService {
   async getUser(login: string): Promise<User> {
     const user = await DbUtil.getOne(UserResultDto, `SELECT u.email, u.login, p.name FROM user u
                                                   INNER JOIN profession p ON p.id = u.profession_id
-                                                  WHERE u.login="${login}"`);
+                                             WHERE u.login="${login}"`);
     if (!user)
       throw ItemNotFound;
     return user;
