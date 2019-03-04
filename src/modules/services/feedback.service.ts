@@ -8,17 +8,33 @@ import { CreateFeedbackDto } from '../default-user/feedback/dto/create-feedback.
 import { TimeUtil } from '../../utils/time-util';
 import { FeedbackResultDto } from '../default-user/feedback/dto/feedback-result.dto';
 import { FeedbackGrade } from '../../entities/feedback-grade.entity';
+import { GetFeedbackParamsDto } from '../default-user/feedback/dto/get-feedback-params';
+import { Faculty } from '../../entities/faculty.entity';
 
 @Injectable()
 export class FeedbackService {
   constructor(){}
 
-  async getFeedback(disciplineId: number): Promise<FeedbackResultDto[]> {
-    const discipline = await DbUtil.getDisciplineById(Discipline, disciplineId);
-    if (!discipline)
-      throw ItemNotFound;
-    const feedback = await DbUtil.getMany(FeedbackResultDto, `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, f.discipline_id, ft.teacher_id FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id WHERE f.discipline_id=${disciplineId}`);
-    return this.groupFeedback(feedback);
+  async getFeedback(params: GetFeedbackParamsDto): Promise<FeedbackResultDto[]> {
+    let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, f.discipline_id, ft.teacher_id` +
+                ` FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id`;
+    let discipline = null;
+    let faculty = null;
+    if (params.disciplineId != undefined) {
+      discipline = await DbUtil.getDisciplineById(Discipline, params.disciplineId);
+      if (!discipline)
+        throw ItemNotFound;
+      query += ` WHERE f.discipline_id=${params.disciplineId}`;
+    }
+    if (params.facultyId != undefined) {
+      faculty = await DbUtil.getFacultyById(Faculty, params.facultyId);
+      if (!faculty)
+        throw ItemNotFound;
+      query += discipline ? ' AND ' : ' WHERE ';
+      query += `${params.facultyId} IN (SELECT d.faculty_id FROM discipline d WHERE d.id=f.discipline_id)`;
+    }
+    const feedback = await DbUtil.getMany(FeedbackResultDto, query);
+    return feedback ? this.groupFeedback(feedback) : [];
   }
 
   private groupFeedback(feedback: FeedbackResultDto[]): FeedbackResultDto[] {

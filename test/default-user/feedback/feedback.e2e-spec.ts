@@ -2,7 +2,7 @@ import express from 'express';
 import { Connection } from 'typeorm';
 import { createTestData, initTestApp, testUserAuth } from '../../e2e.utils';
 import request from 'supertest';
-import { DISCIPLINE, FEEDBACK_GRADE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../../e2e.constants';
+import { DISCIPLINE, FACULTIES, FEEDBACK_GRADE, FEEDBACK_TEACHER, FEEDBACKS, TEACHER, USERS, USERS_JWT } from '../../e2e.constants';
 import { HttpStatus, RequestMethod } from '@nestjs/common';
 import { INVALID_PARAMS, IS_NOT_ITEM_OWNER, ITEM_NOT_FOUND, STATUS_OK } from '../../../src/constants';
 import { DbUtil } from '../../../src/utils/db-util';
@@ -19,11 +19,12 @@ describe('Feedback', () => {
     db = await initTestApp(server);
     await createTestData();
   });
-  describe('GET feedback/:disciplineId', () => {
-    testUserAuth(server, RequestMethod.GET, `/feedback/${DISCIPLINE.OOP.id}`);
-    it('success', () => {
+  describe('GET feedback', () => {
+    testUserAuth(server, RequestMethod.GET, `/feedback`);
+    it('success : disciplineId', () => {
       return request(server)
-        .get(`/feedback/${DISCIPLINE.OOP.id}`)
+        .get(`/feedback`)
+        .query(`disciplineId=${DISCIPLINE.OOP.id}`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
@@ -57,26 +58,222 @@ describe('Feedback', () => {
           }]);
         });
     });
-    it('fail: invalid params', () => {
+    it('success : facultyId', () => {
       return request(server)
-        .get(`/feedback/ewkjf`)
+        .get(`/feedback`)
+        .query(`facultyId=${FACULTIES.INFORMATICS.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body).toEqual([{
+            feedbackId: FEEDBACKS.OOP1.id,
+            rating: FEEDBACKS.OOP1.rating,
+            comment: FEEDBACKS.OOP1.comment,
+            studentGrade: FEEDBACKS.OOP1.studentGrade,
+            created: FEEDBACKS.OOP1.created,
+            userLogin: FEEDBACKS.OOP1.user.login,
+            disciplineId: FEEDBACKS.OOP1.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP1.teacher.id, FEEDBACK_TEACHER.GORBORUKOV_OOP1.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OOP2.id,
+            rating: FEEDBACKS.OOP2.rating,
+            comment: FEEDBACKS.OOP2.comment,
+            studentGrade: null,
+            created: FEEDBACKS.OOP2.created,
+            userLogin: FEEDBACKS.OOP2.user.login,
+            disciplineId: FEEDBACKS.OOP2.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP2.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OOP3.id,
+            rating: FEEDBACKS.OOP3.rating,
+            comment: FEEDBACKS.OOP3.comment,
+            studentGrade: FEEDBACKS.OOP3.studentGrade,
+            created: FEEDBACKS.OOP3.created,
+            userLogin: FEEDBACKS.OOP3.user.login,
+            disciplineId: FEEDBACKS.OOP3.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP3.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OBDZ1.id,
+            rating: FEEDBACKS.OBDZ1.rating,
+            comment: FEEDBACKS.OBDZ1.comment,
+            studentGrade: FEEDBACKS.OBDZ1.studentGrade,
+            created: FEEDBACKS.OBDZ1.created,
+            userLogin: FEEDBACKS.OBDZ1.user.login,
+            disciplineId: FEEDBACKS.OBDZ1.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.GULAEVA_OBDZ1.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OBDZ2.id,
+            rating: FEEDBACKS.OBDZ2.rating,
+            comment: FEEDBACKS.OBDZ2.comment,
+            studentGrade: null,
+            created: FEEDBACKS.OBDZ2.created,
+            userLogin: FEEDBACKS.OBDZ2.user.login,
+            disciplineId: FEEDBACKS.OBDZ2.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.GULAEVA_OBDZ2.teacher.id, FEEDBACK_TEACHER.USHENKO_OBDZ2.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.PROCEDURE1.id,
+            rating: FEEDBACKS.PROCEDURE1.rating,
+            comment: FEEDBACKS.PROCEDURE1.comment,
+            studentGrade: null,
+            created: FEEDBACKS.PROCEDURE1.created,
+            userLogin: FEEDBACKS.PROCEDURE1.user.login,
+            disciplineId: FEEDBACKS.PROCEDURE1.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_PROCEDURE1.teacher.id]
+          }]);
+        });
+    });
+    it('success : no params', () => {
+      return request(server)
+        .get(`/feedback`)
+        .query(``)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body).toEqual([{
+            feedbackId: FEEDBACKS.OOP1.id,
+            rating: FEEDBACKS.OOP1.rating,
+            comment: FEEDBACKS.OOP1.comment,
+            studentGrade: FEEDBACKS.OOP1.studentGrade,
+            created: FEEDBACKS.OOP1.created,
+            userLogin: FEEDBACKS.OOP1.user.login,
+            disciplineId: FEEDBACKS.OOP1.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP1.teacher.id, FEEDBACK_TEACHER.GORBORUKOV_OOP1.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OOP2.id,
+            rating: FEEDBACKS.OOP2.rating,
+            comment: FEEDBACKS.OOP2.comment,
+            studentGrade: null,
+            created: FEEDBACKS.OOP2.created,
+            userLogin: FEEDBACKS.OOP2.user.login,
+            disciplineId: FEEDBACKS.OOP2.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP2.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OOP3.id,
+            rating: FEEDBACKS.OOP3.rating,
+            comment: FEEDBACKS.OOP3.comment,
+            studentGrade: FEEDBACKS.OOP3.studentGrade,
+            created: FEEDBACKS.OOP3.created,
+            userLogin: FEEDBACKS.OOP3.user.login,
+            disciplineId: FEEDBACKS.OOP3.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP3.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OBDZ1.id,
+            rating: FEEDBACKS.OBDZ1.rating,
+            comment: FEEDBACKS.OBDZ1.comment,
+            studentGrade: FEEDBACKS.OBDZ1.studentGrade,
+            created: FEEDBACKS.OBDZ1.created,
+            userLogin: FEEDBACKS.OBDZ1.user.login,
+            disciplineId: FEEDBACKS.OBDZ1.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.GULAEVA_OBDZ1.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OBDZ2.id,
+            rating: FEEDBACKS.OBDZ2.rating,
+            comment: FEEDBACKS.OBDZ2.comment,
+            studentGrade: null,
+            created: FEEDBACKS.OBDZ2.created,
+            userLogin: FEEDBACKS.OBDZ2.user.login,
+            disciplineId: FEEDBACKS.OBDZ2.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.GULAEVA_OBDZ2.teacher.id, FEEDBACK_TEACHER.USHENKO_OBDZ2.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.PROCEDURE1.id,
+            rating: FEEDBACKS.PROCEDURE1.rating,
+            comment: FEEDBACKS.PROCEDURE1.comment,
+            studentGrade: null,
+            created: FEEDBACKS.PROCEDURE1.created,
+            userLogin: FEEDBACKS.PROCEDURE1.user.login,
+            disciplineId: FEEDBACKS.PROCEDURE1.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_PROCEDURE1.teacher.id]
+          }]);
+        });
+    });
+    it('success : disciplineId and facultyId', () => {
+      return request(server)
+        .get(`/feedback`)
+        .query(`disciplineId=${DISCIPLINE.OOP.id}&facultyId=${FACULTIES.INFORMATICS.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body).toEqual([{
+            feedbackId: FEEDBACKS.OOP1.id,
+            rating: FEEDBACKS.OOP1.rating,
+            comment: FEEDBACKS.OOP1.comment,
+            studentGrade: FEEDBACKS.OOP1.studentGrade,
+            created: FEEDBACKS.OOP1.created,
+            userLogin: FEEDBACKS.OOP1.user.login,
+            disciplineId: FEEDBACKS.OOP1.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP1.teacher.id, FEEDBACK_TEACHER.GORBORUKOV_OOP1.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OOP2.id,
+            rating: FEEDBACKS.OOP2.rating,
+            comment: FEEDBACKS.OOP2.comment,
+            studentGrade: null,
+            created: FEEDBACKS.OOP2.created,
+            userLogin: FEEDBACKS.OOP2.user.login,
+            disciplineId: FEEDBACKS.OOP2.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP2.teacher.id]
+          }, {
+            feedbackId: FEEDBACKS.OOP3.id,
+            rating: FEEDBACKS.OOP3.rating,
+            comment: FEEDBACKS.OOP3.comment,
+            studentGrade: FEEDBACKS.OOP3.studentGrade,
+            created: FEEDBACKS.OOP3.created,
+            userLogin: FEEDBACKS.OOP3.user.login,
+            disciplineId: FEEDBACKS.OOP3.discipline.id,
+            teacherIds: [FEEDBACK_TEACHER.BOUBLIK_OOP3.teacher.id]
+          }]);
+        });
+    });
+    it('empty result : disciplineId and facultyId do not match', () => {
+      return request(server)
+        .get(`/feedback`)
+        .query(`disciplineId=${DISCIPLINE.OOP.id}&facultyId=${FACULTIES.FGN.id}`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body).toEqual([]);
+        });
+    });
+    it('fail: invalid disciplineId', () => {
+      return request(server)
+        .get(`/feedback`)
+        .query(`disciplineId=ewkjf`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.BAD_REQUEST)
         .then(response => {
           expect(response.body.error).toEqual(INVALID_PARAMS);
         });
     });
-    it('fail: not found', () => {
+    it('fail: invalid facultyId', () => {
       return request(server)
-        .get(`/feedback/999`)
+        .get(`/feedback`)
+        .query(`facultyId=ewkjf`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then(response => {
+          expect(response.body.error).toEqual(INVALID_PARAMS);
+        });
+    });
+    it('fail: discipline not found', () => {
+      return request(server)
+        .get(`/feedback`)
+        .query(`disciplineId=999`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.NOT_FOUND)
         .then(response => {
           expect(response.body.error).toEqual(ITEM_NOT_FOUND);
         });
     });
-  });
-  describe('POST feedback/:disciplineId', () => {
+    it('fail: faculty not found', () => {
+      return request(server)
+        .get(`/feedback`)
+        .query(`facultyId=999`)
+        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
+        .expect(HttpStatus.NOT_FOUND)
+        .then(response => {
+          expect(response.body.error).toEqual(ITEM_NOT_FOUND);
+        });
+    });
+    describe('POST feedback/:disciplineId', () => {
     testUserAuth(server, RequestMethod.POST, `/feedback/${DISCIPLINE.OBDZ.id}`);
     it('success', () => {
       const body = {studentGrade: 71, comment: 'AWESOME BD', teachersIds: [TEACHER.USHENKO.id, TEACHER.GULAEVA.id]};

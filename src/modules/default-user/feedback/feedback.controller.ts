@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { FeedbackService } from '../../services/feedback.service';
 import { CreateFeedbackDto } from './dto/create-feedback.dto';
 import { User } from '../../../entities/user.entity';
@@ -8,14 +8,20 @@ import { ParseIntPipe } from '../../../common/pipes/parse-int.pipe';
 import { FeedbackGrade } from '../../../entities/feedback-grade.entity';
 import { GradeFeedbackDto } from './dto/grade-feedback.dto';
 import { STATUS_OK } from '../../../constants';
+import { GetFeedbackParamsDto } from './dto/get-feedback-params';
 
 @Controller('feedback')
 export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
 
-  @Get(':disciplineId')
+  /*@Get(':disciplineId')
   async getFeedback(@Param('disciplineId', new ParseIntPipe()) disciplineId: number): Promise<FeedbackResultDto[]> {
     return await this.feedbackService.getFeedback(+disciplineId);
+  }*/
+
+  @Get()
+  async getFeedback(@Query() params: GetFeedbackParamsDto): Promise<FeedbackResultDto[]> {
+    return await this.feedbackService.getFeedback(params);
   }
 
   @Post(':disciplineId')
