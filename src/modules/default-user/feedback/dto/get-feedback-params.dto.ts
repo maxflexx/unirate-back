@@ -13,7 +13,7 @@ export class GetFeedbackParamsDto extends PagingDto {
   @IsOptional()
   facultyId: number;
 
-  @IsIn(['id', 'student_grade', 'rating', `comment`, 'created', 'updated', 'user_login', 'discipline_id'])
+  @IsIn(['student_grade', 'student_grade DESC', 'rating', 'rating DESC', 'created', 'created DESC'])
   @IsOptional()
   orderBy: number;
 }

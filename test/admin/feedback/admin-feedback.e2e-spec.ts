@@ -28,7 +28,7 @@ describe('Feedback', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(3);
-          expect(response.body.feedbacks).toEqual([{
+          expect(response.body.feedback).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -66,7 +66,7 @@ describe('Feedback', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(6);
-          expect(response.body.feedbacks).toEqual([{
+          expect(response.body.feedback).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -131,7 +131,7 @@ describe('Feedback', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(6);
-          expect(response.body.feedbacks).toEqual([{
+          expect(response.body.feedback).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -196,7 +196,7 @@ describe('Feedback', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(3);
-          expect(response.body.feedbacks).toEqual([{
+          expect(response.body.feedback).toEqual([{
             feedbackId: FEEDBACKS.OOP1.id,
             rating: FEEDBACKS.OOP1.rating,
             comment: FEEDBACKS.OOP1.comment,
@@ -234,7 +234,7 @@ describe('Feedback', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(3);
-          expect(response.body.feedbacks).toEqual([{
+          expect(response.body.feedback).toEqual([{
             feedbackId: FEEDBACKS.OOP3.id,
             rating: FEEDBACKS.OOP3.rating,
             comment: FEEDBACKS.OOP3.comment,
@@ -272,7 +272,7 @@ describe('Feedback', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(0);
-          expect(response.body.feedbacks).toEqual([]);
+          expect(response.body.feedback).toEqual([]);
         });
     });
     it('fail: invalid disciplineId', () => {

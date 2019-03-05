@@ -15,24 +15,31 @@ import { Faculty } from '../../entities/faculty.entity';
 export class FeedbackService {
   constructor(){}
 
-  async getFeedback(params: GetFeedbackParamsDto): Promise<{feedbacks: FeedbackResultDto[], total: number}> {
+  async getFeedback(params: GetFeedbackParamsDto): Promise<{feedback: FeedbackResultDto[], total: number}> {
+    let countQuery = `SELECT COUNT(*) AS count FROM feedback`;
     let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, f.discipline_id, ft.teacher_id`;
     query += ` FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id`;
     if (params.disciplineId != undefined) {
       query += ` WHERE f.discipline_id=${params.disciplineId}`;
+      countQuery += ` WHERE discipline_id=${params.disciplineId}`;
     }
     if (params.facultyId != undefined) {
       query += (params.disciplineId != undefined) ? ' AND ' : ' WHERE ';
       query += `${params.facultyId} IN (SELECT d.faculty_id FROM discipline d WHERE d.id=f.discipline_id)`;
+      countQuery += (params.disciplineId != undefined) ? ' AND ' : ' WHERE ';
+      countQuery += `${params.facultyId} IN (SELECT d.faculty_id FROM discipline d WHERE d.id=discipline_id)`;
     }
     if (params.orderBy != undefined) {
       query += ` ORDER BY f.${params.orderBy}`;
     }
     const feedback = await DbUtil.getMany(FeedbackResultDto, query);
-    return feedback ? this.groupFeedback(feedback) : {feedbacks: [], total: 0};
+    const total = await DbUtil.getCount(countQuery);
+    return {total, feedback: this.groupFeedback(feedback)};
   }
 
-  private groupFeedback(feedback: FeedbackResultDto[]): {feedbacks: FeedbackResultDto[], total: number} {
+  private groupFeedback(feedback: FeedbackResultDto[]): FeedbackResultDto[] {
+    if (!feedback)
+      return [];
     const feedbacks = [];
     for (const f of feedback) {
       const indexOfWritten = feedbacks.findIndex(item => item.feedbackId === f.feedbackId);
@@ -43,7 +50,7 @@ export class FeedbackService {
         feedbacks.push(f);
       }
     }
-    return {feedbacks, total: feedbacks.length};
+    return feedbacks;
   }
 
   async createFeedback(disciplineId: number, body: CreateFeedbackDto, userLogin: string) {
