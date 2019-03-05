@@ -10,7 +10,7 @@ export class AdminFeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
 
   @Get()
-  async getFeedbackAdmin(@Query() params: GetFeedbackParamsDto): Promise<{feedbacks: FeedbackResultDto[], total: number}> {
+  async getFeedbackAdmin(@Query() params: GetFeedbackParamsDto): Promise<{feedback: FeedbackResultDto[], total: number}> {
     return await this.feedbackService.getFeedback(params);
   }
 

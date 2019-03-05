@@ -16,7 +16,7 @@ export class FeedbackController {
   constructor(private readonly feedbackService: FeedbackService){}
 
   @Get()
-  async getFeedback(@Query() params: GetFeedbackParamsDto): Promise<{feedbacks: FeedbackResultDto[], total: number}> {
+  async getFeedback(@Query() params: GetFeedbackParamsDto): Promise<{feedback: FeedbackResultDto[], total: number}> {
     return await this.feedbackService.getFeedback(params);
   }
 
