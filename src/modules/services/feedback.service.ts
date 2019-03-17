@@ -61,8 +61,8 @@ export class FeedbackService {
     if (teachers.length !== body.teachersIds.length)
       throw ItemNotFound;
 
-    const feedbackId = await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, updated, user_login, discipline_id) VALUES
-                            (${body.studentGrade || null}, 0, "${body.comment}", ${TimeUtil.getUnixTime()}, 0, "${userLogin}", ${disciplineId});`);
+    const feedbackId = await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, user_login, discipline_id) VALUES
+                            (${body.studentGrade || null}, 0, "${body.comment}", ${TimeUtil.getUnixTime()}, "${userLogin}", ${disciplineId});`);
     let queryFeedbackTeacher = `INSERT INTO feedback_teacher (feedback_id, teacher_id) VALUES `;
     for (const id of body.teachersIds) {
       queryFeedbackTeacher += `(${feedbackId}, ${id}),`;

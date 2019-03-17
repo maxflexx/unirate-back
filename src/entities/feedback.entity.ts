@@ -1,6 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { TimeUtil } from '../utils/time-util';
-import { CreateFeedbackDto } from '../modules/default-user/feedback/dto/create-feedback.dto';
 
 @Entity('feedback')
 export class Feedback {
@@ -32,7 +31,6 @@ export class Feedback {
     entity.rating = raw.rating;
     entity.comment = raw.comment;
     entity.created = raw.created;
-    entity.updated = raw.updated || null;
     entity.userLogin = raw.user_login;
     entity.disciplineId = +raw.discipline_id;
     return entity;

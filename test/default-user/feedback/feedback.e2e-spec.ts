@@ -324,7 +324,6 @@ describe('Feedback', () => {
             rating: 0,
             comment: body.comment,
             created: expect.any(Number),
-            updated: null,
             userLogin: USERS.SIMPLE.login,
             disciplineId: DISCIPLINE.OBDZ.id
           });

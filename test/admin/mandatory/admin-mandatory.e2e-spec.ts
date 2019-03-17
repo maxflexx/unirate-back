@@ -17,7 +17,7 @@ describe('Admin Mandatory', () => {
     await createTestData();
   });
   describe('GET admin/mandatory/:professionId', () => {
-    testAdminAuth(server, RequestMethod.GET, `/admin/mandatory/1`);
+    testAdminAuth(server, RequestMethod.GET, `/admin/mandatory?professionId=1`);
     it('success', () => {
       return request(server)
         .get(`/admin/mandatory?professionId=${PROFESSIONS.ECONOMIST.id}`)
