@@ -16,6 +16,29 @@ describe('Admin Mandatory', () => {
     db = await initTestApp(server);
     await createTestData();
   });
+  describe('GET admin/mandatory/:professionId', () => {
+    testAdminAuth(server, RequestMethod.GET, `/admin/mandatory/1`);
+    it('success', () => {
+      return request(server)
+        .get(`/admin/mandatory?professionId=${PROFESSIONS.ECONOMIST.id}`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(async response => {
+          expect(response.body.total).toBe(2);
+          expect(response.body.disciplines).toEqual([{
+            id: DISCIPLINE.ECONOMICS.id,
+            year: DISCIPLINE.ECONOMICS.year,
+            name: DISCIPLINE.ECONOMICS.name,
+            facultyId: DISCIPLINE.ECONOMICS.faculty.id
+          }, {
+            id: DISCIPLINE.ENGLISH.id,
+            year: DISCIPLINE.ENGLISH.year,
+            name: DISCIPLINE.ENGLISH.name,
+            facultyId: DISCIPLINE.ENGLISH.faculty.id
+          }])
+        })
+    })
+  });
   describe('POST admin/mandatory', () => {
     testAdminAuth(server, RequestMethod.POST, `/admin/mandatory`);
     it('success', () => {

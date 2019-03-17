@@ -19,9 +19,6 @@ export class Feedback {
   @Column()
   created: number = TimeUtil.getUnixTime();
 
-  @Column()
-  updated: number = 0;
-
   @Column({name: 'user_login'})
   userLogin: string;
 

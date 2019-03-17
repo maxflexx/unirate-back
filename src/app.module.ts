@@ -19,9 +19,12 @@ import { AdminTeacherModule } from './modules/admin/teacher/admin-teacher.module
 import { FacultyModule } from './modules/default-user/faculty/faculty.module';
 import { ProfessionModule } from './modules/default-user/profession/profession.module';
 import { DisciplineModule } from './modules/default-user/discipline/discipline.module';
+import { AdminStatisticsController } from './modules/admin/statistics/admin-statistics.controller';
+import { AdminStatisticsModule } from './modules/admin/statistics/admin-statistics.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(ORM_CONFIG), AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule, AdminUserModule, AdminMandatoryModule, AdminTeacherModule, FacultyModule, ProfessionModule, DisciplineModule],
+  imports: [TypeOrmModule.forRoot(ORM_CONFIG), AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule, AdminUserModule, AdminMandatoryModule, AdminTeacherModule, FacultyModule, ProfessionModule, DisciplineModule, AdminStatisticsModule
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

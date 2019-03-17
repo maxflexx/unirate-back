@@ -49,9 +49,9 @@ export const TEACHER = {
 
 export const FEEDBACKS = {
   OOP1: {id: 1, studentGrade: 71, rating: 5, comment: 'The best OOP', created: TimeUtil.getUnixTime(), user: USERS.SIMPLE, discipline: DISCIPLINE.OOP},
-  OOP2: {id: 2, rating: 10, comment: 'Good oop', created: TimeUtil.getUnixTime() - 100, updated: TimeUtil.getUnixTime() - 50, user: USERS.SIMPLE_FGN, discipline: DISCIPLINE.OOP},
+  OOP2: {id: 2, rating: 10, comment: 'Good oop', created: TimeUtil.getUnixTime() - 100, user: USERS.SIMPLE_FGN, discipline: DISCIPLINE.OOP},
   OOP3: {id: 3, rating: -5, studentGrade: 99, comment: 'BAD OOP', created: TimeUtil.getUnixTime() + 1, user: USERS.SIMPLE_FGN, discipline: DISCIPLINE.OOP},
-  OBDZ1: {id: 4, rating: 100, studentGrade: 100, comment: 'IZI', created: TimeUtil.getUnixTime() - 61, updated: TimeUtil.getUnixTime() - 50, user: USERS.SIMPLE, discipline: DISCIPLINE.OBDZ},
+  OBDZ1: {id: 4, rating: 100, studentGrade: 100, comment: 'IZI', created: TimeUtil.getUnixTime() - 61, user: USERS.SIMPLE, discipline: DISCIPLINE.OBDZ},
   OBDZ2: {id: 5, rating: 50, comment: 'LOL OBDZ', created: TimeUtil.getUnixTime(), user: USERS.SIMPLE_FGN, discipline: DISCIPLINE.OBDZ},
   PROCEDURE1: {id: 6, rating: 20, comment: 'Procedure ok', created: TimeUtil.getUnixTime(), user: USERS.SIMPLE, discipline: DISCIPLINE.PROCEDURE}
 };

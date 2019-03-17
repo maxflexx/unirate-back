@@ -35,13 +35,14 @@ import { AdminTeacherModule } from '../src/modules/admin/teacher/admin-teacher.m
 import { FacultyModule } from '../src/modules/default-user/faculty/faculty.module';
 import { ProfessionModule } from '../src/modules/default-user/profession/profession.module';
 import { DisciplineModule } from '../src/modules/default-user/discipline/discipline.module';
+import { AdminStatisticsModule } from '../src/modules/admin/statistics/admin-statistics.module';
 
 export async function initTestApp(server) {
   const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
   const module = await Test.createTestingModule({
     imports: [
-      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule, AdminUserModule, AdminMandatoryModule, AdminTeacherModule, FacultyModule, ProfessionModule, DisciplineModule]
+      TypeOrmModule.forRoot(ORM_CONFIG), AppModule, AuthModule, UserModule, FeedbackModule, TeacherModule, AdminFeedbackModule, AdminDisciplineModule, AdminFacultyModule, AdminProfessionModule, AdminUserModule, AdminMandatoryModule, AdminTeacherModule, FacultyModule, ProfessionModule, DisciplineModule, AdminStatisticsModule]
   }).compile();
 
   server.use(bodyParser.json());
@@ -104,7 +105,7 @@ export async function createTestData() {
   }
 
   for (const key in FEEDBACKS) {
-    await DbUtil.insertOne(`INSERT INTO feedback (id, student_grade, rating, comment, created, updated, user_login, discipline_id) VALUES (${FEEDBACKS[key].id}, ${FEEDBACKS[key].studentGrade || null}, ${FEEDBACKS[key].rating}, "${FEEDBACKS[key].comment}", ${FEEDBACKS[key].created}, ${FEEDBACKS[key].updated || 0}, "${FEEDBACKS[key].user.login}", ${FEEDBACKS[key].discipline.id});`);
+    await DbUtil.insertOne(`INSERT INTO feedback (id, student_grade, rating, comment, created, user_login, discipline_id) VALUES (${FEEDBACKS[key].id}, ${FEEDBACKS[key].studentGrade || null}, ${FEEDBACKS[key].rating}, "${FEEDBACKS[key].comment}", ${FEEDBACKS[key].created}, "${FEEDBACKS[key].user.login}", ${FEEDBACKS[key].discipline.id});`);
   }
 
   for (const key in FEEDBACK_TEACHER) {

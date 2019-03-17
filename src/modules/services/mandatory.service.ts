@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAdminMandatoryDto } from '../admin/mandatory/dto/create-admin-mandatory.dto';
 import { Mandatory } from '../../entities/mandatory.entity';
 import { DbUtil } from '../../utils/db-util';
-import { ItemAlreadyExists } from '../../constants';
+import { ItemAlreadyExists, ItemNotFound } from '../../constants';
 import { Discipline } from '../../entities/discipline.entity';
 import { ErrorUtil } from '../../utils/error-util';
 import { Profession } from '../../entities/profession.entity';
@@ -11,6 +11,23 @@ import { DeleteAdminMandatoryDto } from '../admin/mandatory/dto/delete-admin-man
 @Injectable()
 export class MandatoryService {
   constructor(){}
+
+  async getMandatoryForProfession(professionId: number): Promise<{total: number, disciplines: Discipline[]}> {
+    const profession = await DbUtil.getProfessionById(Profession, professionId);
+    if (!profession)
+      throw ItemNotFound;
+    const query = 'SELECT d.id, d.name, d.year, d.faculty_id ' +
+                  'FROM discipline d, profession pr, mandatory m ' +
+                  'WHERE m.profession_id=pr.id AND ' +
+                  'm.discipline_id=d.id AND ' +
+                  `pr.id=${professionId}`;
+    const countQuery = 'SELECT COUNT(DISTINCT d.id) AS count ' +
+                        'FROM discipline d, profession pr, mandatory m ' +
+                        'WHERE m.profession_id=pr.id AND ' +
+                        'm.discipline_id=d.id AND ' +
+                        `pr.id=${professionId}`;
+    return {total: await DbUtil.getCount(countQuery), disciplines: await DbUtil.getMany(Discipline, query)};
+  }
 
   async createAdminMandtatory(body: CreateAdminMandatoryDto): Promise<Mandatory> {
     const checkExistence = await DbUtil.getMandatoryByDisciplineAndProfession(Mandatory, body.professionId, body.disciplineId);
