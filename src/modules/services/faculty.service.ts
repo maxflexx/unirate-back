@@ -9,7 +9,7 @@ import { GetFacultyDto } from '../default-user/faculty/dto/get-faculty.dto';
 @Injectable()
 export class FacultyService {
 
-  async getFaculties(params: GetFacultyDto): Promise<{total: number, faculties: Faculty[]}> {
+  async getFaculties(params: GetFacultyDto): Promise<{total: number, faculty: Faculty[]}> {
     let query = `SELECT * FROM faculty`;
     let countQuery = 'SELECT COUNT(*) AS count FROM faculty';
     if (params.facultyId != undefined || params.search) {
@@ -26,7 +26,7 @@ export class FacultyService {
       countQuery += queryParams.join(' AND ');
     }
     query += ` LIMIT ${params.limit} OFFSET ${params.offset}`;
-    return {total: await DbUtil.getCount(countQuery), faculties: await DbUtil.getMany(Faculty, query)};
+    return {total: await DbUtil.getCount(countQuery), faculty: await DbUtil.getMany(Faculty, query)};
   }
 
   async createFacultyAdmin(body: CreateFacultyDto): Promise<Faculty> {

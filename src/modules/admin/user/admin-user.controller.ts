@@ -16,7 +16,7 @@ export class AdminUserController {
 
 
   @Get('user')
-  async getAdminUsers(@Query() params: GetUsersAdminDto): Promise<{total: number, users: GetUsersAdminResultDto[]}>  {
+  async getAdminUsers(@Query() params: GetUsersAdminDto): Promise<{total: number, user: GetUsersAdminResultDto[]}>  {
     return await this.userService.getUsersAdmin(params);
   }
 

@@ -12,7 +12,7 @@ export class AdminTeacherController {
   constructor(private readonly teacherService: TeacherService){}
 
   @Get()
-  async getTeacherAdmin(@Query() params: GetTeacherAdminDto): Promise<{total: number, teachers: Teacher[]}> {
+  async getTeacherAdmin(@Query() params: GetTeacherAdminDto): Promise<{total: number, teacher: Teacher[]}> {
     return await this.teacherService.getTeachers(params);
   }
 

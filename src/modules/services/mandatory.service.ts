@@ -12,7 +12,7 @@ import { DeleteAdminMandatoryDto } from '../admin/mandatory/dto/delete-admin-man
 export class MandatoryService {
   constructor(){}
 
-  async getMandatoryForProfession(professionId: number): Promise<{total: number, disciplines: Discipline[]}> {
+  async getMandatoryForProfession(professionId: number): Promise<{total: number, discipline: Discipline[]}> {
     const profession = await DbUtil.getProfessionById(Profession, professionId);
     if (!profession)
       throw ItemNotFound;
@@ -26,7 +26,7 @@ export class MandatoryService {
                         'WHERE m.profession_id=pr.id AND ' +
                         'm.discipline_id=d.id AND ' +
                         `pr.id=${professionId}`;
-    return {total: await DbUtil.getCount(countQuery), disciplines: await DbUtil.getMany(Discipline, query)};
+    return {total: await DbUtil.getCount(countQuery), discipline: await DbUtil.getMany(Discipline, query)};
   }
 
   async createAdminMandtatory(body: CreateAdminMandatoryDto): Promise<Mandatory> {

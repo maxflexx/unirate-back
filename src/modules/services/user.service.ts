@@ -52,7 +52,7 @@ export class UserService {
     await DbUtil.updateOne(`UPDATE feedback SET user_login = "deleted_user" WHERE user_login ="${login}"`);
   }
 
-  async getUsersAdmin(params: GetUsersAdminDto): Promise<{total: number, users: GetUsersAdminResultDto[]}> {
+  async getUsersAdmin(params: GetUsersAdminDto): Promise<{total: number, user: GetUsersAdminResultDto[]}> {
     let query = `SELECT u.login AS login, u.email AS email, u.role AS role, u.profession_id AS professionId, COALESCE(AVG(f.rating),0) AS rating, COUNT(f.id) as totalFeedback
     FROM user AS u
     LEFT JOIN feedback f ON f.user_login=u.login`;
@@ -68,7 +68,7 @@ export class UserService {
       query += ` ORDER BY ${params.orderBy}`;
     query += ` LIMIT ${params.limit} OFFSET ${params.offset}`;
     const total = await DbUtil.getCount(countQuery);
-    return await {total, users: await DbUtil.getMany(GetUsersAdminResultDto, query)};
+    return await {total, user: await DbUtil.getMany(GetUsersAdminResultDto, query)};
   }
 
   async updateUserRoleAdmin(login: string, body: UpdateRoleAdminDto): Promise<UpdateUserResultDto> {

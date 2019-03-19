@@ -27,7 +27,7 @@ describe('Admin Professions', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.professions).toEqual([{
+          expect(response.body.profession).toEqual([{
             id: PROFESSIONS.ECONOMIST.id,
             name: PROFESSIONS.ECONOMIST.name,
             facultyId: PROFESSIONS.ECONOMIST.faculty.id
@@ -42,7 +42,7 @@ describe('Admin Professions', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.professions).toEqual([{
+          expect(response.body.profession).toEqual([{
             id: PROFESSIONS.ECONOMIST.id,
             name: PROFESSIONS.ECONOMIST.name,
             facultyId: PROFESSIONS.ECONOMIST.faculty.id
@@ -57,7 +57,7 @@ describe('Admin Professions', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.professions).toEqual([{
+          expect(response.body.profession).toEqual([{
             id: PROFESSIONS.GERMAN_PHILOLOGY.id,
             name: PROFESSIONS.GERMAN_PHILOLOGY.name,
             facultyId: PROFESSIONS.GERMAN_PHILOLOGY.faculty.id
@@ -71,7 +71,7 @@ describe('Admin Professions', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(4);
-          expect(response.body.professions).toEqual([{
+          expect(response.body.profession).toEqual([{
             id: PROFESSIONS.SOFTWARE_DEVELOPMENT.id,
             name: PROFESSIONS.SOFTWARE_DEVELOPMENT.name,
             facultyId: PROFESSIONS.SOFTWARE_DEVELOPMENT.faculty.id

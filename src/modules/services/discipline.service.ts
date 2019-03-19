@@ -11,7 +11,7 @@ import { UpdateDisciplineDto } from '../admin/discipline/dto/update-discipline.d
 export class DisciplineService {
   constructor(){}
 
-  async getDisciplinesAdmin(params: GetAdminDisciplineParamsDto): Promise<{disciplines: Discipline[], total: number}> {
+  async getDisciplinesAdmin(params: GetAdminDisciplineParamsDto): Promise<{discipline: Discipline[], total: number}> {
     let query = `SELECT * FROM discipline `;
     let countQuery = `SELECT COUNT(*) AS count FROM discipline `;
     if (params.mandatoryProfessionId != undefined) {
@@ -41,8 +41,8 @@ export class DisciplineService {
       countQuery += queryParams.join(' AND ');
     }
     query += ` LIMIT ${params.limit} OFFSET ${params.offset}`;
-    const disciplines = await DbUtil.getMany(Discipline, query);
-    return {disciplines, total: await DbUtil.getCount(countQuery)};
+    const discipline = await DbUtil.getMany(Discipline, query);
+    return {discipline, total: await DbUtil.getCount(countQuery)};
   }
 
   async createDisciplineAdmin(body: CreateDisciplineDto): Promise<Discipline> {

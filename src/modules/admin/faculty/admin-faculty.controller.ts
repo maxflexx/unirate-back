@@ -12,7 +12,7 @@ export class AdminFacultyController {
   constructor(private readonly facultyService: FacultyService){}
 
   @Get()
-  async getFaculties(@Query() params: GetFacultyDto): Promise<{total: number, faculties: Faculty[]}> {
+  async getFaculties(@Query() params: GetFacultyDto): Promise<{total: number, faculty: Faculty[]}> {
     return await this.facultyService.getFaculties(params);
   }
 

@@ -27,7 +27,7 @@ describe('Admin User', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.users).toEqual([{
+          expect(response.body.user).toEqual([{
             login: USERS.SIMPLE_FGN.login,
             email: USERS.SIMPLE_FGN.email,
             rating: 18, // avg(feedback.rating)
@@ -45,7 +45,7 @@ describe('Admin User', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(5);
-          expect(response.body.users).toEqual([{
+          expect(response.body.user).toEqual([{
             login: USERS.GRADE_FEEDBACKS.login,
             email: USERS.GRADE_FEEDBACKS.email,
             rating: 0,
@@ -63,7 +63,7 @@ describe('Admin User', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(5);
-          expect(response.body.users).toEqual([{
+          expect(response.body.user).toEqual([{
             login: USERS.SIMPLE.login,
             email: USERS.SIMPLE.email,
             rating: 42,

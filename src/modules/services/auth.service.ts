@@ -9,11 +9,16 @@ import { TimeUtil } from '../../utils/time-util';
 import { DbUtil } from '../../utils/db-util';
 import { SignupBodyDto } from '../auth/dto/signup-body.dto';
 import { SignupResultDto } from '../auth/dto/signup-result.dto';
+import { Profession } from '../../entities/profession.entity';
 const jwt = require('jwt-simple');
 
 @Injectable()
 export class AuthService {
   constructor() {}
+
+  async getAllProfessions(): Promise<Profession[]> {
+    return await DbUtil.getMany(Profession, 'SELECT * FROM profession');
+  }
 
   async login(body: LoginBodyDto): Promise<{token: string, isAdmin: boolean}> {
     const user = await DbUtil.getUserByLogin(User, body.login);

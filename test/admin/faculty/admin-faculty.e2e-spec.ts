@@ -25,7 +25,7 @@ describe('Admin Faculty', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(3);
-          expect(response.body.faculties).toEqual([{
+          expect(response.body.faculty).toEqual([{
             id: FACULTIES.INFORMATICS.id,
             name: FACULTIES.INFORMATICS.name,
             shortName: FACULTIES.INFORMATICS.shortName,
@@ -48,7 +48,7 @@ describe('Admin Faculty', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.faculties).toEqual([{
+          expect(response.body.faculty).toEqual([{
             id: FACULTIES.FGN.id,
             name: FACULTIES.FGN.name,
             shortName: FACULTIES.FGN.shortName,
@@ -63,7 +63,7 @@ describe('Admin Faculty', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.faculties).toEqual([{
+          expect(response.body.faculty).toEqual([{
             id: FACULTIES.FGN.id,
             name: FACULTIES.FGN.name,
             shortName: FACULTIES.FGN.shortName,

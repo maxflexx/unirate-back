@@ -12,7 +12,7 @@ export class AdminMandatoryController {
   constructor(private readonly mandatoryService: MandatoryService){}
 
   @Get()
-  async getAdminMandatory(@Query() params: GetMandatoryDisciplinesForProfessionDto): Promise<{total: number, disciplines: Discipline[]}> {
+  async getAdminMandatory(@Query() params: GetMandatoryDisciplinesForProfessionDto): Promise<{total: number, discipline: Discipline[]}> {
     return this.mandatoryService.getMandatoryForProfession(params.professionId);
   }
 

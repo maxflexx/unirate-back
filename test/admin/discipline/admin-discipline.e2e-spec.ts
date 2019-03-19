@@ -26,7 +26,7 @@ describe('Admin Disciplines', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(2);
-          expect(response.body.disciplines).toEqual([{
+          expect(response.body.discipline).toEqual([{
             id: DISCIPLINE.ECONOMICS.id,
             name: DISCIPLINE.ECONOMICS.name,
             year: DISCIPLINE.ECONOMICS.year,
@@ -47,7 +47,7 @@ describe('Admin Disciplines', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.disciplines).toEqual([ {
+          expect(response.body.discipline).toEqual([ {
             id: DISCIPLINE.HISTORY.id,
             name: DISCIPLINE.HISTORY.name,
             year: DISCIPLINE.HISTORY.year,
@@ -63,7 +63,7 @@ describe('Admin Disciplines', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(8);
-          expect(response.body.disciplines).toEqual([ {
+          expect(response.body.discipline).toEqual([ {
             id: DISCIPLINE.PROCEDURE.id,
             name: DISCIPLINE.PROCEDURE.name,
             year: DISCIPLINE.PROCEDURE.year,
@@ -79,7 +79,7 @@ describe('Admin Disciplines', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.disciplines).toEqual([ {
+          expect(response.body.discipline).toEqual([ {
             id: DISCIPLINE.PROCEDURE.id,
             name: DISCIPLINE.PROCEDURE.name,
             year: DISCIPLINE.PROCEDURE.year,
@@ -95,7 +95,7 @@ describe('Admin Disciplines', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.disciplines).toEqual([{
+          expect(response.body.discipline).toEqual([{
             id: DISCIPLINE.OOP.id,
             name: DISCIPLINE.OOP.name,
             year: DISCIPLINE.OOP.year,
@@ -111,7 +111,7 @@ describe('Admin Disciplines', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(2);
-          expect(response.body.disciplines).toEqual([ {
+          expect(response.body.discipline).toEqual([ {
             id: DISCIPLINE.ECONOMICS.id,
             name: DISCIPLINE.ECONOMICS.name,
             year: DISCIPLINE.ECONOMICS.year,

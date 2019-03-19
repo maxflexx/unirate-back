@@ -12,7 +12,7 @@ import { ItemNotFound } from '../../constants';
 export class TeacherService {
   constructor(){}
 
-  async getTeachers(params: GetTeacherAdminDto): Promise<{total: number, teachers: Teacher[]}> {
+  async getTeachers(params: GetTeacherAdminDto): Promise<{total: number, teacher: Teacher[]}> {
     let query = `SELECT t.id AS id, t.last_name AS lastName, t.name AS name, t.middle_name AS middleName, COUNT(ft.teacher_id) AS feedbackNumber FROM teacher t LEFT JOIN feedback_teacher ft ON t.id=ft.teacher_id`;
     let countQuery = `SELECT COUNT(*) AS count FROM teacher `;
     if (params.search || params.teacherId != undefined) {
@@ -31,7 +31,7 @@ export class TeacherService {
     query += ' GROUP BY t.id ';
     query += ' ORDER BY t.last_name ';
     query += ` LIMIT ${params.limit} OFFSET ${params.offset} `;
-    return {total: await DbUtil.getCount(countQuery), teachers: await DbUtil.getMany(GetTeacherAdminResultDto, query)};
+    return {total: await DbUtil.getCount(countQuery), teacher: await DbUtil.getMany(GetTeacherAdminResultDto, query)};
   }
 
   async createTeacherAdmin(body: CreateTecherAdminDto): Promise<Teacher> {

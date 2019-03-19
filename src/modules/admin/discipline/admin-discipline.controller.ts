@@ -12,7 +12,7 @@ export class AdminDisciplineController {
   constructor(private readonly disciplineService: DisciplineService){}
 
   @Get()
-  async getDisciplineAdmin(@Query() params: GetAdminDisciplineParamsDto): Promise<{disciplines: Discipline[], total: number}>  {
+  async getDisciplineAdmin(@Query() params: GetAdminDisciplineParamsDto): Promise<{discipline: Discipline[], total: number}>  {
     return await this.disciplineService.getDisciplinesAdmin(params);
   }
 

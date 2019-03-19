@@ -12,7 +12,7 @@ export class AdminProfessionController {
   constructor(private readonly professionService: ProfessionService){}
 
   @Get()
-  async getProfession(@Query() params: GetProfessionDto): Promise<{total: number, professions: Profession[]}> {
+  async getProfession(@Query() params: GetProfessionDto): Promise<{total: number, profession: Profession[]}> {
     return await this.professionService.getProfessions(params);
   }
 

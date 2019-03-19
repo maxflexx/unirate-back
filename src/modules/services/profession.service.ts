@@ -11,7 +11,7 @@ import { UpdateProfessionDto } from '../admin/profession/dto/update-profession.d
 export class ProfessionService {
   constructor(){}
 
-  async getProfessions(params: GetProfessionDto): Promise<{total: number, professions: Profession[]}> {
+  async getProfessions(params: GetProfessionDto): Promise<{total: number, profession: Profession[]}> {
     let query = 'SELECT * FROM profession';
     let countQuery = 'SELECT COUNT(*) AS count FROM profession';
     if (params.facultyId != undefined || params.professionId != undefined || params.search) {
@@ -30,7 +30,7 @@ export class ProfessionService {
       query += queryParams.join(' AND ');
       countQuery += queryParams.join(' AND ');
     }
-    return {total: await DbUtil.getCount(countQuery), professions: await DbUtil.getMany(Profession, query)};
+    return {total: await DbUtil.getCount(countQuery), profession: await DbUtil.getMany(Profession, query)};
   }
 
   async createProfessionAdmin(body: CreateProfessionDto): Promise<Profession> {

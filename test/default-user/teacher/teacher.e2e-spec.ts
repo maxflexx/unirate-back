@@ -24,7 +24,7 @@ describe('Teachers', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.teachers).toEqual([{
+          expect(response.body.teacher).toEqual([{
             id: TEACHER.USHENKO.id,
             lastName: TEACHER.USHENKO.lastName,
             name: TEACHER.USHENKO.name,
@@ -41,7 +41,7 @@ describe('Teachers', () => {
         .expect(HttpStatus.OK)
         .then(response => {
           expect(response.body.total).toBe(1);
-          expect(response.body.teachers).toEqual([{
+          expect(response.body.teacher).toEqual([{
             id: TEACHER.USHENKO.id,
             lastName: TEACHER.USHENKO.lastName,
             name: TEACHER.USHENKO.name,
