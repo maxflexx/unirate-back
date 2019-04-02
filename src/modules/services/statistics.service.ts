@@ -70,7 +70,7 @@ export class StatisticsService {
   }
 
   async getTeachersWithMostHonestStudents(params: PagingDto): Promise<{total: number, teacher: TeachersWithMostHonestStudentsDto[]}> {
-    const query = 'SELECT t.id, t.last_name, t.name, t.middle_name, COALESCE(SUM(feed.rating), 0) AS likes ' +
+    const query = 'SELECT t.id, t.last_name, t.`name`, t.middle_name, COALESCE(SUM(feed.rating), 0) AS likes ' +
                   'FROM teacher t ' +
                   'LEFT JOIN feedback_teacher ft ON ft.teacher_id=t.id ' +
                   'LEFT JOIN feedback feed ON feed.id=ft.feedback_id ' +

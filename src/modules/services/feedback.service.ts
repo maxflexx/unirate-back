@@ -87,13 +87,13 @@ export class FeedbackService {
     await this.updateFeedbackRating(like, feedbackGrade);
     if (feedbackGrade) {
       if (feedbackGrade.like !== like) {
-        await DbUtil.updateOne(`UPDATE feedback_grade SET like=${like} WHERE user_login="${login}" AND feedback_id=${feedbackId}`);
+        await DbUtil.updateOne(`UPDATE feedback_grade SET ` + '`like`' + `=${like} WHERE user_login="${login}" AND feedback_id=${feedbackId}`);
         await DbUtil.updateOne(`UPDATE feedback SET rating=rating+${like} WHERE user_login="${login}" AND id=${feedbackId}`);
         feedbackGrade.like = like;
       }
       return feedbackGrade;
     }
-    await DbUtil.insertOne(`INSERT INTO feedback_grade (like, feedback_id, user_login) VALUES (${like}, ${feedbackId}, "${login}")`);
+    await DbUtil.insertOne(`INSERT INTO feedback_grade (` + '`like`' + `, feedback_id, user_login) VALUES (${like}, ${feedbackId}, "${login}")`);
     return await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
   }
 
