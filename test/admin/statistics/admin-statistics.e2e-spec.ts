@@ -68,6 +68,12 @@ describe('Admin Statistics', () => {
             name: TEACHER.USHENKO.name,
             middleName: TEACHER.USHENKO.middleName,
             feedbackNum: 1
+          }, {
+            id: TEACHER.TOP_ECONOMIST.id,
+            lastName: TEACHER.TOP_ECONOMIST.lastName,
+            name: TEACHER.TOP_ECONOMIST.name,
+            middleName: TEACHER.TOP_ECONOMIST.middleName,
+            feedbackNum: 0
           }]);
         });
     });
