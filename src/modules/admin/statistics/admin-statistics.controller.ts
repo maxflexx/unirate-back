@@ -7,6 +7,7 @@ import { ActiveUsersDto } from './dto/active-users.dto';
 import { TeachersWithMostHonestStudentsDto } from './dto/teachers-with-most-honest-students.dto';
 import { UserRatingDto } from './dto/user-rating.dto';
 import { PagingDto } from '../../../common/dto/paging.dto';
+import { ProfessionStatisticsDto } from '../user/dto/profession-statistics.dto';
 
 @Controller('admin/statistics')
 export class AdminStatisticsController {
@@ -35,5 +36,10 @@ export class AdminStatisticsController {
   @Get('user-rating')
   async getUserRatings(@Query() params: PagingDto): Promise<{total: number, user: UserRatingDto[]}> {
     return await this.statisticsService.getUsersRating(params);
+  }
+
+  @Get('most-active-profession')
+  async getMostActiveProfession(@Query() params: PagingDto): Promise<{total: number, profession: ProfessionStatisticsDto[]}>  {
+    return await this.statisticsService.getMostActiveProfession(params);
   }
 }

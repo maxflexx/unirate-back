@@ -205,4 +205,35 @@ describe('Admin Statistics', () => {
         });
     });
   });
+  describe('GET admin/statistics/most-active-profession', () => {
+    it('success', () => {
+      return request(server)
+        .get(`/admin/statistics/most-active-profession`)
+        .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
+        .expect(HttpStatus.OK)
+        .then(response => {
+          expect(response.body.total).toBe(4);
+          expect(response.body.profession).toEqual([{
+            id: PROFESSIONS.SOFTWARE_DEVELOPMENT.id,
+            name: PROFESSIONS.SOFTWARE_DEVELOPMENT.name,
+            facultyId: PROFESSIONS.SOFTWARE_DEVELOPMENT.faculty.id,
+            totalFeedback: 4
+          }, {
+            id: PROFESSIONS.ECONOMIST.id,
+            name: PROFESSIONS.ECONOMIST.name,
+            facultyId: PROFESSIONS.ECONOMIST.faculty.id,
+            totalFeedback: 3
+          }, {
+            id: PROFESSIONS.GERMAN_PHILOLOGY.id,
+            name: PROFESSIONS.GERMAN_PHILOLOGY.name,
+            facultyId: PROFESSIONS.GERMAN_PHILOLOGY.faculty.id,
+            totalFeedback: 0
+          }, {
+            id: PROFESSIONS.APPLIED_MATH.id,
+            name: PROFESSIONS.APPLIED_MATH.name,
+            facultyId: PROFESSIONS.APPLIED_MATH.faculty.id,
+            totalFeedback: 0
+          }]);
+        });
+  });
 });

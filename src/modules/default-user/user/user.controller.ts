@@ -17,7 +17,7 @@ export class UserController {
     if (!login) {
       throw ErrorUtil.getValidationError('No login field');
     }
-    if (login != user.login) {
+    if (login.toLocaleLowerCase() != user.login.toLocaleLowerCase()) {
       throw AccessDenied;
     }
     return await this.userService.getUser(login);
@@ -27,7 +27,7 @@ export class UserController {
   async updateUserData(@Param('login') login: string, @Body() body: UserUpdateBodyDto, @UserDecorator() user: User): Promise<UserUpdateResultDto> {
     if (!login)
       throw ErrorUtil.getValidationError('No login');
-    if (login != user.login) {
+    if (login.toLocaleLowerCase() != user.login.toLocaleLowerCase()) {
       throw AccessDenied;
     }
     return await this.userService.updateUser(login, body);
@@ -38,7 +38,7 @@ export class UserController {
     if (!login) {
       throw ErrorUtil.getValidationError('No login field');
     }
-    if (login != user.login) {
+    if (login.toLocaleLowerCase() != user.login.toLocaleLowerCase()) {
       throw AccessDenied;
     }
     await this.userService.deleteUserData(login);
