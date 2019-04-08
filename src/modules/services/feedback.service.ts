@@ -61,14 +61,15 @@ export class FeedbackService {
     if (teachers.length !== body.teachersIds.length)
       throw ItemNotFound;
 
-    const feedbackId = await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, user_login, discipline_id) VALUES
+    const feedback = await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, user_login, discipline_id) VALUES
                             (${body.studentGrade || null}, 0, "${body.comment}", ${TimeUtil.getUnixTime()}, "${userLogin}", ${disciplineId});`);
     let queryFeedbackTeacher = `INSERT INTO feedback_teacher (feedback_id, teacher_id) VALUES `;
     for (const id of body.teachersIds) {
-      queryFeedbackTeacher += `(${feedbackId}, ${id}),`;
+      queryFeedbackTeacher += `(${+feedback.id}, ${id}),`;
     }
     await DbUtil.insertOne(queryFeedbackTeacher.substr(0, queryFeedbackTeacher.length - 1));
-    return {id: +feedbackId, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachersIds: body.teachersIds, studentGrade: body.studentGrade};
+    return {id: +feedback.id, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachers: body.teachersIds, studentGrade: body.studentGrade};
+    //return {id: +feedbackId, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachersIds: body.teachersIds, studentGrade: body.studentGrade};
   }
 
   async updateFeedbackRating(like: number, feedbackGrade: FeedbackGrade): Promise<void> {
@@ -93,8 +94,8 @@ export class FeedbackService {
       }
       return feedbackGrade;
     }
-    await DbUtil.insertOne(`INSERT INTO feedback_grade (` + '`like`' + `, feedback_id, user_login) VALUES (${like}, ${feedbackId}, "${login}")`);
-    return await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
+    return await DbUtil.insertOne(`INSERT INTO feedback_grade (` + '`like`' + `, feedback_id, user_login) VALUES (${like}, ${feedbackId}, "${login}")`);
+    //return await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
   }
 
   async getFeedbackSecure(feedbackId: number): Promise<Feedback> {

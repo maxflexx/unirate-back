@@ -36,8 +36,8 @@ export class TeacherService {
 
   async createTeacherAdmin(body: CreateTecherAdminDto): Promise<Teacher> {
     const query = `INSERT INTO teacher (last_name, name, middle_name) VALUES("${body.lastName}", "${body.name}", "${body.middleName}");`;
-    const id = +(await DbUtil.insertOne(query));
-    return await DbUtil.getTeacherById(Teacher, id);
+    return await DbUtil.insertOne(query);
+    //return await DbUtil.getTeacherById(Teacher, id);
   }
 
   async updateTeacherAdmin(teacherId: number, body: UpdateTeacherAdminDto): Promise<Teacher> {
