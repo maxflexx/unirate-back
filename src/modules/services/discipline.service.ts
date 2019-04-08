@@ -49,9 +49,9 @@ export class DisciplineService {
     const faculty = await DbUtil.getFacultyById(Faculty, body.facultyId);
     if (!faculty)
       throw ItemNotFound;
-    const id = +(await DbUtil.insertOne(`INSERT INTO discipline(name, year, faculty_id) VALUES
-    ("${body.name}", ${body.year}, ${body.facultyId})`));
-    return await DbUtil.getDisciplineById(Discipline, id);
+    return await DbUtil.insertOne(`INSERT INTO discipline(name, year, faculty_id) VALUES
+    ("${body.name}", ${body.year}, ${body.facultyId})`);
+    //return await DbUtil.getDisciplineById(Discipline, id);
   }
 
   async updateDisciplineAdmin(disciplineId: number, body: UpdateDisciplineDto): Promise<Discipline> {
