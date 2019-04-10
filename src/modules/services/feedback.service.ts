@@ -61,11 +61,12 @@ export class FeedbackService {
     if (teachers.length !== body.teachersIds.length)
       throw ItemNotFound;
 
-    const feedback = await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, user_login, discipline_id) VALUES
+    await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, user_login, discipline_id) VALUES
                             (${body.studentGrade || null}, 0, "${body.comment}", ${TimeUtil.getUnixTime()}, "${userLogin}", ${disciplineId});`);
+    const feedback = await DbUtil.getOne(Feedback, `SELECT * FROM feedback WHERE discipline_id=${disciplineId} AND comment="${body.comment}"`)
     let queryFeedbackTeacher = `INSERT INTO feedback_teacher (feedback_id, teacher_id) VALUES `;
     for (const id of body.teachersIds) {
-      queryFeedbackTeacher += `(${+feedback.id}, ${id}),`;
+      queryFeedbackTeacher += `(${feedback.id}, ${id}),`;
     }
     await DbUtil.insertOne(queryFeedbackTeacher.substr(0, queryFeedbackTeacher.length - 1));
     return {id: +feedback.id, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachers: body.teachersIds, studentGrade: body.studentGrade};
@@ -85,11 +86,12 @@ export class FeedbackService {
     if (!feedback)
       throw ItemNotFound;
     const feedbackGrade = await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
-    await this.updateFeedbackRating(like, feedbackGrade);
+
+    //await this.updateFeedbackRating(like, feedbackGrade);
     if (feedbackGrade) {
       if (feedbackGrade.like !== like) {
-        await DbUtil.updateOne(`UPDATE feedback_grade SET ` + '`like`' + `=${like} WHERE user_login="${login}" AND feedback_id=${feedbackId}`);
-        await DbUtil.updateOne(`UPDATE feedback SET rating=rating+${like} WHERE user_login="${login}" AND id=${feedbackId}`);
+        await DbUtil.updateOne(`UPDATE feedback_grade SET ` + '`like`' + `=${like} WHERE feedback_id=${feedbackId} AND user_login="${login}"`);
+        await DbUtil.updateOne(`UPDATE feedback SET rating=rating+${like} WHERE id=${feedbackId}`);
         feedbackGrade.like = like;
       }
       return feedbackGrade;

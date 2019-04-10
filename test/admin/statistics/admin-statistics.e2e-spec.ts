@@ -26,12 +26,7 @@ describe('Admin Statistics', () => {
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.total).toBe(1);
-          expect(response.body.profession).toEqual([{
-            id: PROFESSIONS.SOFTWARE_DEVELOPMENT.id,
-            name: PROFESSIONS.SOFTWARE_DEVELOPMENT.name,
-            facultyId: PROFESSIONS.SOFTWARE_DEVELOPMENT.faculty.id
-          }]);
+          expect(response.body.total).toBe(1);n]);
         });
     });
   });

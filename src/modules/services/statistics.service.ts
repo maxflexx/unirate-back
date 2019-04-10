@@ -50,9 +50,8 @@ export class StatisticsService {
                   'GROUP BY t.id ' +
                   'ORDER BY feedbackNum DESC ' +
                   `LIMIT ${params.limit} OFFSET ${params.offset}`;
-    const countQuery = 'SELECT COUNT(DISTINCT t.id) AS count ' +
-                       'FROM teacher t, feedback_teacher ft ' +
-                       'WHERE t.id=ft.teacher_id ';
+    const countQuery = 'SELECT COUNT(t.id) AS count ' +
+                       'FROM teacher t';
     return {total: await DbUtil.getCount(countQuery), teacher: await DbUtil.getMany(PopularTeachersDto, query)};
 
   }
@@ -89,6 +88,7 @@ export class StatisticsService {
     const query = 'SELECT u.login, u.email, u.profession_id, u.role, COALESCE(AVG(f.rating), 0) AS rating, COUNT(f.id) totalFeedbackNumber ' +
                   'FROM user u ' +
                   'LEFT JOIN feedback f ON f.user_login=u.login ' +
+                  'WHERE totalFeedbackNumber > 0 ' +
                   'GROUP BY u.login ' +
                   'ORDER BY rating ' +
                   `LIMIT ${params.limit} OFFSET ${params.offset}`;
