@@ -20,7 +20,7 @@ export class MandatoryService {
                   'FROM discipline d, profession pr, mandatory m ' +
                   'WHERE m.profession_id=pr.id AND ' +
                   'm.discipline_id=d.id AND ' +
-                  `pr.id=${professionId}`;
+                  `pr.id=${professionId} ORDER BY d.name`;
     const countQuery = 'SELECT COUNT(DISTINCT d.id) AS count ' +
                         'FROM discipline d, profession pr, mandatory m ' +
                         'WHERE m.profession_id=pr.id AND ' +

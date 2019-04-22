@@ -17,8 +17,10 @@ export class FeedbackService {
 
   async getFeedback(params: GetFeedbackParamsDto): Promise<{feedback: FeedbackResultDto[], total: number}> {
     let countQuery = `SELECT COUNT(*) AS count FROM feedback`;
-    let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, f.discipline_id, ft.teacher_id`;
+    let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, d.name AS discipline_name, ft.teacher_id, t.name, t.middle_name, t.last_name`;
     query += ` FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id`;
+    query += ` LEFT JOIN discipline d ON d.id=f.discipline_id`;
+    query += ` LEFT JOIN teacher t ON t.id=ft.teacher_id`;
     if (params.disciplineId != undefined) {
       query += ` WHERE f.discipline_id=${params.disciplineId}`;
       countQuery += ` WHERE discipline_id=${params.disciplineId}`;
@@ -44,7 +46,7 @@ export class FeedbackService {
     for (const f of feedback) {
       const indexOfWritten = feedbacks.findIndex(item => item.feedbackId === f.feedbackId);
       if (indexOfWritten >= 0){
-        feedbacks[indexOfWritten].teacherIds.push(f.teacherIds[0]);
+        feedbacks[indexOfWritten].teachers.push(f.teachers[0]);
       }
       else {
         feedbacks.push(f);
@@ -57,18 +59,22 @@ export class FeedbackService {
     const discipline = await DbUtil.getDisciplineById(Discipline, disciplineId);
     if (!discipline)
       throw ItemNotFound;
-    const teachers = await DbUtil.getMany(Teacher, `SELECT * FROM teacher WHERE id IN (${body.teachersIds.join(', ')})`);
-    if (teachers.length !== body.teachersIds.length)
-      throw ItemNotFound;
+    if (body.teachersIds && body.teachersIds.length !== 0) {
+      const teachers = await DbUtil.getMany(Teacher, `SELECT * FROM teacher WHERE id IN (${body.teachersIds.join(', ')})`);
+      if (teachers.length !== body.teachersIds.length)
+        throw ItemNotFound;
+    }
 
     await DbUtil.insertOne(`INSERT INTO feedback (student_grade, rating, comment, created, user_login, discipline_id) VALUES
                             (${body.studentGrade || null}, 0, "${body.comment}", ${TimeUtil.getUnixTime()}, "${userLogin}", ${disciplineId});`);
     const feedback = await DbUtil.getOne(Feedback, `SELECT * FROM feedback WHERE discipline_id=${disciplineId} AND comment="${body.comment}"`)
-    let queryFeedbackTeacher = `INSERT INTO feedback_teacher (feedback_id, teacher_id) VALUES `;
-    for (const id of body.teachersIds) {
-      queryFeedbackTeacher += `(${feedback.id}, ${id}),`;
+    if (body.teachersIds && body.teachersIds.length !== 0) {
+      let queryFeedbackTeacher = `INSERT INTO feedback_teacher (feedback_id, teacher_id) VALUES `;
+      for (const id of body.teachersIds) {
+        queryFeedbackTeacher += `(${feedback.id}, ${id}),`;
+      }
+      await DbUtil.insertOne(queryFeedbackTeacher.substr(0, queryFeedbackTeacher.length - 1));
     }
-    await DbUtil.insertOne(queryFeedbackTeacher.substr(0, queryFeedbackTeacher.length - 1));
     return {id: +feedback.id, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachers: body.teachersIds, studentGrade: body.studentGrade};
     //return {id: +feedbackId, disciplineId: +disciplineId, comment: body.comment, rating: 0, teachersIds: body.teachersIds, studentGrade: body.studentGrade};
   }

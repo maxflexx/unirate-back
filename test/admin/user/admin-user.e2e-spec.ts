@@ -32,7 +32,7 @@ describe('Admin User', () => {
             email: USERS.SIMPLE_FGN.email,
             rating: 18, // avg(feedback.rating)
             role: USERS.SIMPLE_FGN.role,
-            professionId: USERS.SIMPLE_FGN.profession.id,
+            professionName: USERS.SIMPLE_FGN.profession.name,
             totalFeedbackNumber: 3
           }]);
         });
@@ -50,7 +50,7 @@ describe('Admin User', () => {
             email: USERS.GRADE_FEEDBACKS.email,
             rating: 0,
             role: USERS.GRADE_FEEDBACKS.role,
-            professionId: null,
+            professionName: null,
             totalFeedbackNumber: 0
           }]);
         });
@@ -68,7 +68,7 @@ describe('Admin User', () => {
             email: USERS.SIMPLE.email,
             rating: 42,
             role: USERS.SIMPLE.role,
-            professionId: USERS.SIMPLE.profession.id,
+            professionName: USERS.SIMPLE.profession.name,
             totalFeedbackNumber: 3
           }, {
             login: USERS.SIMPLE_FGN.login,

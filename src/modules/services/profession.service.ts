@@ -6,31 +6,34 @@ import { CreateProfessionDto } from '../admin/profession/dto/create-profession.d
 import { Faculty } from '../../entities/faculty.entity';
 import { ItemAlreadyExists, ItemNotFound } from '../../constants';
 import { UpdateProfessionDto } from '../admin/profession/dto/update-profession.dto';
+import { ProfessionClientDto } from '../../entities/client-entities/profession-client.dto';
 
 @Injectable()
 export class ProfessionService {
   constructor(){}
 
   async getProfessions(params: GetProfessionDto): Promise<{total: number, profession: Profession[]}> {
-    let query = 'SELECT * FROM profession';
-    let countQuery = 'SELECT COUNT(*) AS count FROM profession';
+    let query = 'SELECT p.id, p.name, f.name AS facultyName FROM profession p LEFT JOIN faculty f ON f.id=p.faculty_id';
+
+    let countQuery = 'SELECT COUNT(*) AS count FROM profession p';
     if (params.facultyId != undefined || params.professionId != undefined || params.search) {
       query += ' WHERE ';
       countQuery += ' WHERE ';
       const queryParams = [];
       if (params.facultyId != undefined) {
-        queryParams.push(`faculty_id=${params.facultyId}`);
+        queryParams.push(`p.faculty_id=${params.facultyId}`);
       }
       if (params.professionId != undefined) {
-        queryParams.push(`id=${params.professionId}`);
+        queryParams.push(`p.id=${params.professionId}`);
       }
       if (params.search) {
-        queryParams.push(`name LIKE "%${params.search}%"`);
+        queryParams.push(`p.name LIKE "%${params.search}%"`);
       }
       query += queryParams.join(' AND ');
       countQuery += queryParams.join(' AND ');
     }
-    return {total: await DbUtil.getCount(countQuery), profession: await DbUtil.getMany(Profession, query)};
+    query += ' ORDER BY p.name ';
+    return {total: await DbUtil.getCount(countQuery), profession: await DbUtil.getMany(ProfessionClientDto, query)};
   }
 
   async createProfessionAdmin(body: CreateProfessionDto): Promise<Profession> {

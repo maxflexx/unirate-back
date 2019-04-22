@@ -25,6 +25,7 @@ export class FacultyService {
       query += queryParams.join(' AND ');
       countQuery += queryParams.join(' AND ');
     }
+    query += ' ORDER BY faculty.name ';
     query += ` LIMIT ${params.limit} OFFSET ${params.offset}`;
     return {total: await DbUtil.getCount(countQuery), faculty: await DbUtil.getMany(Faculty, query)};
   }

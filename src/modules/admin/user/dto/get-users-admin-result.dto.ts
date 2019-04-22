@@ -5,7 +5,7 @@ export class GetUsersAdminResultDto {
   email: string;
   rating: number;
   role: number;
-  professionId: number;
+  professionName: string;
   totalFeedbackNumber: number;
 
   static fromRaw(raw: any): GetUsersAdminResultDto {
@@ -14,7 +14,7 @@ export class GetUsersAdminResultDto {
     dto.email = raw.email;
     dto.rating = Math.round(raw.rating);
     dto.role = raw.role;
-    dto.professionId = raw.professionId;
+    dto.professionName = raw.professionName;
     dto.totalFeedbackNumber = raw.totalFeedback;
     return dto;
   }

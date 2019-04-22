@@ -26,7 +26,7 @@ describe('Professions', () => {
           expect(response.body.profession).toEqual([{
             id: PROFESSIONS.ECONOMIST.id,
             name: PROFESSIONS.ECONOMIST.name,
-            facultyId: PROFESSIONS.ECONOMIST.faculty.id
+            facultyName: PROFESSIONS.ECONOMIST.faculty.name
           }]);
         });
     });
@@ -41,7 +41,7 @@ describe('Professions', () => {
           expect(response.body.profession).toEqual([{
             id: PROFESSIONS.ECONOMIST.id,
             name: PROFESSIONS.ECONOMIST.name,
-            facultyId: PROFESSIONS.ECONOMIST.faculty.id
+            facultyName: PROFESSIONS.ECONOMIST.faculty.name
           }]);
         });
     });
@@ -56,33 +56,7 @@ describe('Professions', () => {
           expect(response.body.profession).toEqual([{
             id: PROFESSIONS.GERMAN_PHILOLOGY.id,
             name: PROFESSIONS.GERMAN_PHILOLOGY.name,
-            facultyId: PROFESSIONS.GERMAN_PHILOLOGY.faculty.id
-          }]);
-        });
-    });
-    it('success: all', () => {
-      return request(server)
-        .get(`/profession`)
-        .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
-        .expect(HttpStatus.OK)
-        .then(response => {
-          expect(response.body.total).toBe(4);
-          expect(response.body.profession).toEqual([{
-            id: PROFESSIONS.SOFTWARE_DEVELOPMENT.id,
-            name: PROFESSIONS.SOFTWARE_DEVELOPMENT.name,
-            facultyId: PROFESSIONS.SOFTWARE_DEVELOPMENT.faculty.id
-          }, {
-            id: PROFESSIONS.GERMAN_PHILOLOGY.id,
-            name: PROFESSIONS.GERMAN_PHILOLOGY.name,
-            facultyId: PROFESSIONS.GERMAN_PHILOLOGY.faculty.id
-          }, {
-            id: PROFESSIONS.APPLIED_MATH.id,
-            name: PROFESSIONS.APPLIED_MATH.name,
-            facultyId: PROFESSIONS.APPLIED_MATH.faculty.id
-          }, {
-            id: PROFESSIONS.ECONOMIST.id,
-            name: PROFESSIONS.ECONOMIST.name,
-            facultyId: PROFESSIONS.ECONOMIST.faculty.id
+            facultyName: PROFESSIONS.GERMAN_PHILOLOGY.faculty.name
           }]);
         });
     });

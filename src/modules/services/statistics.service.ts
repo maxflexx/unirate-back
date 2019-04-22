@@ -9,6 +9,7 @@ import { TeachersWithMostHonestStudentsDto } from '../admin/statistics/dto/teach
 import { UserRatingDto } from '../admin/statistics/dto/user-rating.dto';
 import { PagingDto } from '../../common/dto/paging.dto';
 import { ProfessionStatisticsDto } from '../admin/user/dto/profession-statistics.dto';
+import { ProfessionClientDto } from '../../entities/client-entities/profession-client.dto';
 
 @Injectable()
 export class StatisticsService {
@@ -17,9 +18,8 @@ export class StatisticsService {
 
   //professions where all mandatory disciplines has feedback
   async getStatisticsProfession(params: PagingDto): Promise<{total: number, profession: Profession[]}> {
-    const query = 'SELECT * ' +
-                'FROM profession pr ' +
-                'WHERE NOT EXISTS (SELECT * ' +
+    const query = 'SELECT pr.id, pr.name, f.name AS facultyName FROM profession pr LEFT JOIN faculty ff ON ff.id=pr.faculty_id ' +
+                  'WHERE NOT EXISTS (SELECT * ' +
                                   'FROM mandatory m ' +
                                   'WHERE m.profession_id=pr.id AND ' +
                                   'NOT EXISTS (SELECT * ' +
@@ -27,7 +27,7 @@ export class StatisticsService {
                                               'WHERE f.discipline_id=m.discipline_id)) ' +
                 'AND (SELECT COUNT(DISTINCT mm.discipline_id) ' +
                      'FROM mandatory mm ' +
-                     'WHERE mm.profession_id=pr.id)' +
+                     'WHERE mm.profession_id=pr.id) > 1' +
                 `LIMIT ${params.limit} OFFSET ${params.offset}`;
     const countQuery =  'SELECT COUNT(pr.id) AS count ' +
       'FROM profession pr ' +
@@ -40,7 +40,7 @@ export class StatisticsService {
       'AND (SELECT COUNT(DISTINCT mm.discipline_id) ' +
       'FROM mandatory mm ' +
       'WHERE mm.profession_id=pr.id)';
-      return {total: await DbUtil.getCount(countQuery), profession: await DbUtil.getMany(Profession, query)};
+      return {total: await DbUtil.getCount(countQuery), profession: await DbUtil.getMany(ProfessionClientDto, query)};
   }
 
   async getPopularTeachers(params: PagingDto): Promise<{total: number, teacher: Teacher[]}> {
@@ -57,9 +57,10 @@ export class StatisticsService {
   }
 
   async getMostActiveUsers(params: PagingDto): Promise<{total: number, user: ActiveUsersDto[]}> {
-    const query = 'SELECT u.login, u.email, u.profession_id, COUNT(DISTINCT feed.id) AS feedbackNum ' +
+    const query = 'SELECT u.login, u.email, pr.name AS professionName, COUNT(DISTINCT feed.id) AS feedbackNum ' +
                   'FROM user u ' +
                   'LEFT JOIN feedback feed ON feed.user_login=u.login ' +
+                  'LEFT JOIN profession pr ON pr.id=u.profession_id ' +
                   'GROUP BY u.login ' +
                   'ORDER BY feedbackNum DESC ' +
                   `LIMIT ${params.limit} OFFSET ${params.offset}`;
@@ -85,25 +86,24 @@ export class StatisticsService {
   }
 
   async getUsersRating(params: PagingDto): Promise<{total: number, user: UserRatingDto[]}> {
-    const query = 'SELECT u.login, u.email, u.profession_id, u.role, COALESCE(AVG(f.rating), 0) AS rating, COUNT(f.id) totalFeedbackNumber ' +
+    const query = 'SELECT u.login, u.email, pr.name AS professionName, u.role, COALESCE(AVG(f.rating), 0) AS rating, COUNT(f.id) totalFeedbackNumber ' +
                   'FROM user u ' +
                   'LEFT JOIN feedback f ON f.user_login=u.login ' +
-                  'WHERE totalFeedbackNumber > 0 ' +
+                  'LEFT JOIN profession pr ON pr.id=u.profession_id ' +
                   'GROUP BY u.login ' +
+                  'HAVING COUNT(f.id) > 0 ' +
                   'ORDER BY rating ' +
                   `LIMIT ${params.limit} OFFSET ${params.offset}`;
-
-    const countQuery = 'SELECT COUNT(DISTINCT u.login) AS count ' +
-                        'FROM user u ' +
-                        'LEFT JOIN feedback f ON f.user_login=u.login ';
-    return {total: await DbUtil.getCount(countQuery), user: await DbUtil.getMany(UserRatingDto, query)};
+    const users = await DbUtil.getMany(UserRatingDto, query);
+    return {total: users ? users.length : 0, user: users};
   }
 
   async getMostActiveProfession(params: PagingDto): Promise<{total: number, profession: ProfessionStatisticsDto[]}> {
-    const query = 'SELECT pr.id, pr.`name`, pr.faculty_id, COALESCE(COUNT(f.id), 0) AS total_feedback ' +
+    const query = 'SELECT pr.id, pr.`name`, ff.name AS facultyName, COALESCE(COUNT(f.id), 0) AS total_feedback ' +
                   'FROM profession pr ' +
                   'LEFT JOIN user u ON pr.id=u.profession_id ' +
                   'LEFT JOIN feedback f ON f.user_login=u.login ' +
+                  'LEFT JOIN faculty ff ON ff.id=pr.faculty_id ' +
                   'GROUP BY pr.id ' +
                   'ORDER BY total_feedback DESC ' +
                   `LIMIT ${params.limit} OFFSET ${params.offset}`;

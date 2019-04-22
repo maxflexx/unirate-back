@@ -53,9 +53,10 @@ export class UserService {
   }
 
   async getUsersAdmin(params: GetUsersAdminDto): Promise<{total: number, user: GetUsersAdminResultDto[]}> {
-    let query = `SELECT u.login AS login, u.email AS email, u.role AS role, u.profession_id AS professionId, COALESCE(AVG(f.rating),0) AS rating, COUNT(f.id) as totalFeedback
+    let query = `SELECT u.login AS login, u.email AS email, u.role AS role, pr.name AS professionName, COALESCE(AVG(f.rating),0) AS rating, COUNT(f.id) as totalFeedback
     FROM user AS u
-    LEFT JOIN feedback f ON f.user_login=u.login`;
+    LEFT JOIN feedback f ON f.user_login=u.login
+    LEFT JOIN profession pr ON u.profession_id=pr.id`;
     let countQuery = 'SELECT COUNT(*) AS count FROM user';
     if (params.userLogin) {
       countQuery += ` WHERE login="${params.userLogin}"`;

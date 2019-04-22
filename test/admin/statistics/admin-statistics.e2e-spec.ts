@@ -26,7 +26,7 @@ describe('Admin Statistics', () => {
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.total).toBe(1);n]);
+          expect(response.body.total).toBe(1);
         });
     });
   });
@@ -38,7 +38,7 @@ describe('Admin Statistics', () => {
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.total).toBe(4);
+          expect(response.body.total).toBe(5);
           expect(response.body.teacher).toEqual([{
             id: TEACHER.BOUBLIK.id,
             lastName: TEACHER.BOUBLIK.lastName,
@@ -85,27 +85,27 @@ describe('Admin Statistics', () => {
           expect(response.body.user).toEqual([{
             login: USERS.SIMPLE.login,
             email: USERS.SIMPLE.email,
-            professionId: USERS.SIMPLE.profession.id,
+            professionName: USERS.SIMPLE.profession.name,
             feedbackNum: 4
           }, {
             login: USERS.SIMPLE_FGN.login,
             email: USERS.SIMPLE_FGN.email,
-            professionId: USERS.SIMPLE_FGN.profession.id,
+            professionName: USERS.SIMPLE_FGN.profession.name,
             feedbackNum: 3
           }, {
             login: USERS.ADMIN_USER.login,
             email: USERS.ADMIN_USER.email,
-            professionId: null,
+            professionName: null,
             feedbackNum: 0
           }, {
             login: USERS.GRADE_FEEDBACKS.login,
             email: USERS.GRADE_FEEDBACKS.email,
-            professionId: null,
+            professionName: null,
             feedbackNum: 0
           }, {
             login: USERS.GRADE_FEEDBACKS1.login,
             email: USERS.GRADE_FEEDBACKS1.email,
-            professionId: null,
+            professionName: null,
             feedbackNum: 0
           },]);
         });
@@ -160,41 +160,20 @@ describe('Admin Statistics', () => {
         .set('Authorization', 'Bearer ' + ADMINS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
-          expect(response.body.total).toBe(5);
+          expect(response.body.total).toBe(2);
           expect(response.body.user).toEqual([{
-            login: USERS.ADMIN_USER.login,
-            email: USERS.ADMIN_USER.email,
-            role: USERS.ADMIN_USER.role,
-            professionId: null,
-            rating: 0,
-            totalFeedbackNumber: 0
-          }, {
-            login: USERS.GRADE_FEEDBACKS.login,
-            email: USERS.GRADE_FEEDBACKS.email,
-            role: USERS.GRADE_FEEDBACKS.role,
-            rating: 0,
-            professionId: null,
-            totalFeedbackNumber: 0
-          }, {
-            login: USERS.GRADE_FEEDBACKS1.login,
-            email: USERS.GRADE_FEEDBACKS1.email,
-            role: USERS.GRADE_FEEDBACKS1.role,
-            rating: 0,
-            professionId: null,
-            totalFeedbackNumber: 0
-          }, {
             login: USERS.SIMPLE_FGN.login,
             email: USERS.SIMPLE_FGN.email,
             role: USERS.SIMPLE_FGN.role,
             rating: 18.333333333333332,
-            professionId: USERS.SIMPLE_FGN.profession.id,
+            professionName: USERS.SIMPLE_FGN.profession.name,
             totalFeedbackNumber: 3
           }, {
             login: USERS.SIMPLE.login,
             email: USERS.SIMPLE.email,
             role: USERS.SIMPLE.role,
             rating: 32.5,
-            professionId: USERS.SIMPLE.profession.id,
+            professionName: USERS.SIMPLE.profession.name,
             totalFeedbackNumber: 4
           }]);
         });
@@ -211,22 +190,22 @@ describe('Admin Statistics', () => {
           expect(response.body.profession).toEqual([{
             id: PROFESSIONS.SOFTWARE_DEVELOPMENT.id,
             name: PROFESSIONS.SOFTWARE_DEVELOPMENT.name,
-            facultyId: PROFESSIONS.SOFTWARE_DEVELOPMENT.faculty.id,
+            facultyName: PROFESSIONS.SOFTWARE_DEVELOPMENT.faculty.name,
             totalFeedback: 4
           }, {
             id: PROFESSIONS.ECONOMIST.id,
             name: PROFESSIONS.ECONOMIST.name,
-            facultyId: PROFESSIONS.ECONOMIST.faculty.id,
+            facultyName: PROFESSIONS.ECONOMIST.faculty.name,
             totalFeedback: 3
           }, {
             id: PROFESSIONS.GERMAN_PHILOLOGY.id,
             name: PROFESSIONS.GERMAN_PHILOLOGY.name,
-            facultyId: PROFESSIONS.GERMAN_PHILOLOGY.faculty.id,
+            facultyName: PROFESSIONS.GERMAN_PHILOLOGY.faculty.name,
             totalFeedback: 0
           }, {
             id: PROFESSIONS.APPLIED_MATH.id,
             name: PROFESSIONS.APPLIED_MATH.name,
-            facultyId: PROFESSIONS.APPLIED_MATH.faculty.id,
+            facultyName: PROFESSIONS.APPLIED_MATH.faculty.name,
             totalFeedback: 0
           }]);
         });

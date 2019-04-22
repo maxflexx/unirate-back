@@ -7,8 +7,8 @@ export class FeedbackResultDto {
   rating: number;
   comment: string;
   created: number;
-  disciplineId: number;
-  teacherIds: number[];
+  disciplineName: string;
+  teachers: any[];
 
   static fromRaw(raw: any): FeedbackResultDto {
     const dto = new FeedbackResultDto();
@@ -18,8 +18,8 @@ export class FeedbackResultDto {
     dto.rating = raw.rating;
     dto.comment = raw.comment;
     dto.created = raw.created;
-    dto.disciplineId = +raw.discipline_id;
-    dto.teacherIds = [+raw.teacher_id];
+    dto.disciplineName = raw.discipline_name;
+    dto.teachers = [{id: +raw.teacher_id, name: raw.name, lastName: raw.last_name, middleName: raw.middle_name}];
     return dto;
   }
 }

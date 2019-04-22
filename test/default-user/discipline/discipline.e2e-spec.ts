@@ -27,12 +27,12 @@ describe('Disciplines', () => {
             id: DISCIPLINE.ECONOMICS.id,
             name: DISCIPLINE.ECONOMICS.name,
             year: DISCIPLINE.ECONOMICS.year,
-            facultyId: FACULTIES.FEN.id
+            facultyName: FACULTIES.FEN.name
           }, {
             id: DISCIPLINE.HISTORY.id,
             name: DISCIPLINE.HISTORY.name,
             year: DISCIPLINE.HISTORY.year,
-            facultyId: FACULTIES.FEN.id
+            facultyName: FACULTIES.FEN.name
           }]);
         });
     });
@@ -48,7 +48,7 @@ describe('Disciplines', () => {
             id: DISCIPLINE.HISTORY.id,
             name: DISCIPLINE.HISTORY.name,
             year: DISCIPLINE.HISTORY.year,
-            facultyId: FACULTIES.FEN.id
+            facultyName: FACULTIES.FEN.name
           }]);
         });
     });
@@ -61,10 +61,10 @@ describe('Disciplines', () => {
         .then(response => {
           expect(response.body.total).toBe(8);
           expect(response.body.discipline).toEqual([{
-            id: DISCIPLINE.PROCEDURE.id,
-            name: DISCIPLINE.PROCEDURE.name,
-            year: DISCIPLINE.PROCEDURE.year,
-            facultyId: DISCIPLINE.PROCEDURE.faculty.id
+            id: DISCIPLINE.ECONOMICS.id,
+            name: DISCIPLINE.ECONOMICS.name,
+            year: DISCIPLINE.ECONOMICS.year,
+            facultyName: DISCIPLINE.ECONOMICS.faculty.name
           }]);
         });
     });
@@ -80,7 +80,7 @@ describe('Disciplines', () => {
             id: DISCIPLINE.PROCEDURE.id,
             name: DISCIPLINE.PROCEDURE.name,
             year: DISCIPLINE.PROCEDURE.year,
-            facultyId: DISCIPLINE.PROCEDURE.faculty.id
+            facultyName: DISCIPLINE.PROCEDURE.faculty.name
           }]);
         });
     });
@@ -96,7 +96,7 @@ describe('Disciplines', () => {
             id: DISCIPLINE.OOP.id,
             name: DISCIPLINE.OOP.name,
             year: DISCIPLINE.OOP.year,
-            facultyId: DISCIPLINE.OOP.faculty.id
+            facultyName: DISCIPLINE.OOP.faculty.name
           }]);
         });
     });
@@ -112,12 +112,12 @@ describe('Disciplines', () => {
             id: DISCIPLINE.ECONOMICS.id,
             name: DISCIPLINE.ECONOMICS.name,
             year: DISCIPLINE.ECONOMICS.year,
-            facultyId: DISCIPLINE.ECONOMICS.faculty.id
+            facultyName: DISCIPLINE.ECONOMICS.faculty.name
           }, {
             id: DISCIPLINE.ENGLISH.id,
             name: DISCIPLINE.ENGLISH.name,
             year: DISCIPLINE.ENGLISH.year,
-            facultyId: DISCIPLINE.ENGLISH.faculty.id
+            facultyName: DISCIPLINE.ENGLISH.faculty.name
           }]);
         });
     });

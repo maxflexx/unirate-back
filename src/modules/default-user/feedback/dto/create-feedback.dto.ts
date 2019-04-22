@@ -9,6 +9,6 @@ export class CreateFeedbackDto {
   comment: string;
 
   @IsInt({each: true})
-  @IsNotEmpty()
+  @IsOptional()
   teachersIds: number[];
 }
