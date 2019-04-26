@@ -4,6 +4,7 @@ export class DisciplineClientDto {
   name: string;
   year: number;
   facultyName: string;
+  feedbackNum: number;
 
   static fromRaw(raw: any): DisciplineClientDto {
     const dto = new DisciplineClientDto();
@@ -11,6 +12,7 @@ export class DisciplineClientDto {
     dto.name = raw.name;
     dto.year = +raw.year;
     dto.facultyName = raw.facultyName;
+    dto.feedbackNum = +raw.feedbackNum;
     return dto;
   }
 }

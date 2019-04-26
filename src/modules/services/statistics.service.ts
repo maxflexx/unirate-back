@@ -18,7 +18,7 @@ export class StatisticsService {
 
   //professions where all mandatory disciplines has feedback
   async getStatisticsProfession(params: PagingDto): Promise<{total: number, profession: Profession[]}> {
-    const query = 'SELECT pr.id, pr.name, f.name AS facultyName FROM profession pr LEFT JOIN faculty ff ON ff.id=pr.faculty_id ' +
+    const query = 'SELECT pr.id, pr.name, ff.name AS facultyName FROM profession pr LEFT JOIN faculty ff ON ff.id=pr.faculty_id ' +
                   'WHERE NOT EXISTS (SELECT * ' +
                                   'FROM mandatory m ' +
                                   'WHERE m.profession_id=pr.id AND ' +
@@ -28,7 +28,7 @@ export class StatisticsService {
                 'AND (SELECT COUNT(DISTINCT mm.discipline_id) ' +
                      'FROM mandatory mm ' +
                      'WHERE mm.profession_id=pr.id) > 1' +
-                `LIMIT ${params.limit} OFFSET ${params.offset}`;
+                ` LIMIT ${params.limit} OFFSET ${params.offset}`;
     const countQuery =  'SELECT COUNT(pr.id) AS count ' +
       'FROM profession pr ' +
       'WHERE NOT EXISTS (SELECT * ' +

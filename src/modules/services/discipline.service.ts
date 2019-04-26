@@ -13,13 +13,14 @@ export class DisciplineService {
   constructor(){}
 
   async getDisciplinesAdmin(params: GetAdminDisciplineParamsDto): Promise<{discipline: Discipline[], total: number}> {
-    let query = 'SELECT discipline.id, discipline.name, discipline.year, f.name AS facultyName FROM discipline ';
+    let query = 'SELECT discipline.id, discipline.name, discipline.year, f.name AS facultyName, COALESCE(COUNT(feed.id),0) AS feedbackNum FROM discipline ';
     let countQuery = `SELECT COUNT(*) AS count FROM discipline `;
     if (params.mandatoryProfessionId != undefined) {
       query += `LEFT JOIN mandatory ON mandatory.discipline_id = discipline.id `;
       countQuery += `LEFT JOIN mandatory ON mandatory.discipline_id = discipline.id `;
     }
     query += 'LEFT JOIN faculty f ON f.id=discipline.faculty_id ';
+    query += 'LEFT JOIN feedback feed ON feed.discipline_id=discipline.id ';
     if (params.facultyId != undefined || params.id != undefined || params.year != undefined || params.mandatoryProfessionId != undefined || params.search) {
       query += 'WHERE ';
       countQuery += 'WHERE ';
@@ -42,7 +43,11 @@ export class DisciplineService {
       query += queryParams.join(' AND ');
       countQuery += queryParams.join(' AND ');
     }
-    query += ' ORDER BY discipline.name ';
+    query += ' GROUP BY discipline.id ';
+    if (params.orderBy.includes('feedbackNum'))
+      query += ` ORDER BY ${params.orderBy} `;
+    else
+      query += ` ORDER BY discipline.${params.orderBy} `;
     query += ` LIMIT ${params.limit} OFFSET ${params.offset}`;
     const discipline = await DbUtil.getMany(DisciplineClientDto, query);
     return {discipline, total: await DbUtil.getCount(countQuery)};

@@ -56,6 +56,7 @@ export class FeedbackService {
   }
 
   async createFeedback(disciplineId: number, body: CreateFeedbackDto, userLogin: string) {
+    console.log('Feedback comment: ' + body.comment);
     const discipline = await DbUtil.getDisciplineById(Discipline, disciplineId);
     if (!discipline)
       throw ItemNotFound;
@@ -102,6 +103,7 @@ export class FeedbackService {
       }
       return feedbackGrade;
     }
+    await DbUtil.updateOne(`UPDATE feedback SET rating=rating+${like} WHERE id=${feedbackId}`);
     return await DbUtil.insertOne(`INSERT INTO feedback_grade (` + '`like`' + `, feedback_id, user_login) VALUES (${like}, ${feedbackId}, "${login}")`);
     //return await DbUtil.getFeedbackGrade(FeedbackGrade, feedbackId, login);
   }

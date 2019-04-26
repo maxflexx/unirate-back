@@ -33,4 +33,10 @@ export class GetAdminDisciplineParamsDto extends PagingDto{
   @IsOptional()
   @Expose()
   search: string;
+
+  @IsString()
+  @Transform(v => v ? v : 'name')
+  @IsOptional()
+  @Expose()
+  orderBy: string;
 }

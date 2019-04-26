@@ -300,7 +300,7 @@ describe('Feedback', () => {
   describe('POST feedback/:disciplineId', () => {
     testUserAuth(server, RequestMethod.POST, `/feedback/${DISCIPLINE.OBDZ.id}`);
     it('success', () => {
-      const body = {studentGrade: 71, comment: 'AWESOME BD', teachersIds: [TEACHER.USHENKO.id, TEACHER.GULAEVA.id]};
+      const body = {studentGrade: 71, comment: 'мінус матьґ', teachersIds: [TEACHER.USHENKO.id, TEACHER.GULAEVA.id]};
       const start = TimeUtil.getUnixTime();
       return request(server)
         .post(`/feedback/${DISCIPLINE.OBDZ.id}`)

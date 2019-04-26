@@ -55,7 +55,7 @@ describe('Disciplines', () => {
     it('success: limit & offset', () => {
       return request(server)
         .get(`/discipline`)
-        .query(`offset=1&limit=1`)
+        .query(`offset=1&limit=99&orderBy=feedbackNum DESC`)
         .set('Authorization', 'Bearer ' + USERS_JWT.SIMPLE)
         .expect(HttpStatus.OK)
         .then(response => {
