@@ -6,9 +6,11 @@ import { HttpStatus } from '@nestjs/common';
 export const TESTNET = false;
 
 const ormConfig = require('../ormconfig.json');
-export const ORM_CONFIG_MEMORY = TESTNET ? ormConfig.MEMORY_DB : ormConfig.AWS_DB;
+export const ORM_CONFIG_MEMORY = TESTNET
+  ? ormConfig.MEMORY_DB
+  : ormConfig.AWS_DB;
 
-export const LISTEN_PORT = TESTNET ? 3000 : process.env.PORT;
+export const LISTEN_PORT = TESTNET ? 3000 : 3000;
 
 export const ORM_CONFIG = ORM_CONFIG_MEMORY;
 
@@ -30,9 +32,33 @@ export const UNAUTHORIZED = 'unauthorized';
 export const ITEM_ALREADY_EXISTS = 'item_already_exists';
 export const IS_NOT_ITEM_OWNER = 'is_not_item_owner';
 
-export const InvalidParams = new HttpCodeException(HttpStatus.BAD_REQUEST, INVALID_PARAMS, 'Invalid parameters, check your request body or query');
-export const ItemNotFound = new HttpCodeException(HttpStatus.NOT_FOUND, ITEM_NOT_FOUND, 'Item not found in database');
-export const AccessDenied = new HttpCodeException(HttpStatus.FORBIDDEN, ACCESS_DENIED, 'You have not enough rights to use this method');
-export const Unauthorized = new HttpCodeException(HttpStatus.UNAUTHORIZED, UNAUTHORIZED, 'Invalid jwt token');
-export const ItemAlreadyExists = new HttpCodeException(HttpStatus.CONFLICT, ITEM_ALREADY_EXISTS, 'Item already exists');
-export const IsNotItemOwner = new HttpCodeException(HttpStatus.FORBIDDEN, IS_NOT_ITEM_OWNER, 'Logged in user is not an item owner');
+export const InvalidParams = new HttpCodeException(
+  HttpStatus.BAD_REQUEST,
+  INVALID_PARAMS,
+  'Invalid parameters, check your request body or query',
+);
+export const ItemNotFound = new HttpCodeException(
+  HttpStatus.NOT_FOUND,
+  ITEM_NOT_FOUND,
+  'Item not found in database',
+);
+export const AccessDenied = new HttpCodeException(
+  HttpStatus.FORBIDDEN,
+  ACCESS_DENIED,
+  'You have not enough rights to use this method',
+);
+export const Unauthorized = new HttpCodeException(
+  HttpStatus.UNAUTHORIZED,
+  UNAUTHORIZED,
+  'Invalid jwt token',
+);
+export const ItemAlreadyExists = new HttpCodeException(
+  HttpStatus.CONFLICT,
+  ITEM_ALREADY_EXISTS,
+  'Item already exists',
+);
+export const IsNotItemOwner = new HttpCodeException(
+  HttpStatus.FORBIDDEN,
+  IS_NOT_ITEM_OWNER,
+  'Logged in user is not an item owner',
+);
