@@ -39,29 +39,6 @@ export class AuthService {
     if (user.password !== body.password) {
       throw ErrorUtil.getValidationError('Invalid password hash');
     }
-    var transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'unirateBot@gmail.com',
-        pass: 'MaxIMisha',
-      },
-    });
-
-    var mailOptions = {
-      from: 'unirateBot@gmail.com',
-      to: [user.email],
-      subject: 'Hello from UNIRATE',
-      text: `Welcome to the UNIRATE project, dear ${body.login}!`,
-    };
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log('This is undefined: ', error);
-      } else {
-        console.log(info);
-      }
-    });
     return {
       token: this.getJwtToken(user.login, user.role),
       isAdmin: user.role === 1,
