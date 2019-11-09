@@ -63,7 +63,7 @@ CREATE TABLE feedback (
     PRIMARY KEY(id),
     FOREIGN KEY(user_login)
 		REFERENCES `user`(login)
-        ON UPDATE CASCADE, --on update set default
+        ON UPDATE CASCADE,
     FOREIGN KEY(discipline_id)
 		REFERENCES discipline(id)
         ON UPDATE CASCADE
@@ -110,7 +110,7 @@ CREATE TABLE feedback_grade (
         ON DELETE CASCADE,
     FOREIGN KEY(user_login)
 		REFERENCES `user`(login)
-		ON UPDATE CASCADE -- ON DELETE SET DEFAULT
+		ON UPDATE CASCADE
 );
 
 DROP TABLE IF EXISTS mandatory;

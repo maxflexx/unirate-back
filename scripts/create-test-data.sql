@@ -1,5 +1,20 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS teacher;
+CREATE TABLE teacher (
+	id bigint NOT NULL AUTO_INCREMENT,
+    name varchar(20) NOT NULL,
+    last_name varchar(30) NOT NULL,
+    middle_name varchar(20) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+INSERT INTO teacher (id, name, last_name, middle_name) VALUES
+(1, "Nataliya", "Gulaeva", "Mykhailivna"),
+(2, "Volodymyr", "Boublik", "Vasylyovych"),
+(3, "Ivan", "Gorobrukov", "GGG"),
+(4, "Andrew", "Ushenko", "Ushch");
+
 DROP TABLE IF EXISTS feedback_grade;
 CREATE TABLE feedback_grade (
 	id bigint NOT NULL AUTO_INCREMENT,

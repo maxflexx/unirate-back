@@ -17,7 +17,6 @@ import { DbUtil } from '../../utils/db-util';
 import { SignupBodyDto } from '../auth/dto/signup-body.dto';
 import { SignupResultDto } from '../auth/dto/signup-result.dto';
 import { Profession } from '../../entities/profession.entity';
-var nodemailer = require('nodemailer');
 
 const jwt = require('jwt-simple');
 
@@ -62,30 +61,6 @@ export class AuthService {
           body.login
         }", "${body.password}", "${body.email}", ${UserRole.USER});`,
       );
-
-    var transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      auth: {
-        user: 'unirateBot@gmail.com',
-        pass: 'MaxIMisha',
-      },
-    });
-
-    var mailOptions = {
-      from: 'unirateBot@gmail.com',
-      to: [body.email],
-      subject: 'Welcome to UNIRATE',
-      text: `Welcome to the UNIRATE project, dear ${body.login}!`,
-    };
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log('This is undefined: ', error);
-      } else {
-        console.log(info);
-      }
-    });
     return await DbUtil.getUserByLogin(SignupResultDto, body.login);
   }
 
