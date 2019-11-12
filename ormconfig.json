@@ -2,9 +2,7 @@
   "MEMORY_DB": {
     "type": "sqlite",
     "database": ":memory:",
-    "entities": [
-      "src/entities/**.entity{.ts,.js}"
-    ],
+    "entities": ["src/entities/**.entity{.ts,.js}"],
     "synchronize": true,
     "supportBigNumbers": true,
     "logging": false
@@ -14,11 +12,9 @@
     "host": "localhost",
     "port": 3306,
     "username": "root",
-    "password": "rootroot",
+    "password": "rootbeer",
     "database": "unirate",
-    "entities": [
-      "dist/**/**.entity{.ts,.js}"
-    ],
+    "entities": ["dist/**/**.entity{.ts,.js}"],
     "logging": true,
     "supportBigNumbers": true
   }
