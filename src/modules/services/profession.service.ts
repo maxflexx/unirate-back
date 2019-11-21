@@ -45,8 +45,8 @@ export class ProfessionService {
     if (professionWithSameName) {
       throw ItemAlreadyExists;
     }
-    return await DbUtil.insertOne(`INSERT INTO profession(name, faculty_id) VALUES ("${body.name}", ${body.facultyId})`);
-    //return await DbUtil.getProfessionById(Profession, id);
+    const id = +(await DbUtil.insertOne(`INSERT INTO profession(name, faculty_id) VALUES ("${body.name}", ${body.facultyId})`));
+    return await DbUtil.getProfessionById(Profession, id);
   }
 
   async updateProfessionAdmin(body: UpdateProfessionDto, professionId: number): Promise<Profession> {

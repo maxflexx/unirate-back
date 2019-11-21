@@ -43,8 +43,8 @@ export class MandatoryService {
     if (!profession) {
       throw ErrorUtil.getNotFoundError('No such profession ' + body.professionId);
     }
-    return await DbUtil.insertOne(`INSERT INTO mandatory (profession_id, discipline_id) VALUES (${body.professionId}, ${body.disciplineId})`);
-    //return await DbUtil.getMandatoryByDisciplineAndProfession(Mandatory, body.professionId, body.disciplineId);
+    await DbUtil.insertOne(`INSERT INTO mandatory (profession_id, discipline_id) VALUES (${body.professionId}, ${body.disciplineId})`);
+    return await DbUtil.getMandatoryByDisciplineAndProfession(Mandatory, body.professionId, body.disciplineId);
   }
 
   async deleteAdminMandatory(params: DeleteAdminMandatoryDto): Promise<void> {

@@ -27,13 +27,13 @@ describe('Faculty', () => {
             name: FACULTIES.INFORMATICS.name,
             shortName: FACULTIES.INFORMATICS.shortName,
           }, {
-            id: FACULTIES.FGN.id,
-            name: FACULTIES.FGN.name,
-            shortName: FACULTIES.FGN.shortName,
-          }, {
             id: FACULTIES.FEN.id,
             name: FACULTIES.FEN.name,
             shortName: FACULTIES.FEN.shortName,
+          }, {
+            id: FACULTIES.FGN.id,
+            name: FACULTIES.FGN.name,
+            shortName: FACULTIES.FGN.shortName,
           }]);
         });
     });
