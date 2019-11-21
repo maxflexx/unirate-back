@@ -17,7 +17,7 @@ export class FeedbackService {
 
   async getFeedback(params: GetFeedbackParamsDto): Promise<{feedback: FeedbackResultDto[], total: number}> {
     let countQuery = `SELECT COUNT(*) AS count FROM feedback`;
-    let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, d.name AS discipline_name, ft.teacher_id, t.name, t.middle_name, t.last_name`;
+    let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, d.name AS discipline_name, ft.teacher_id, t.name, t.middle_name, t.last_name, d.year`;
     query += ` FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id`;
     query += ` LEFT JOIN discipline d ON d.id=f.discipline_id`;
     query += ` LEFT JOIN teacher t ON t.id=ft.teacher_id`;

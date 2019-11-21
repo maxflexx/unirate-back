@@ -35,8 +35,8 @@ export class FacultyService {
     if (faculty) {
       throw ItemAlreadyExists;
     }
-    return await DbUtil.insertOne(`INSERT INTO faculty(name, short_name) VALUES ("${body.name}", "${body.shortName}")`);
-    //return await DbUtil.getFacultyById(Faculty, id);
+    const id = +(await DbUtil.insertOne(`INSERT INTO faculty(name, short_name) VALUES ("${body.name}", "${body.shortName}")`));
+    return await DbUtil.getFacultyById(Faculty, id);
   }
 
   async updateFacultyAdmin(body: UpdateFacultyDto, facultyId: number): Promise<Faculty> {

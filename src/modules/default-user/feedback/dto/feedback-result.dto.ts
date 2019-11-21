@@ -8,6 +8,7 @@ export class FeedbackResultDto {
   comment: string;
   created: number;
   disciplineName: string;
+  disciplineYear: number;
   teachers: any[];
 
   static fromRaw(raw: any): FeedbackResultDto {
@@ -19,6 +20,7 @@ export class FeedbackResultDto {
     dto.comment = raw.comment;
     dto.created = raw.created;
     dto.disciplineName = raw.discipline_name;
+    dto.disciplineYear = raw.year;
     dto.teachers = [{id: +raw.teacher_id, name: raw.name, lastName: raw.last_name, middleName: raw.middle_name}];
     return dto;
   }
