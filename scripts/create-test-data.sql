@@ -96,6 +96,15 @@ CREATE TABLE discipline(
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+INSERT INTO faculty (id, name, short_name) VALUES 
+(1, "Faculty of Informatics", "FI"), 
+(2, "Faculty of human studies", "FGN");
+
+INSERT INTO profession (id, name, faculty_id) VALUES 
+(1, "IPZ", 1), 
+(2, "German Philosophy", 2)
+
+
 INSERT INTO discipline (id, name, year, faculty_id) VALUES
 (1, "OOP", 2, 1),
 (2, "Procedure programming", 2, 1),
