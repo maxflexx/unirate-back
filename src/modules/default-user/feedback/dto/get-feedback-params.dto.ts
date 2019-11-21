@@ -1,4 +1,4 @@
-import { IsIn, IsInt, IsOptional } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString } from 'class-validator';
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { PagingDto } from '../../../../common/dto/paging.dto';
 
@@ -19,5 +19,10 @@ export class GetFeedbackParamsDto extends PagingDto {
   @IsIn(['student_grade', 'student_grade DESC', 'rating', 'rating DESC', 'created', 'created DESC'])
   @Expose()
   @IsOptional()
-  orderBy: number;
+  orderBy: string;
+
+  @IsString()
+  @Expose()
+  @IsOptional()
+  userLogin: string;
 }

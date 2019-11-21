@@ -16,7 +16,7 @@ export class FeedbackService {
   constructor(){}
 
   async getFeedback(params: GetFeedbackParamsDto): Promise<{feedback: FeedbackResultDto[], total: number}> {
-    let countQuery = `SELECT COUNT(*) AS count FROM feedback`;
+    let countQuery = `SELECT COUNT(*) AS count FROM feedback f`;
     let query = `SELECT f.id, f.user_login, f.student_grade, f.rating, f.comment, f.created, d.name AS discipline_name, ft.teacher_id, t.name, t.middle_name, t.last_name, d.year`;
     query += ` FROM feedback f LEFT JOIN feedback_teacher ft ON ft.feedback_id = f.id`;
     query += ` LEFT JOIN discipline d ON d.id=f.discipline_id`;
@@ -31,12 +31,18 @@ export class FeedbackService {
       countQuery += (params.disciplineId != undefined) ? ' AND ' : ' WHERE ';
       countQuery += `${params.facultyId} IN (SELECT d.faculty_id FROM discipline d WHERE d.id=discipline_id)`;
     }
+    if (params.userLogin) {
+      query += (params.disciplineId != undefined) || (params.facultyId != undefined) ? ' AND ' : ' WHERE ';
+      query += ` f.user_login="${params.userLogin}"`;
+      countQuery += (params.disciplineId != undefined) || (params.facultyId != undefined) ? ' AND ' : ' WHERE ';
+      countQuery += ` f.user_login="${params.userLogin}"`;
+    }
     if (params.orderBy != undefined) {
       query += ` ORDER BY f.${params.orderBy}`;
     }
     const feedback = await DbUtil.getMany(FeedbackResultDto, query);
     const total = await DbUtil.getCount(countQuery);
-    return {total, feedback: this.groupFeedback(feedback)};
+    return { total, feedback: this.groupFeedback(feedback) };
   }
 
   private groupFeedback(feedback: FeedbackResultDto[]): FeedbackResultDto[] {
